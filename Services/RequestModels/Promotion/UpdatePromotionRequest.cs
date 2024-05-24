@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Services.RequestModels.Promotion
 {
-    internal class UpdatePromotionRequest
+    public class UpdatePromotionRequest
     {
     }
 }

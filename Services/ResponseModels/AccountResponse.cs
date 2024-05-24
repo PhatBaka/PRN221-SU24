@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Services.ResponseModels
 {
-    internal class AccountResponse
+    public class AccountResponse
     {
     }
 }

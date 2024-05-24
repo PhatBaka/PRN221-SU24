@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services.RequestModels.Account
+namespace Services.ResponseModels
 {
-    public class CreateAccountRequest
+    public class PromotionResponse
     {
     }
 }

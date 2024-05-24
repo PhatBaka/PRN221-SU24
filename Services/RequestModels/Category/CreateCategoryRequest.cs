@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Services.RequestModels.Category
 {
-    internal class CreateCategoryRequest
+    public class CreateCategoryRequest
     {
     }
 }

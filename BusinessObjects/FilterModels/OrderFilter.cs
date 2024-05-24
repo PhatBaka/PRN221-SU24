@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BusinessObjects.FilterModels
 {
-    internal class OrderFilter
+    public class OrderFilter
     {
     }
 }

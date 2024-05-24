@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Services.RequestModels.Account
 {
-    public class CreateAccountRequest
+    public class LoginRequest
     {
     }
 }

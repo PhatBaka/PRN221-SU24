@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Services.RequestModels.Order
 {
-    internal class CreateOrderRequest
+    public class CreateOrderRequest
     {
     }
 }

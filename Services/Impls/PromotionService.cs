@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Services.Impls
 {
-    public class PromotionService 
+    public class PromotionService : IPromotionService
     {
     }
 }

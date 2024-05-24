@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Services.RequestModels.Account
 {
-    internal class UpdateAccountRequest
+    public class UpdateAccountRequest
     {
     }
 }

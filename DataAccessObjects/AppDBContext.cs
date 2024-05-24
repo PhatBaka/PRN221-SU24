@@ -22,7 +22,7 @@ namespace DataAccessObjects
                     .Build();
 
                 var connectionString = configuration.GetConnectionString("DefaultConnection");
-
+                optionsBuilder.UseLazyLoadingProxies();
                 optionsBuilder.UseSqlServer(connectionString);
             }
         }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Services.RequestModels.Jewelry
 {
-    internal class UpdateJewelryRequest
+    public class UpdateJewelryRequest
     {
     }
 }
