@@ -1,0 +1,72 @@
+﻿@page
+@model UI.Pages.Promotions.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Promotion[0].PromotionName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Promotion[0].PromotionCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Promotion[0].StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Promotion[0].EndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Promotion[0].DiscountValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Promotion[0].AcceptedPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Promotion[0].DiscountStatus)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Promotion) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PromotionName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PromotionCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DiscountValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AcceptedPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DiscountStatus)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.PromotionId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.PromotionId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.PromotionId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
