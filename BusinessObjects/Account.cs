@@ -10,6 +10,7 @@ using BusinessObjects.Enums;
 
 namespace BusinessObjects
 {
+    [Table("Account")]
     public class Account
     {
         [Key]
@@ -41,6 +42,9 @@ namespace BusinessObjects
 
         [Required]
         public AccountRole Role { get; set; }
+
+        [Required]
+        public ObjectStatus ObjectStatus { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; }
     }

@@ -9,6 +9,7 @@ using BusinessObjects.Enums;
 
 namespace BusinessObjects
 {
+    [Table("Order")]
     public class Order
     {
         [Key]
@@ -33,8 +34,15 @@ namespace BusinessObjects
         [Required]
         public int CustomerId { get; set; }
 
+        public int PromotionId { get; set; }
+
+        public virtual Promotion Promotion { get; set; }
+
         [Required]
         public virtual Account Customer { get; set; }
+
+        [Required]
+        public virtual ICollection<Warranty> Warranties { get; set; }
 
         [Required]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

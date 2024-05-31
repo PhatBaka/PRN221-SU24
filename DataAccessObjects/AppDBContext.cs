@@ -31,13 +31,19 @@ namespace DataAccessObjects
         {
             modelBuilder.Entity<OrderDetail>()
                 .HasKey(od => new { od.OrderId, od.JewelryId });
+            modelBuilder.Entity<JewelryMaterial>()
+                .HasKey(jm => new { jm.JewelryId, jm.MaterialId });
         }
 
-        public DbSet<Account> Account { get; set; }
-        public DbSet<Category> Category { get; set; }
-        public DbSet<Jewelry> Jewelry { get; set; }
-        public DbSet<Order> Order { get; set; }
-        public DbSet<OrderDetail> OrderDetail { get; set; }
-        public DbSet<Promotion> Promotion { get; set; }
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Jewelry> Jewelries { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<Promotion> Promotions { get; set; }
+        public DbSet<JewelryMaterial> JewelryMaterials { get; set; }
+        public DbSet<Material> Materials { get; set; }
+        public DbSet<Warranty> Warranties { get; set; }
+        public DbSet<WarrantyHistory> WarrantyHistories { get; set; }
     }
 }

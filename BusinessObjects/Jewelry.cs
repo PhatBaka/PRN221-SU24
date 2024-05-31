@@ -5,9 +5,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessObjects.Enums;
 
 namespace BusinessObjects
 {
+    [Table("Jewelry")]
     public class Jewelry
     {
         [Key]
@@ -34,13 +36,21 @@ namespace BusinessObjects
         public byte[] JewelryImage { get; set; }
 
         [Required]
+        public double MarkupPercentage { get; set; }
+
+        [Required]
         public int CategoryId { get; set; }
 
+        [Required]
+        public StatusSale StatusSale { get; set; }
+
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+
+        public virtual ICollection<JewelryMaterial> JewelryMaterials { get; set; }
+
+        public virtual ICollection<Warranty> Warranties { get; set; }
         
         [Required]
         public virtual Category Category { get; set; }
-
-        public virtual Promotion Promotion { get; set; }
     }
 }

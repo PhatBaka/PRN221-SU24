@@ -4,6 +4,7 @@ using DataAccessObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessObjects.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240531175042_UpdateDatabasV2")]
+    partial class UpdateDatabasV2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,7 +72,7 @@ namespace DataAccessObjects.Migrations
 
                     b.HasKey("AccountId");
 
-                    b.ToTable("Account", (string)null);
+                    b.ToTable("Account");
                 });
 
             modelBuilder.Entity("BusinessObjects.Category", b =>
@@ -88,7 +90,7 @@ namespace DataAccessObjects.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("BusinessObjects.Jewelry", b =>
@@ -140,7 +142,7 @@ namespace DataAccessObjects.Migrations
 
                     b.HasIndex("PromotionId");
 
-                    b.ToTable("Jewelry", (string)null);
+                    b.ToTable("Jewelry");
                 });
 
             modelBuilder.Entity("BusinessObjects.JewelryMaterial", b =>
@@ -158,7 +160,7 @@ namespace DataAccessObjects.Migrations
 
                     b.HasIndex("MaterialId");
 
-                    b.ToTable("JewelryMaterial", (string)null);
+                    b.ToTable("JewelryMaterial");
                 });
 
             modelBuilder.Entity("BusinessObjects.Material", b =>
@@ -182,7 +184,7 @@ namespace DataAccessObjects.Migrations
 
                     b.HasKey("MaterialId");
 
-                    b.ToTable("Material", (string)null);
+                    b.ToTable("Material");
                 });
 
             modelBuilder.Entity("BusinessObjects.Order", b =>
@@ -220,7 +222,7 @@ namespace DataAccessObjects.Migrations
 
                     b.HasIndex("PromotionId");
 
-                    b.ToTable("Order", (string)null);
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("BusinessObjects.OrderDetail", b =>
@@ -255,7 +257,7 @@ namespace DataAccessObjects.Migrations
 
                     b.HasIndex("PromotionId");
 
-                    b.ToTable("OrderDetail", (string)null);
+                    b.ToTable("OrderDetail");
                 });
 
             modelBuilder.Entity("BusinessObjects.Promotion", b =>
@@ -293,7 +295,7 @@ namespace DataAccessObjects.Migrations
 
                     b.HasKey("PromotionId");
 
-                    b.ToTable("Promotion", (string)null);
+                    b.ToTable("Promotion");
                 });
 
             modelBuilder.Entity("BusinessObjects.Warranty", b =>
@@ -324,7 +326,7 @@ namespace DataAccessObjects.Migrations
 
                     b.HasIndex("WarrantyId1");
 
-                    b.ToTable("Warranties", (string)null);
+                    b.ToTable("Warranties");
                 });
 
             modelBuilder.Entity("BusinessObjects.WarrantyHistory", b =>
@@ -348,7 +350,7 @@ namespace DataAccessObjects.Migrations
 
                     b.HasIndex("WarrantyId");
 
-                    b.ToTable("WarrantyHistories", (string)null);
+                    b.ToTable("WarrantyHistories");
                 });
 
             modelBuilder.Entity("BusinessObjects.Jewelry", b =>

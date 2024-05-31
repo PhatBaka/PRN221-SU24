@@ -8,17 +8,20 @@ using System.Threading.Tasks;
 
 namespace BusinessObjects
 {
-    [Table("Category")]
-    public class Category
+    public class WarrantyHistory
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int CategoryId { get; set; }
+        public int WarrantyHistoryId { get; set; }
 
         [Required]
-        [StringLength(50)]
-        public string CategoryName { get; set; }
+        public DateTime ReceivedDate { get; set; }
 
-        public virtual ICollection<Jewelry> Jewelries { get;}
+        [Required]
+        public DateTime ReturnDate { get; set; }
+
+        public int WarrantyId { get; set; }
+
+        public virtual Warranty Warranty { get; set; }
     }
 }

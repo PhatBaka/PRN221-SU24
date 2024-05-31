@@ -31,12 +31,12 @@ namespace UI.Pages
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Account == null || Account == null)
+          if (!ModelState.IsValid || _context.Accounts == null || Account == null)
             {
                 return Page();
             }
 
-            _context.Account.Add(Account);
+            _context.Accounts.Add(Account);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
