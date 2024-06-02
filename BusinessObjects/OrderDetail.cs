@@ -30,10 +30,6 @@ namespace BusinessObjects
         [Required]
         public decimal FinalPrice { get; set; }
 
-        public int PromotionId { get; set; }
-
-        public virtual Promotion Promotion { get; set; }
-
         [Required]
         public virtual Order Order { get; set; }
 
