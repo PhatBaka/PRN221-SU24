@@ -99,24 +99,23 @@ left:88%!important;
 /********************************/
 /*       Slides backgrounds     */
 /********************************/
-.fade-carousel .slides .slide-1, 
+.fade-carousel .slides .slide-1,
 .fade-carousel .slides .slide-2,
 .fade-carousel .slides .slide-3 {
-  min-height: 600px;
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
+    height: 600px;
+    width: 100%;
+    object-fit: fill;
 }
 .fade-carousel .slides .slide-1 {
-      background-image: url(../img/5.jpg);
-	  background-position:center;
+    width: 100%;
 }
 .fade-carousel .slides .slide-2 {
-    background-image: url(../img/6.jpg);
+    background-image: url(../img/2ecf1d7b-59b9-42c3-891d-45d77e45b564_8a8b8061.webp);
 	background-position:center;
 }
 .fade-carousel .slides .slide-3 {
-      background-image: url(../img/7.jpg);
+
+      background-image: url(../img/GettyImages-1129717648.webp);
 	  background-position:center;
 }
 #center .carousel-indicators{
