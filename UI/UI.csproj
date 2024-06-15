@@ -7,6 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\Jewelries\**" />
+    <Compile Remove="Pages\Orders\**" />
+    <Compile Remove="Pages\Promotions\**" />
+    <Content Remove="Pages\Jewelries\**" />
+    <Content Remove="Pages\Orders\**" />
+    <Content Remove="Pages\Promotions\**" />
+    <EmbeddedResource Remove="Pages\Jewelries\**" />
+    <EmbeddedResource Remove="Pages\Orders\**" />
+    <EmbeddedResource Remove="Pages\Promotions\**" />
+    <None Remove="Pages\Jewelries\**" />
+    <None Remove="Pages\Orders\**" />
+    <None Remove="Pages\Promotions\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DataAccessObjects\DataAccessObjects.csproj" />
     <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
@@ -20,14 +35,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pages\Accounts\" />
-    <Folder Include="Pages\Categories\" />
-    <Folder Include="Pages\Jewelries\" />
-    <Folder Include="Pages\Orders\" />
-    <Folder Include="Pages\Promotions\" />
   </ItemGroup>
 
 </Project>
