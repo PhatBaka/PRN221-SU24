@@ -314,7 +314,7 @@ namespace DataAccessObjects.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("Warranties");
+                    b.ToTable("Warranty");
                 });
 
             modelBuilder.Entity("BusinessObjects.WarrantyHistory", b =>
@@ -338,7 +338,7 @@ namespace DataAccessObjects.Migrations
 
                     b.HasIndex("WarrantyId");
 
-                    b.ToTable("WarrantyHistories");
+                    b.ToTable("WarrantyHistory");
                 });
 
             modelBuilder.Entity("BusinessObjects.Jewelry", b =>

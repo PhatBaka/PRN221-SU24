@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace BusinessObjects
 {
+    [Table("WarrantyHistory")]
     public class WarrantyHistory
     {
         [Key]
