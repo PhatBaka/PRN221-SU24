@@ -1,0 +1,80 @@
+﻿@page
+@model UI.Pages.Jewelries.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                S/N
+            </th>
+            <th>
+                Jewelry Name
+            </th>
+            <th>
+                Jewelry ID
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Sale Status
+            </th>
+            <th>
+                Category
+            </th>
+            <th>
+                Base Price
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@{
+  int i = 0;
+ }
+@foreach (var item in Model.Jewelry) {
+        <tr>
+            <td>
+                @{
+                    i = i + 1;
+                 }
+                @i
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JewelryName)
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.JewelryId)
+                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @ViewData[$"ItemStatusSale_{item.JewelryId}"]
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.CategoryName)
+            </td>
+            <td>
+                 @(((Decimal)ViewData[$"ItemBasePrice_{item.JewelryId}"]).ToString("#,##0")) VNĐ
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.JewelryId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.JewelryId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.JewelryId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

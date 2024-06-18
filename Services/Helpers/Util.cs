@@ -21,5 +21,16 @@ namespace Services.Helpers
             }
             return dateList;
         }
+
+        public static string CapitalizeFirstLetterOfSentence(string sentence)
+        {
+            if (string.IsNullOrEmpty(sentence))
+            {
+                return sentence;
+            }
+
+            return char.ToUpper(sentence[0]) + sentence.Substring(1);
+        }
+
     }
 }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BusinessObjects.Enums;
+using System.Runtime.Serialization;
 
 namespace BusinessObjects
 {
@@ -25,15 +26,15 @@ namespace BusinessObjects
         public string Description { get; set; }
 
         [Required]
-        public decimal Weight { get; set; }
+        [Column("Weight")]
+        public decimal TotalWeight { get; set; }
 
         [Required]
-        public decimal WorkPrice { get; set; }
+        [Column("WorkPrice")]
+        public decimal LaborPrice { get; set; }
 
         [Required]
         public int Quantity { get; set; }
-
-        public byte[] JewelryImage { get; set; }
 
         [Required]
         public double MarkupPercentage { get; set; }
@@ -41,16 +42,17 @@ namespace BusinessObjects
         [Required]
         public int CategoryId { get; set; }
 
+        public byte[]? JewelryImage { get; set; }
+
         [Required]
         public StatusSale StatusSale { get; set; }
 
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-
         public virtual ICollection<JewelryMaterial> JewelryMaterials { get; set; }
 
-        public virtual ICollection<Warranty> Warranties { get; set; }
+        public virtual Warranty Warranties { get; set; }
         
-        [Required]
         public virtual Category Category { get; set; }
+
+        //public virtual ICollection<Image> Images { get; set; }
     }
 }

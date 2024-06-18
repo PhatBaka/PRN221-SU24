@@ -3,10 +3,10 @@ using BusinessObjects;
 using BusinessObjects.FilterModels;
 using Services.RequestModels.Account;
 using Services.RequestModels.Category;
-using Services.RequestModels.Jewelry;
 using Services.RequestModels.Order;
 using Services.RequestModels.Promotion;
 using Services.ResponseModels;
+using UI.Payload.JewelryPayload;
 
 namespace UI.AppStarts
 {
