@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services.Interfaces
+namespace BusinessObjects.Enums
 {
-    public interface IOrderService
+    public enum StatusSaleEnum
     {
     }
 }

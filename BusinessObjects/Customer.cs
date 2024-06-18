@@ -2,44 +2,38 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BusinessObjects
 {
-    [Table("Account")]
-    public class Account
+    [Table("Customer")]
+    public class Customer
     {
-        public Account()
+        public Customer()
         {
+            WarrantyRequests = new HashSet<WarrantyRequest>();
             Orders = new HashSet<Order>();
             Promotions = new HashSet<Promotion>();
-            Counters = new HashSet<Counter>();
         }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int AccountId { get; set; }
+        public int CustomerId { get; set; }
 
         [Required]
-        public string? Email { get; set; }
-
-        [Required]
-        public string? Password { get; set; }
-
         [StringLength(10)]
         public string? PhoneNumber { get; set; }
 
         [Required]
         public DateTime CreatedDate { get; set; }
 
+        [Required]
         [StringLength(50)]
         public string? FullName { get; set; }
 
-        [Required]
-        public string? Role { get; set; }
+        public double TotalPoint { get; set; }
 
         [Required]
         public string? ObjectStatus { get; set; }
@@ -48,6 +42,6 @@ namespace BusinessObjects
 
         public virtual ICollection<Promotion> Promotions { get; set; }
 
-        public virtual ICollection<Counter> Counters { get; set; }
+        public virtual ICollection<WarrantyRequest> WarrantyRequests { get; set; }
     }
 }

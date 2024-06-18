@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessObjects.Impls
 {
-    public class WarrantyDAO : BaseDAO<Warranty>, IWarrantyDAO
+    public class WarrantyDAO : BaseDAO<WarrantyOrder>, IWarrantyDAO
     {
         private readonly AppDBContext _context;
 

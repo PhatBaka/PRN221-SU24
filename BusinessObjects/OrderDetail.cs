@@ -1,39 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessObjects
 {
     [Table("OrderDetail")]
     public class OrderDetail
     {
-        public int OrderId { get; set; }
+        public OrderDetail()
+        {
+            Promotions = new HashSet<Promotion>();
+        }
 
-        public int JewelryId { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int OrderDetailId { get; set; }
 
         [Required]
-        public decimal Dicount { get; set; }
+        [ForeignKey("Order")]
+        public int OrderId { get; set; }
+        public virtual Order? Order { get; set; }
+
+        [Required]
+        [ForeignKey("Jewelry")]
+        public int JewelryId { get; set; }
+        public virtual Jewelry? Jewelry { get; set; }
+
+        [Required]
+        [Column(TypeName = "float")]
+        public decimal DiscountValue { get; set; }
 
         [Required]
         public int Quantity { get; set; }
 
         [Required]
+        [Column(TypeName = "money")]
         public decimal UnitPrice { get; set; }
 
         [Required]
-        public decimal DiscountPrice { get; set;  }
+        [Column(TypeName = "money")]
+        public decimal DiscountPrice { get; set; }
 
         [Required]
+        [Column(TypeName = "money")]
         public decimal FinalPrice { get; set; }
 
         [Required]
-        public virtual Order Order { get; set; }
+        public int WarrantyOrderId { get; set; }
+        public virtual WarrantyOrder? WarrantyOrder { get; set; }
 
-        [Required]
-        public virtual Jewelry Jewelry { get; set; }
+        public virtual ICollection<Promotion> Promotions { get; set; }
     }
 }

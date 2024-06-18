@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Repositories.Impls
 {
-    public class WarrantyRepository : BaseRepository<WarrantyOrder>, IWarrantyRepository
+    public class WarrantyRequest : BaseRepository<BusinessObjects.WarrantyRequest>, IWarrantyHistoryRepository
     {
     }
 }

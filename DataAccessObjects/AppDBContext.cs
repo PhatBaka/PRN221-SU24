@@ -1,11 +1,7 @@
 ﻿using BusinessObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace DataAccessObjects
 {
@@ -15,35 +11,59 @@ namespace DataAccessObjects
         {
             if (!optionsBuilder.IsConfigured)
             {
-                // Ensure that the configuration is properly set up to retrieve the connection string.
                 var configuration = new ConfigurationBuilder()
                     .SetBasePath(Directory.GetCurrentDirectory())
                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                     .Build();
-
                 var connectionString = configuration.GetConnectionString("DefaultConnection");
-                optionsBuilder.UseLazyLoadingProxies();
                 optionsBuilder.UseSqlServer(connectionString);
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<OrderDetail>()
-                .HasKey(od => new { od.OrderId, od.JewelryId });
+            modelBuilder.Entity<Jewelry>()
+                .HasOne(j => j.WarrantyJewelry)
+                .WithOne(wj => wj.Jewelry)
+                .HasForeignKey<WarrantyJewelry>(wj => wj.JewelryId);
+
             modelBuilder.Entity<JewelryMaterial>()
                 .HasKey(jm => new { jm.JewelryId, jm.MaterialId });
+
+            modelBuilder.Entity<JewelryMaterial>()
+                .HasOne(jm => jm.Jewelry)
+                .WithMany(j => j.JewelryMaterials)
+                .HasForeignKey(jm => jm.JewelryId);
+
+            modelBuilder.Entity<JewelryMaterial>()
+                .HasOne(jm => jm.Material)
+                .WithMany(m => m.JewelryMaterials)
+                .HasForeignKey(jm => jm.MaterialId);
+
+            modelBuilder.Entity<OrderDetail>()
+                .HasOne(od => od.WarrantyOrder)
+                .WithOne(wo => wo.OrderDetail)
+                .HasForeignKey<WarrantyOrder>(wo => wo.OrderDetailId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<WarrantyOrder>()
+                .HasOne(wo => wo.WarrantyRequest)
+                .WithOne(wr => wr.WarrantyOrder)
+                .HasForeignKey<WarrantyRequest>(wr => wr.WarrantyOrderId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
-        public DbSet<Account> Accounts { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Jewelry> Jewelries { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderDetail> OrderDetails { get; set; }
-        public DbSet<Promotion> Promotions { get; set; }
-        public DbSet<JewelryMaterial> JewelryMaterials { get; set; }
-        public DbSet<Material> Materials { get; set; }
-        public DbSet<Warranty> Warranties { get; set; }
-        public DbSet<WarrantyHistory> WarrantyHistories { get; set; }
+        public DbSet<Account>? Accounts { get; set; }
+        public DbSet<Counter>? Counters { get; set; }
+        public DbSet<Customer>? Customers { get; set; }
+        public DbSet<Jewelry>? Jewelries { get; set; }
+        public DbSet<JewelryMaterial>? JewelryMaterials { get; set; }
+        public DbSet<Material>? Materials { get; set; }
+        public DbSet<Order>? Orders { get; set; }
+        public DbSet<OrderDetail>? OrderDetails { get; set; }
+        public DbSet<Promotion>? Promotions { get; set; }
+        public DbSet<WarrantyJewelry>? WarrantyJewelries { get; set; }
+        public DbSet<WarrantyOrder>? WarrantyOrders { get; set; }
+        public DbSet<WarrantyRequest>? WarrantyRequests { get; set; }
     }
 }

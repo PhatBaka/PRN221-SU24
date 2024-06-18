@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services.Interfaces
+namespace DTOs.Enums
 {
-    public interface IOrderService
+    public enum AccountRoleEnum
     {
+        STAFF,
+        MANAGER,
+        CUSTOMER
     }
 }

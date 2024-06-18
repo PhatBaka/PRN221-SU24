@@ -1,51 +1,56 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var datetime = DateTime.Now;
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
+    <base href="">
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - UI</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/UI.styles.css" asp-append-version="true" />
+    <title>Start | Keenthemes</title>
+    <meta name="description" content="Check out all the features of the Start admin panel. A large number of templates, components and widgets." />
+    <meta name="keywords" content="Start, bootstrap, bootstrap 5, admin themes, free admin themes, bootstrap admin, bootstrap dashboard, html admin theme, html template" />
+    <link rel="canonical" href="Https://preview.keenthemes.com/start" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="~/media/logos/favicon.ico" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+    <link href="~/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/style.bundle.css" rel="stylesheet" type="text/css" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">UI</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
+<body id="kt_body" data-sidebar="on" class="header-fixed header-tablet-and-mobile-fixed sidebar-enabled">
+    <div class="d-flex flex-column">
+        <!--begin::Page-->
+        <div class="page d-flex flex-row flex-column-fluid">
+            <!--begin::Wrapper-->
+            <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
+                <div id="kt_header" class="header" data-kt-sticky="true" data-kt-sticky-name="header" data-kt-sticky-offset="{default: '200px', lg: '300px'}">
+                    <div class="container d-flex align-items-stretch justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <a href="index.html">
+                                <img alt="Logo" src="~/media/logos/diamond.png" class="h-30px" />
+                                JEWELRY STORE
+                            </a>
+                            <h1></h1>
+                        </div>
+                        <h1>PRICE TODAY - Update Date: @datetime</h1>
+                    </div>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <div class="d-flex flex-column flex-root">
         <div class="container">
-            &copy; 2024 - UI - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            @RenderBody()
         </div>
-    </footer>
+    </div>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/plugins/global/plugins.bundle.js"></script>
+    <script src="~/js/scripts.bundle.js"></script>
+    <script src="~/js/custom/widgets.js"></script>
+    <script src="~/js/custom/modals/create-app.js"></script>
+    <script src="~/js/custom/modals/select-location.js"></script>
+    <script src="~/js/custom/modals/users-search.js"></script>
 
-    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

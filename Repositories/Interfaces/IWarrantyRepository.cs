@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Repositories.Interfaces
 {
-    public interface IWarrantyRepository : IBaseRepository<Warranty>
+    public interface IWarrantyRepository : IBaseRepository<WarrantyOrder>
     {
     }
 }

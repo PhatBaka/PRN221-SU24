@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessObjects.Interfaces
 {
-    public interface IWarrantyHistoryDAO : IBaseDAO<WarrantyHistory>
+    public interface IWarrantyHistoryDAO : IBaseDAO<WarrantyRequest>
     {
     }
 }

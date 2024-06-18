@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Services.Impls
 {
-    internal class JewelryService : IJewelryService
+    public class JewelryService : IJewelryService
     { 
     }
 }

@@ -1,44 +1,50 @@
-﻿using BusinessObjects.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessObjects
 {
     [Table("Promotion")]
     public class Promotion
     {
+        public Promotion()
+        {
+            OrderDetails = new HashSet<OrderDetail>();
+            Jewelries = new HashSet<Jewelry>();
+            Orders = new HashSet<Order>();
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PromotionId { get; set; }
 
-        [Required]
+        [StringLength(100)]
+        public string? PromotionCode { get; set; }
+
         [StringLength(50)]
-        public string PromotionName { get; set; }
+        public string? PromotionName { get; set; }
 
         [Required]
-        [StringLength(50)]
-        public string PromotionCode { get; set; }
+        public DateTime? StartDate { get; set; }
 
         [Required]
-        public DateTime StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         [Required]
-        public DateTime EndDate { get; set; }
-
-        [Required]
+        [Column(TypeName = "money")]
         public decimal DiscountValue { get; set; }
 
         [Required]
+        [Column(TypeName = "money")]
         public decimal AcceptedPrice { get; set; }
 
-        [Required]
-        public DiscountEnum DiscountStatus { get; set; }
+        public string? PromotionType { get; set; }
 
-        public virtual ICollection<Jewelry> Jewelries { get; set; }
-     }
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; } 
+
+        public virtual ICollection<Jewelry> Jewelries { get; set; } 
+
+        public virtual ICollection<Order> Orders { get; set; }
+    }
 }
