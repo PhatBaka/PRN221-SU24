@@ -4,6 +4,7 @@ using DataAccessObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessObjects.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240601024800_FixWarranty")]
+    partial class FixWarranty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -240,12 +242,6 @@ namespace DataAccessObjects.Migrations
                     b.Property<decimal>("FinalPrice")
                         .HasColumnType("decimal(18,2)");
 
-<<<<<<< HEAD
-                    b.Property<int>("PromotionId")
-                        .HasColumnType("int");
-
-=======
->>>>>>> c63b69159348e0bf538884388abcd058c27a2928
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -417,8 +413,6 @@ namespace DataAccessObjects.Migrations
                     b.Navigation("Jewelry");
 
                     b.Navigation("Order");
-
-                    b.Navigation("Promotion");
                 });
 
             modelBuilder.Entity("BusinessObjects.Warranty", b =>
