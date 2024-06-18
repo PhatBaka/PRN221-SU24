@@ -1,0 +1,89 @@
+﻿@* @page
+@model UI.Pages.PriceModel
+@{
+    Layout = "_Layout";
+    int totalItems = Model.Materials.Count;
+    int third = totalItems / 3;
+    int remainder = totalItems % 3;
+}
+
+<div style="display: flex;">
+    <!-- First Third Table -->
+    <table class="table table-row-dashed table-row-gray-300 gy-7" style="flex: 1; margin-right: 10px;">
+        <thead>
+            <tr class="fw-bolder fs-6 text-gray-800">
+                <th></th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Unit Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < third + (remainder > 0 ? 1 : 0); i++)
+            {
+                var item = Model.Materials[i];
+                <tr>
+                    <td>
+                        <img src="data:image/jpeg;base64,@item.Base64" alt="Material Image" width="100" height="100" />
+                    </td>
+                    <td>@item.Data.name</td>
+                    <td>@item.Data.price</td>
+                    <td>@item.Data.unitType</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Second Third Table -->
+    <table class="table table-row-dashed table-row-gray-300 gy-7" style="flex: 1; margin-right: 10px;">
+        <thead>
+            <tr class="fw-bolder fs-6 text-gray-800">
+                <th></th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Unit Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = third + (remainder > 0 ? 1 : 0); i < 2 * third + (remainder > 1 ? 1 : 0); i++)
+            {
+                var item = Model.Materials[i];
+                <tr>
+                    <td>
+                        <img src="data:image/jpeg;base64,@item.Base64" alt="Material Image" width="100" height="100" />
+                    </td>
+                    <td>@item.Data.name</td>
+                    <td>@item.Data.price</td>
+                    <td>@item.Data.unitType</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Third Third Table -->
+    <table class="table table-row-dashed table-row-gray-300 gy-7" style="flex: 1;">
+        <thead>
+            <tr class="fw-bolder fs-6 text-gray-800">
+                <th></th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Unit Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 2 * third + (remainder > 1 ? 1 : 0); i < totalItems; i++)
+            {
+                var item = Model.Materials[i];
+                <tr>
+                    <td>
+                        <img src="data:image/jpeg;base64,@item.Base64" alt="Material Image" width="100" height="100" />
+                    </td>
+                    <td>@item.Data.name</td>
+                    <td>@item.Data.price</td>
+                    <td>@item.Data.unitType</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+ *@
