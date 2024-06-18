@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services.RequestModels.Jewelry
+namespace UI.Payload.JewelryPayload
 {
-    public class CreateJewelryRequest
+    public class UpdateJewelryRequest
     {
     }
 }

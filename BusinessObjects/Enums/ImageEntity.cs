@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services.RequestModels.Jewelry
+namespace BusinessObjects.Enums
 {
-    public class UpdateJewelryRequest
+    public enum ImageEntity
     {
+        PRODUCT_IMG = 1,
+        ACCOUNT_IMG = 2
     }
 }

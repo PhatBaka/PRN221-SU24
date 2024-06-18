@@ -14,11 +14,12 @@ namespace UI.AppStarts
             services.AddScoped(typeof(AppDBContext));
             services.AddScoped(typeof(GenericDAO<>));
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddAutoMapper(typeof(MapperConfig));
 
             services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<IJewelryService, IJewelryService>();
+            services.AddScoped<IJewelryService, JewelryService>();
             services.AddScoped<IPromotionService, PromotionService>();
-            services.AddScoped<ICategoryService, ICategoryService>();
+            services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IOrderService, OrderService>();
         }
     }
