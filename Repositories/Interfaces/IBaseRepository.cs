@@ -15,7 +15,7 @@ namespace Repositories.Interfaces
         Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
         Task<IEnumerable<T>> GetWhereAsync(Expression<Func<T, bool>> predicate);
         Task<object> AddAsync(T entity);
-        Task<bool> UpdateAsync(T entity);
+        Task<bool> UpdateAsync(T entity, int id);
         Task<bool> DeleteAsync(T entity);
     }
 }

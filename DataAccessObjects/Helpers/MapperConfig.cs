@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using BusinessObjects;
+using DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +13,12 @@ namespace DataAccessObjects.Helpers
     {
         public MapperConfig()
         {
-            
+            CreateMap<Account, AccountDTO>().ReverseMap();
+
+            CreateMap<Jewelry, JewelryDTO>().ReverseMap();
+
+            CreateMap<Material, MaterialDTO>().ReverseMap();
+            CreateMap<MaterialDTO, MaterialViewModel>().ReverseMap();
         }
     }
 }

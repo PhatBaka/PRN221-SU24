@@ -1,0 +1,68 @@
+﻿@page
+@model UI.Pages.Materials.EditModel
+
+@{
+    Layout = "_Layout";
+}
+
+<h1>Edit</h1>
+
+<h4>Material</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Material.MaterialId" />
+            <div class="form-group">
+                <label asp-for="Material.MaterialName" class="control-label"></label>
+                <input asp-for="Material.MaterialName" class="form-control" />
+                <span asp-validation-for="Material.MaterialName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Material.MaterialCost" class="control-label"></label>
+                <input asp-for="Material.MaterialCost" class="form-control" />
+                <span asp-validation-for="Material.MaterialCost" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Material.MaterialWeight" class="control-label"></label>
+                <input asp-for="Material.MaterialWeight" class="form-control" />
+                <span asp-validation-for="Material.MaterialWeight" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Material.UnitType" class="control-label"></label>
+                <input asp-for="Material.UnitType" class="form-control" />
+                <span asp-validation-for="Material.UnitType" class="text-danger"></span>
+            </div>
+            @if (!Model.Material.IsMetal)
+            {
+                <div class="form-group">
+                    <label asp-for="Material.MaterialQuantity" class="control-label"></label>
+                    <input asp-for="Material.MaterialQuantity" class="form-control" />
+                    <span asp-validation-for="Material.MaterialQuantity" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group">
+                <label asp-for="Material.MaterialImage" class="control-label"></label>
+                <img src="data:image/png;base64, Material.MaterialImage" width="100px" height="100px"/>
+                <span asp-validation-for="Material.MaterialImage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.ImageData" class="control-label"></label>
+                <input asp-for="@Model.ImageData" class="form-control" />
+                <span asp-validation-for="@Model.ImageData" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

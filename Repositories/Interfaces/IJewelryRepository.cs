@@ -1,4 +1,5 @@
 ﻿using BusinessObjects;
+using DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,6 @@ namespace Repositories.Interfaces
 {
     public interface IJewelryRepository : IBaseRepository<Jewelry>
     {
+        public Task<bool> AddMaterialIntoJewelry(Jewelry jewelry, IList<MaterialViewModel> materials);
     }
 }

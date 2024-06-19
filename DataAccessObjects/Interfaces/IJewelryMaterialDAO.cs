@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repositories.Interfaces
+namespace DataAccessObjects.Interfaces
 {
-    public interface IWarrantyHistoryRepository : IBaseRepository<WarrantyRequest>
+    public interface IJewelryMaterialDAO
     {
     }
 }

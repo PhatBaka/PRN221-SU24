@@ -1,0 +1,111 @@
+﻿@page
+@model UI.Pages.Materials.IndexModel
+
+@{
+    Layout = "_Layout";
+}
+
+<h1>Index</h1>
+
+<form asp-asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by name:
+            <input type="text"
+                   name="SearchString"
+                   value="@Model.CurrentFilter" />
+            <input type="submit"
+                   value="Search"
+                   class="btn btn-primary" />
+            <a asp-page="./Index">Back to full List</a>
+        </p>
+    </div>
+</form>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Material[0].MaterialName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Material[0].IsMetal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Material[0].MaterialCost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Material[0].MaterialWeight)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Material[0].UnitType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Material[0].MaterialQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Material[0].MaterialImage)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Material) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaterialName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsMetal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaterialCost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaterialWeight)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaterialQuantity)
+            </td>
+            <td>             
+                @{
+                        string base64Image = null;
+                        if (item.MaterialImage != null)
+                    {
+                        base64Image = Convert.ToBase64String(item.MaterialImage);
+                    }
+                }
+                <img src="data:image/png;base64, @base64Image" alt="Material Image" width="50px" height="50px">
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.MaterialId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.MaterialId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.MaterialId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.Material.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Material.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="./Index"
+   asp-route-pageIndex="@(Model.Material.PageIndex - 1)"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-page="./Index"
+   asp-route-pageIndex="@(Model.Material.PageIndex + 1)"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>
+

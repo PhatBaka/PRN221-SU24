@@ -1,89 +1,99 @@
-﻿@* @page
+﻿@page
 @model UI.Pages.PriceModel
 @{
     Layout = "_Layout";
-    int totalItems = Model.Materials.Count;
-    int third = totalItems / 3;
-    int remainder = totalItems % 3;
+}
+<form asp-asp-page="/Price" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by name:
+            <input type="text"
+                   name="SearchString"
+                   value="@Model.CurrentFilter" />
+            <input type="submit"
+                   value="Search"
+                   class="btn btn-primary" />
+            <a asp-page="./Index">Back to full List</a>
+        </p>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Material[0].MaterialName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Material[0].IsMetal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Material[0].MaterialCost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Material[0].MaterialWeight)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Material[0].UnitType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Material[0].MaterialQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Material[0].MaterialImage)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Material) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaterialName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsMetal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaterialCost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaterialWeight)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaterialQuantity)
+            </td>
+            <td>
+                @{
+                        string base64Image = null;
+                        if (item.MaterialImage != null)
+                    {
+                        base64Image = Convert.ToBase64String(item.MaterialImage);
+                    }
+                }
+                <img src="data:image/png;base64, @base64Image" alt="Material Image" width="50px" height="50px">
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.Material.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Material.HasNextPage ? "disabled" : "";
 }
 
-<div style="display: flex;">
-    <!-- First Third Table -->
-    <table class="table table-row-dashed table-row-gray-300 gy-7" style="flex: 1; margin-right: 10px;">
-        <thead>
-            <tr class="fw-bolder fs-6 text-gray-800">
-                <th></th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Unit Type</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (int i = 0; i < third + (remainder > 0 ? 1 : 0); i++)
-            {
-                var item = Model.Materials[i];
-                <tr>
-                    <td>
-                        <img src="data:image/jpeg;base64,@item.Base64" alt="Material Image" width="100" height="100" />
-                    </td>
-                    <td>@item.Data.name</td>
-                    <td>@item.Data.price</td>
-                    <td>@item.Data.unitType</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<a asp-page="/Price"
+   asp-route-pageIndex="@(Model.Material.PageIndex - 1)"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-page="/Price"
+   asp-route-pageIndex="@(Model.Material.PageIndex + 1)"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>
 
-    <!-- Second Third Table -->
-    <table class="table table-row-dashed table-row-gray-300 gy-7" style="flex: 1; margin-right: 10px;">
-        <thead>
-            <tr class="fw-bolder fs-6 text-gray-800">
-                <th></th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Unit Type</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (int i = third + (remainder > 0 ? 1 : 0); i < 2 * third + (remainder > 1 ? 1 : 0); i++)
-            {
-                var item = Model.Materials[i];
-                <tr>
-                    <td>
-                        <img src="data:image/jpeg;base64,@item.Base64" alt="Material Image" width="100" height="100" />
-                    </td>
-                    <td>@item.Data.name</td>
-                    <td>@item.Data.price</td>
-                    <td>@item.Data.unitType</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <!-- Third Third Table -->
-    <table class="table table-row-dashed table-row-gray-300 gy-7" style="flex: 1;">
-        <thead>
-            <tr class="fw-bolder fs-6 text-gray-800">
-                <th></th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Unit Type</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (int i = 2 * third + (remainder > 1 ? 1 : 0); i < totalItems; i++)
-            {
-                var item = Model.Materials[i];
-                <tr>
-                    <td>
-                        <img src="data:image/jpeg;base64,@item.Base64" alt="Material Image" width="100" height="100" />
-                    </td>
-                    <td>@item.Data.name</td>
-                    <td>@item.Data.price</td>
-                    <td>@item.Data.unitType</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
- *@

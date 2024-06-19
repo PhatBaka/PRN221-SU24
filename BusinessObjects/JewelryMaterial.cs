@@ -22,5 +22,8 @@ namespace BusinessObjects
         [Required]
         [Column(TypeName = "float")]
         public float MetalWeight { get; set; }
+
+        [Required]
+        public int NumberOfGem { get; set; }
     }
 }

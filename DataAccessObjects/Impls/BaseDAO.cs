@@ -69,10 +69,20 @@ namespace DataAccessObjects.Impls
             return entityEntry.Property(idProperty.Name).CurrentValue;
         }
 
-        public async Task<bool> UpdateAsync(T entity)
+        public async Task<bool> CreateAsync(T entity)
         {
-            _dbSet.Attach(entity);
-            _context.Entry(entity).State = EntityState.Modified;
+            await _dbSet.AddAsync(entity);
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> UpdateAsync(T entity, int id)
+        {
+            var existedEntity = await GetByIdAsync(id);
+            if (existedEntity == entity)
+            {
+                return true;
+            }
+            _context.Entry(existedEntity).CurrentValues.SetValues(entity);
             return await _context.SaveChangesAsync() > 0;
         }
 

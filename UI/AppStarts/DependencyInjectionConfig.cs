@@ -24,6 +24,7 @@ namespace UI.AppStarts
             services.AddScoped<IPromotionDAO, PromotionDAO>();
             services.AddScoped<IWarrantyDAO, WarrantyDAO>();
             services.AddScoped<IWarrantyHistoryDAO, WarrantyHistoryDAO>();
+            services.AddScoped<IJewelryMaterialDAO, JewelryMaterialDAO>();
 
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IAccountRepository, AccountRepository>();
@@ -37,6 +38,7 @@ namespace UI.AppStarts
             services.AddScoped<IJewelryService, JewelryService>();
             services.AddScoped<IPromotionService, PromotionService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IMaterialService, MaterialService>();
         }
     }
 }

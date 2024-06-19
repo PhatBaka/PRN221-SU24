@@ -1,0 +1,52 @@
+﻿@page
+@model UI.Pages.Warranties.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>WarrantyRequest</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="WarrantyRequest.ReceivedDate" class="control-label"></label>
+                <input asp-for="WarrantyRequest.ReceivedDate" class="form-control" />
+                <span asp-validation-for="WarrantyRequest.ReceivedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WarrantyRequest.ReturnDate" class="control-label"></label>
+                <input asp-for="WarrantyRequest.ReturnDate" class="form-control" />
+                <span asp-validation-for="WarrantyRequest.ReturnDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WarrantyRequest.WarrantyStatus" class="control-label"></label>
+                <input asp-for="WarrantyRequest.WarrantyStatus" class="form-control" />
+                <span asp-validation-for="WarrantyRequest.WarrantyStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WarrantyRequest.WarrantyOrderId" class="control-label"></label>
+                <select asp-for="WarrantyRequest.WarrantyOrderId" class ="form-control" asp-items="ViewBag.WarrantyOrderId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="WarrantyRequest.CustomerId" class="control-label"></label>
+                <select asp-for="WarrantyRequest.CustomerId" class ="form-control" asp-items="ViewBag.CustomerId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

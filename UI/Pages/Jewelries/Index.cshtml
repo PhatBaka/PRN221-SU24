@@ -1,0 +1,91 @@
+﻿@page
+@model UI.Pages.Jewelries.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Jewelry[0].JewelryName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jewelry[0].Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jewelry[0].Weight)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jewelry[0].WorkPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jewelry[0].Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jewelry[0].JewelryImage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jewelry[0].MarkupPercentage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jewelry[0].Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jewelry[0].ObjectStatus)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Jewelry) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.JewelryName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Weight)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WorkPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+            @{
+                string base64Image = null;
+                if (item.JewelryImage != null)
+                {
+                    base64Image = Convert.ToBase64String(item.JewelryImage);
+                }
+            }
+            <img src="data:image/png;base64, @base64Image" alt="Material Image" width="50px" height="50px">
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MarkupPercentage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ObjectStatus)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.JewelryId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.JewelryId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.JewelryId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace Services.Helpers
+namespace UI.Helpers
 {
     public class PaginatedList<T> : List<T>
     {

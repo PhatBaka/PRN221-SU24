@@ -1,5 +1,6 @@
 ﻿using BusinessObjects;
 using DataAccessObjects.Impls;
+using DTOs;
 using Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,6 @@ namespace Repositories.Impls
 {
     public class AccountRepository : BaseRepository<Account>, IAccountRepository
     {
+
     }
 }

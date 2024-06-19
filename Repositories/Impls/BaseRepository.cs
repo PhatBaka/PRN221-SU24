@@ -20,9 +20,9 @@ namespace Repositories.Impls
             return await BaseDAO<T>.Instance.AddAsync(entity);
         }
 
-        public async Task<bool> UpdateAsync(T entity)
+        public async Task<bool> UpdateAsync(T entity, int id)
         {
-            return await BaseDAO<T>.Instance.UpdateAsync(entity);
+            return await BaseDAO<T>.Instance.UpdateAsync(entity, id);
         }
 
         public async Task<bool> DeleteAsync(T entity)

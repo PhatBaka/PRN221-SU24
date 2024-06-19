@@ -151,7 +151,7 @@ namespace DataAccessObjects.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<byte[]>("JewelryImage")
-                        .HasColumnType("image");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("JewelryName")
                         .IsRequired()
@@ -192,6 +192,9 @@ namespace DataAccessObjects.Migrations
                     b.Property<double>("MetalWeight")
                         .HasColumnType("float");
 
+                    b.Property<int>("NumberOfGem")
+                        .HasColumnType("int");
+
                     b.HasKey("JewelryId", "MaterialId");
 
                     b.HasIndex("MaterialId");
@@ -210,11 +213,15 @@ namespace DataAccessObjects.Migrations
                     b.Property<int?>("CounterId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsMetail")
+                    b.Property<bool>("IsMetal")
                         .HasColumnType("bit");
 
                     b.Property<decimal>("MaterialCost")
                         .HasColumnType("money");
+
+                    b.Property<byte[]>("MaterialImage")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("MaterialName")
                         .IsRequired()

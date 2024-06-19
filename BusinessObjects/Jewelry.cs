@@ -37,7 +37,6 @@ namespace BusinessObjects
         [Required]
         public int Quantity { get; set; }
 
-        [Column(TypeName = "image")]
         public byte[]? JewelryImage { get; set; }
 
         [Required]

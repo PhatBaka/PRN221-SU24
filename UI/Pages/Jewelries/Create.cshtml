@@ -1,0 +1,208 @@
+﻿@page
+@model UI.Pages.Jewelries.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Jewelry</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        @if (Model.Materials != null && Model.Materials.Count != 0)
+        {
+            <div class="form-group">
+                <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Cost
+                        </th>
+                        <th>
+                            Weight
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Materials)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MaterialName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MaterialCost)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MaterialWeight)
+                            </td>
+                            <td>
+                                @if (!item.IsMetal)
+                                {
+                                    @Html.DisplayFor(modelItem => item.MaterialQuantity)
+                                }                             
+                            </td>
+                            <td>
+                                @{
+                                    string base64Image = null;
+                                    if (item.MaterialImage != null)
+                                    {
+                                        base64Image = Convert.ToBase64String(item.MaterialImage);
+                                    }
+                                }
+                                <img src="data:image/png;base64, @base64Image" alt="Material Image" width="50px" height="50px">
+                            </td>
+                            <td>
+                                <form asp-route-materialId="@item.MaterialId" method="post" asp-page-handler="AddMaterialToSession">
+                                    <button type="submit" class="btn btn-primary">Add to Session</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                </table>
+            </div>
+
+            var prevDisabled = !Model.Materials.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.Materials.HasNextPage ? "disabled" : "";
+
+            <a asp-page="./Create" asp-route-currentFilter="@Model.CurrentFilter" asp-route-pageIndex="@(Model.Materials.PageIndex - 1)" class="btn btn-primary @prevDisabled">Previous</a>
+            <a asp-page="./Create" asp-route-currentFilter="@Model.CurrentFilter" asp-route-pageIndex="@(Model.Materials.PageIndex + 1)" class="btn btn-primary @nextDisabled">Next</a>
+        }
+
+        @if (Model.SelectedMaterials != null && Model.SelectedMaterials.Count != 0)
+        {
+            <div class="form-group">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Cost
+                            </th>
+                            <th>
+                                Weight
+                            </th>
+                            <th>
+                                Quantity
+                            </th>
+                            <th></th>
+                            <th>
+                               Weight of metal
+                            </th>
+                            <th>
+                                Number of gem
+                            </th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.SelectedMaterials)
+                        {
+                            <tr>
+                                <td>
+                                    Name
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MaterialCost)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MaterialWeight)
+                                </td>
+                                <td>
+                                    @if (!item.IsMetal)
+                                    {
+                                        @Html.DisplayFor(modelItem => item.MaterialQuantity)
+                                    }
+                                </td>
+                                <td>
+                                    @{
+                                        string base64Image = null;
+                                        if (item.MaterialImage != null)
+                                        {
+                                            base64Image = Convert.ToBase64String(item.MaterialImage);
+                                        }
+                                    }
+                                    <img src="data:image/png;base64, @base64Image" alt="Material Image" width="50px" height="50px">
+                                </td>
+                                <td>
+                                    @if(item.IsMetal)
+                                    {
+                                        <input asp-for="@item.MetalWeight" />
+                                    }
+                                </td>
+                                <td>
+                                    @if (!item.IsMetal)
+                                    {
+                                        <input asp-for="@item.NumberOfGem" />
+                                    }
+                                </td>
+                                <td>
+                                    <form asp-route-tagId="@item.MaterialId" method="post" asp-page-handler="RemoveMaterialFromSession">
+                                        <button type="submit" class="btn btn-primary">Remove from session</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @if (Model.Message != null)
+            {
+                <p>@Model.Message</p>
+            }
+        }
+    </div>
+
+    <div class="col-md-6">
+        <form method="post" asp-page-handler="CreateJewelry">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Jewelry.JewelryName" class="control-label"></label>
+                <input asp-for="Jewelry.JewelryName" class="form-control" />
+                <span asp-validation-for="Jewelry.JewelryName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Jewelry.Description" class="control-label"></label>
+                <input asp-for="Jewelry.Description" class="form-control" />
+                <span asp-validation-for="Jewelry.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Jewelry.WorkPrice" class="control-label"></label>
+                <input asp-for="Jewelry.WorkPrice" class="form-control" />
+                <span asp-validation-for="Jewelry.WorkPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Jewelry.Quantity" class="control-label"></label>
+                <input asp-for="Jewelry.Quantity" class="form-control" />
+                <span asp-validation-for="Jewelry.Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

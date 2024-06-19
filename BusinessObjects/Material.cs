@@ -25,7 +25,7 @@ namespace BusinessObjects
         public string? MaterialName { get; set; }
 
         [Required]
-        public bool IsMetail { get; set; }
+        public bool IsMetal { get; set; }
 
         [Required]
         [Column(TypeName = "money")]
@@ -39,6 +39,9 @@ namespace BusinessObjects
         public string? UnitType { get; set; }
 
         public int MaterialQuantity { get; set; }
+
+        [Required]
+        public byte[] MaterialImage { get; set; }
 
         public virtual ICollection<JewelryMaterial> JewelryMaterials { get; set; }
     }

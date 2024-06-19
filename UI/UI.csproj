@@ -7,21 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Pages\Jewelries\**" />
-    <Compile Remove="Pages\Orders\**" />
-    <Compile Remove="Pages\Promotions\**" />
-    <Content Remove="Pages\Jewelries\**" />
-    <Content Remove="Pages\Orders\**" />
-    <Content Remove="Pages\Promotions\**" />
-    <EmbeddedResource Remove="Pages\Jewelries\**" />
-    <EmbeddedResource Remove="Pages\Orders\**" />
-    <EmbeddedResource Remove="Pages\Promotions\**" />
-    <None Remove="Pages\Jewelries\**" />
-    <None Remove="Pages\Orders\**" />
-    <None Remove="Pages\Promotions\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\plugins\air-datepicker\dist\js\datepicker.js" />
     <None Include="wwwroot\plugins\air-datepicker\dist\js\datepicker.min.js" />
     <None Include="wwwroot\plugins\air-datepicker\dist\js\i18n\datepicker.cs.js" />
