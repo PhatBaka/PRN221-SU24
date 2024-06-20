@@ -253,6 +253,8 @@ namespace DataAccessObjects.Migrations
 
                     b.HasIndex("JewelryId");
 
+                    b.HasIndex("PromotionId");
+
                     b.ToTable("OrderDetail");
                 });
 
@@ -308,6 +310,9 @@ namespace DataAccessObjects.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("WarrantyId1")
+                        .HasColumnType("int");
+
                     b.Property<double>("WarrantyPeriod")
                         .HasColumnType("float");
 
@@ -316,6 +321,8 @@ namespace DataAccessObjects.Migrations
                     b.HasIndex("JewelryId");
 
                     b.HasIndex("OrderId");
+
+                    b.HasIndex("WarrantyId1");
 
                     b.ToTable("Warranties");
                 });
@@ -411,6 +418,12 @@ namespace DataAccessObjects.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BusinessObjects.Promotion", "Promotion")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("PromotionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Jewelry");
 
                     b.Navigation("Order");
@@ -431,6 +444,10 @@ namespace DataAccessObjects.Migrations
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("BusinessObjects.Warranty", null)
+                        .WithMany("Warranties")
+                        .HasForeignKey("WarrantyId1");
 
                     b.Navigation("Jewelry");
 
@@ -482,10 +499,14 @@ namespace DataAccessObjects.Migrations
             modelBuilder.Entity("BusinessObjects.Promotion", b =>
                 {
                     b.Navigation("Jewelries");
+
+                    b.Navigation("OrderDetails");
                 });
 
             modelBuilder.Entity("BusinessObjects.Warranty", b =>
                 {
+                    b.Navigation("Warranties");
+
                     b.Navigation("WarrantyHistories");
                 });
 #pragma warning restore 612, 618

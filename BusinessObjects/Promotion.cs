@@ -40,5 +40,7 @@ namespace BusinessObjects
         public DiscountEnum DiscountStatus { get; set; }
 
         public virtual ICollection<Jewelry> Jewelries { get; set; }
+
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
      }
 }
