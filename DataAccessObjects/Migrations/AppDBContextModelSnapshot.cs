@@ -240,9 +240,12 @@ namespace DataAccessObjects.Migrations
                     b.Property<decimal>("FinalPrice")
                         .HasColumnType("decimal(18,2)");
 
+<<<<<<< HEAD
                     b.Property<int>("PromotionId")
                         .HasColumnType("int");
 
+=======
+>>>>>>> c63b69159348e0bf538884388abcd058c27a2928
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
