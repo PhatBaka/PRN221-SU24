@@ -26,6 +26,5 @@ namespace BusinessObjects
 
         public virtual ICollection<WarrantyHistory> WarrantyHistories { get; set; }
 
-        public virtual ICollection<Warranty> Warranties { get; set; }
     }
 }
