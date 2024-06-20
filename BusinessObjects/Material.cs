@@ -27,7 +27,6 @@ namespace BusinessObjects
         [Required]
         public bool IsMetail { get; set; }
 
-        [Required]
         [Column(TypeName = "money")]
         public double MaterialCost { get; set; }
 

@@ -1,5 +1,5 @@
 ﻿@page
-@model UI.Pages.Materials.Gems.IndexModel
+@model UI.Pages.Materials.Metals.IndexModel
 
 @{
     ViewData["Title"] = "Index";
@@ -9,6 +9,9 @@
 
 <p>
     <a asp-page="Create">Create New</a>
+    <form method="post" asp-page-handler="UpdatePrice">
+        <input type="submit" value="Update price"/>
+    </form>
 </p>
 <table class="table">
     <thead>
@@ -17,13 +20,13 @@
                 @Html.DisplayNameFor(model => model.Material[0].MaterialName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Material[0].Clarity)
+                @Html.DisplayNameFor(model => model.Material[0].MaterialCost)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Material[0].Color)
+                @Html.DisplayNameFor(model => model.Material[0].BidPrice)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Material[0].Sharp)
+                @Html.DisplayNameFor(model => model.Material[0].OfferPrice)
             </th>
             <th></th>
         </tr>
@@ -38,16 +41,10 @@
                 @Html.DisplayFor(modelItem => item.MaterialCost)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Clarity)
+                @Html.DisplayFor(modelItem => item.BidPrice)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Purity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Color)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Sharp)
+                @Html.DisplayFor(modelItem => item.OfferPrice)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.MaterialId">Edit</a> |

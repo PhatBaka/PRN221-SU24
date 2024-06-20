@@ -8,6 +8,7 @@ using Services.RequestModels.Promotion;
 using Services.ResponseModels;
 using UI.Payload.JewelryPayload;
 using UI.Payload.MaterialPayload.GemPayload;
+using UI.Payload.MaterialPayload.MetalPayload;
 
 namespace UI.AppStarts
 {
@@ -63,6 +64,7 @@ namespace UI.AppStarts
 
             #region MATERIAL
             CreateMap<Material, CreateGemRequest>().ReverseMap();
+            CreateMap<Material, CreateMetalRequest>().ReverseMap();
             #endregion
         }
     }

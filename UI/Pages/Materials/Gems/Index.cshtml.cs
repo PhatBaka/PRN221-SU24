@@ -24,7 +24,7 @@ namespace UI.Pages.Materials.Gems
 
         public async Task OnGetAsync()
         {
-            Material = _materialService.GetMaterials();
+            Material = _materialService.GetMaterials().Where(x => x.IsMetail == false).ToList();
         }
     }
 }

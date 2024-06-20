@@ -1,4 +1,5 @@
-﻿using BusinessObjects;
+﻿using AutoMapper;
+using BusinessObjects;
 using DataAccessObjects;
 using Repositories;
 using Services.Interfaces;
@@ -13,9 +14,12 @@ namespace Services.Impls
     public class MaterialService : IMaterialService
     {
         private readonly IGenericRepository<Material> _materialRepository;
+        private readonly IMapper _mapper;
 
-        public MaterialService(IGenericRepository<Material> materialRepository)
+        public MaterialService(IGenericRepository<Material> materialRepository,
+                                IMapper mapper)
         {
+            _mapper = mapper;
             _materialRepository = materialRepository;
         }
 
@@ -59,7 +63,13 @@ namespace Services.Impls
 
         public void UpdateMaterial(Material material)
         {
-            throw new NotImplementedException();
+            var existedMaterial = _materialRepository.GetByIdAsync(material.MaterialId).Result;
+            if (existedMaterial == null)
+            {
+                return;
+            }
+            _mapper.Map(material, existedMaterial);
+            _materialRepository.UpdateByIdAsync(existedMaterial, material.MaterialId);
         }
     }
 }
