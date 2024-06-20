@@ -46,6 +46,13 @@ namespace BusinessObjects
         [Column(TypeName = "money")]
         public decimal OfferPrice { get; set; }
 
+        public string? Description { get; set; }
+
+        [Required(ErrorMessage = "Material image is required")]
+        public byte[]? MaterialImage { get; set; }
+
+        public byte[]? GemCertificate { get; set; }
+
         public virtual ICollection<JewelryMaterial> JewelryMaterials { get; set; }
     }
 }
