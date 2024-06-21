@@ -2,10 +2,65 @@
 @model UI.Pages.LoginModel
 
 @{
-    ViewData["Title"] = "Login";
+    Layout = "_Layout";
 }
 
-<h1>Login</h1>
+<section id="center" class="center_shop">
+	<div class="container">
+		<div class="row">
+			<div class="center_shop_t clearfix">
+				<div class="col-sm-6">
+					<div class="center_shop_tl clearfix">
+						<h4 class="mgt">Login</h4>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="center_shop_tr text-right clearfix">
+						<h6 class="col_2">You are here: <a asp-page="Login">Login</a></h6>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section id="contact_top">
+	<div class="container">
+		<div class="row">
+			<div class="">
+				<div class="col-sm-6">
+					<div class="">
+						<img src="~/img/login.jpg"
+								width="100%" height="500px" />
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="detail_14 clearfix">
+						<h2 class="mgt">Login</h2>
+						<form method="post">
+							<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+							<div class="form-group">
+								<label asp-for="Account.Email" class="control-label"></label>
+								<input asp-for="Account.Email" type="text" class="form-control" placeholder="Email*">
+								<span asp-validation-for="Account.Email" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label asp-for="Account.Password" class="control-label"></label>
+								<input asp-for="Account.Password" type="text" class="form-control" placeholder="Password*">
+								<span asp-validation-for="Account.Password" class="text-danger"></span>
+							</div>
+							<h4><input class="button" type="submit" value="Login" />
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+
+@* <h1>Login</h1>
 
 <h4>Account</h4>
 <hr />
@@ -24,36 +79,6 @@
                 <span asp-validation-for="Account.Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Account.PhoneNumber" class="control-label"></label>
-                <input asp-for="Account.PhoneNumber" class="form-control" />
-                <span asp-validation-for="Account.PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Account.CreatedDate" class="control-label"></label>
-                <input asp-for="Account.CreatedDate" class="form-control" />
-                <span asp-validation-for="Account.CreatedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Account.FullName" class="control-label"></label>
-                <input asp-for="Account.FullName" class="form-control" />
-                <span asp-validation-for="Account.FullName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Account.UserName" class="control-label"></label>
-                <input asp-for="Account.UserName" class="form-control" />
-                <span asp-validation-for="Account.UserName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Account.Avatar" class="control-label"></label>
-                <input asp-for="Account.Avatar" class="form-control" />
-                <span asp-validation-for="Account.Avatar" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Account.Role" class="control-label"></label>
-                <select asp-for="Account.Role" class="form-control"></select>
-                <span asp-validation-for="Account.Role" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -67,3 +92,4 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+ *@

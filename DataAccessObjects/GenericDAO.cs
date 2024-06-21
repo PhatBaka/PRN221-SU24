@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessObjects
 {
-    public class GenericDAO<TEntity> where TEntity : class
+    public class GenericDAO<TEntity> : IGenericDAO<TEntity> where TEntity : class
     {
         private readonly AppDBContext _context;
         private readonly DbSet<TEntity> _dbSet;
