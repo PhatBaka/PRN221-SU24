@@ -21,6 +21,7 @@ namespace UI.AppStarts
             services.AddScoped<IPromotionService, PromotionService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IMaterialService, MaterialService>();
         }
     }
 }

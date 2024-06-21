@@ -1,0 +1,109 @@
+﻿@page
+@model UI.Pages.Materials.Gems.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    .report {
+        width: 100%;
+        max-width: 1000px;
+        margin: 0 auto;
+        border: 1px solid #ccc;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .header, .footer {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .content {
+        display: flex;
+    }
+
+    .left {
+        width: 30%;
+        padding: 10px;
+        margin-left: 20px;
+        margin-top: 20px;
+    }
+
+    .right {
+        width: 70%;
+        padding: 10px;
+        margin-left: 50px;
+        margin-top: 20px;
+    }
+
+    .details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .details-item {
+        display: flex;
+        justify-content: space-start;
+        margin-bottom: 10px;
+    }
+
+        .details-item dt {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+</style>
+
+<h1>Gem Details</h1>
+
+<div>
+    <div class="report">
+        <div class="header">
+            <h1>Gem Report</h1>
+            <h2>ID No: @Model.Material.MaterialId</h2>
+        </div>
+        <div class="content">
+            <div class="left">
+                <img src="data:image/*;base64, @Convert.ToBase64String(Model.Material.MaterialImage)" alt="Jewelry Image" style="width:100%; max-width:300px;">
+                <img src="data:image/*;base64, @Convert.ToBase64String(Model.Material.GemCertificate)" alt="Certificate Image" style="width:100%; max-width:300px;">
+            </div>
+            <div class="right">
+                <dl class="details">
+                    <div class="details-item">
+                        <dt>Material Name:</dt>
+                        <dd>@Model.Material.MaterialName</dd>
+                    </div>
+                    <div class="details-item">
+                        <dt>Description:</dt>
+                        <dd>@Html.Raw(Model.Material.Description)</dd>
+                    </div>
+                    <div class="details-item">
+                        <dt>Cost:</dt>
+                        <dd>@Model.Material.MaterialCost $</dd>
+                    </div>
+                    <div class="details-item">
+                        <dt>Color:</dt>
+                        <dd>@Model.Material.Color</dd>
+                    </div>
+                    <div class="details-item">
+                        <dt>Color:</dt>
+                        <dd>@Model.Material.Purity $</dd>
+                    </div>
+                    <div class="details-item">
+                        <dt>Color:</dt>
+                        <dd>@Model.Material.Sharp $</dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Material?.MaterialId">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

@@ -1,0 +1,57 @@
+﻿@page
+@model UI.Pages.Materials.Metals.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+    <form method="post" asp-page-handler="UpdatePrice">
+        <input type="submit" value="Update price"/>
+    </form>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Material[0].MaterialName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Material[0].MaterialCost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Material[0].BidPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Material[0].OfferPrice)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Material) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaterialName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaterialCost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BidPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OfferPrice)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.MaterialId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.MaterialId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.MaterialId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

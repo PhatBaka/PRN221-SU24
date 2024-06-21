@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BusinessObjects.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,19 +12,45 @@ namespace BusinessObjects
     [Table("Material")]
     public class Material
     {
+        public Material()
+        {
+            JewelryMaterials = new HashSet<JewelryMaterial>();
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int MaterialId { get; set; }
 
         [Required]
-        [StringLength(100)]
-        public string MaterialName { get; set; }
+        public string? MaterialName { get; set; }
 
         [Required]
         public bool IsMetail { get; set; }
 
-        [Required]
+        [Column(TypeName = "money")]
         public double MaterialCost { get; set; }
+
+        public ClarityEnum Clarity { get; set; }
+
+        [Column(TypeName = "float")]
+        public decimal Purity { get; set; }
+
+        public string? Color { get; set; }
+
+        public string? Sharp { get; set; }
+
+        [Column(TypeName = "money")]
+        public decimal BidPrice { get; set; }
+
+        [Column(TypeName = "money")]
+        public decimal OfferPrice { get; set; }
+
+        public string? Description { get; set; }
+
+        [Required(ErrorMessage = "Material image is required")]
+        public byte[]? MaterialImage { get; set; }
+
+        public byte[]? GemCertificate { get; set; }
 
         public virtual ICollection<JewelryMaterial> JewelryMaterials { get; set; }
     }

@@ -40,5 +40,19 @@ namespace Services.Helpers
             string ext = Path.GetExtension(fileName).ToLower();
             return ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".gif" || ext == ".bmp";
         }
+
+        public static async Task<byte[]> ConvertToByteArrayAsync(IFormFile formFile)
+        {
+            if (formFile == null || formFile.Length == 0)
+            {
+                return null;
+            }
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await formFile.CopyToAsync(memoryStream);
+                return memoryStream.ToArray();
+            }
+        }
     }
 }
