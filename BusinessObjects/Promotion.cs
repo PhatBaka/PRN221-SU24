@@ -21,24 +21,12 @@ namespace BusinessObjects
         public string PromotionName { get; set; }
 
         [Required]
-        [StringLength(50)]
-        public string PromotionCode { get; set; }
-
-        [Required]
         public DateTime StartDate { get; set; }
 
         [Required]
         public DateTime EndDate { get; set; }
 
         [Required]
-        public decimal DiscountValue { get; set; }
-
-        [Required]
-        public decimal AcceptedPrice { get; set; }
-
-        [Required]
-        public DiscountEnum DiscountStatus { get; set; }
-
-        public virtual ICollection<Jewelry> Jewelries { get; set; }
-     }
+        public virtual ICollection<PromotionDetail> PromotionDetails { get; set; }
+    }
 }

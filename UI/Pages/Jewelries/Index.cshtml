@@ -74,6 +74,13 @@
                 <a asp-page="./Details" asp-route-id="@item.JewelryId">Details</a> |
                 <a asp-page="./Delete" asp-route-id="@item.JewelryId">Delete</a>
             </td>
+                <td>
+                    <form method="post" asp-page-handler="Buy">
+                        <input type="hidden" name="JewelryId" value="@item.JewelryId" />
+                        <input type="number" name="Quantity" value="1" min="1" max="@item.Quantity" class="form-control" />
+                        <button type="submit" class="btn btn-primary">Buy</button>
+                    </form>
+                </td>
         </tr>
 }
     </tbody>

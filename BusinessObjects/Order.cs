@@ -20,23 +20,10 @@ namespace BusinessObjects
         public DateTime OrderDate { get; set; }
 
         [Required]
-        public double TotalPrice { get; set; }
-
-        [Required]
-        public double DiscountPrice { get; set; }
-
-        [Required]
-        public double FinalPrice { get; set; }
-
-        [Required]
         public OrderEnum OrderType { get; set; }
 
         [Required]
         public int CustomerId { get; set; }
-
-        public int PromotionId { get; set; }
-
-        public virtual Promotion Promotion { get; set; }
 
         [Required]
         public virtual Account Customer { get; set; }

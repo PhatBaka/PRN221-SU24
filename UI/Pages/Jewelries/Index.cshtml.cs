@@ -40,5 +40,34 @@ namespace UI.Pages.Jewelries
             }
 
         }
+        public async Task<IActionResult> OnPostBuyAsync(int JewelryId, int Quantity)
+        {
+            var jewelry = await _context.Jewelries.FindAsync(JewelryId);
+            if (jewelry == null || Quantity > jewelry.Quantity)
+            {
+                return NotFound();
+            }
+
+            var cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
+            var cartItem = cart.Find(ci => ci.Jewelry.JewelryId == JewelryId);
+
+            if (cartItem != null)
+            {
+                cartItem.Quantity += Quantity;
+            }
+            else
+            {
+                cart.Add(new CartItem
+                {
+                    Jewelry = jewelry,
+                    Quantity = Quantity
+                });
+            }
+
+            HttpContext.Session.SetObjectAsJson("Cart", cart);
+
+            return RedirectToPage();
+        }
+
     }
 }
