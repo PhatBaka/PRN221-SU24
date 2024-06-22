@@ -8,5 +8,6 @@ namespace Services.RequestModels.Account
 {
     public class LoginRequest
     {
+
     }
 }

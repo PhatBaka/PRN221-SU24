@@ -9,9 +9,9 @@ namespace Repositories
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
-        private readonly GenericDAO<TEntity> dao;
+        private readonly IGenericDAO<TEntity> dao;
 
-        public GenericRepository(GenericDAO<TEntity> dao)
+        public GenericRepository(IGenericDAO<TEntity> dao)
         {
             this.dao = dao;
         }

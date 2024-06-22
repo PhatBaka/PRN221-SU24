@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace Services.Interfaces
 {
-    public class IAccountService
+    public interface IAccountService
     {
+        public Account GetAccount(string email, string password);
     }
 }

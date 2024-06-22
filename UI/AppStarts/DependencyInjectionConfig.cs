@@ -1,7 +1,11 @@
 ﻿using BusinessObjects;
 using DataAccessObjects;
+using DataAccessObjects.Impls;
+using DataAccessObjects.Interfaces;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Repositories;
+using Repositories.Impls;
+using Repositories.Interfaces;
 using Services.Impls;
 using Services.Interfaces;
 
@@ -12,7 +16,7 @@ namespace UI.AppStarts
         public static void ConfigDI(this IServiceCollection services)
         {
             services.AddScoped(typeof(AppDBContext));
-            services.AddScoped(typeof(GenericDAO<>));
+            //services.AddScoped(typeof(GenericDAO<>));
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddAutoMapper(typeof(MapperConfig));
 
@@ -22,6 +26,11 @@ namespace UI.AppStarts
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IMaterialService, MaterialService>();
+
+            services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IAccountDAO, AccountDAO>();
+
+            services.AddScoped(typeof(IGenericDAO<>), typeof(GenericDAO<>));
         }
     }
 }

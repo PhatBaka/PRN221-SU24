@@ -25,37 +25,23 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					@{
-						var role = Context.Session.GetString("ROLE");
-						switch (role)
-						{
-							case "ADMIN":
-								<a class="navbar-brand" asp-page="Admin">
-									<i class="fa fa-diamond"></i> <span class="col">Jewe</span>lry
-								</a>
-								break;
-							case "STAFF":
-								<a class="navbar-brand" asp-page="Staff">
-									<i class="fa fa-diamond"></i> <span class="col">Jewe</span>lry
-								</a>
-								break;
-							case "MANAGER":
-								<a class="navbar-brand" asp-page="Manager">
-									<i class="fa fa-diamond"></i> <span class="col">Jewe</span>lry
-								</a>
-								break;
-							default:
-								<a class="navbar-brand" asp-page="Login">
-									<i class="fa fa-diamond"></i> <span class="col">Jewe</span>lry
-								</a>
-								break;
-						}
-					}
+					<a class="navbar-brand" asp-page="Manager">
+						<i class="fa fa-diamond"></i> <span class="col">Jewe</span>lry
+					</a>
 				</div>
 				<!-- Brand and toggle get grouped for better mobile display -->
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
+					<ul class="nav navbar-nav nav_m">
+						<li class="dropdown">
+							<a class="m_tag" href="#" data-toggle="dropdown" role="button"
+							   aria-expanded="false">Material<span class="caret"></span></a>
+							<ul class="dropdown-menu drop_3" role="menu">
+								<li><a asp-page="Materials/Gems/Index">Gem</a></li>
+								<li><a class="border_none" asp-page="Materials/Metals/Index">Metal</a></li>
+							</ul>
+						</li>
+					</ul>
 				</div>
 				<!-- /.navbar-collapse -->
 			</div>
