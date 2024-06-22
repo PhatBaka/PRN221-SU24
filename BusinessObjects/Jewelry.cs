@@ -49,10 +49,6 @@ namespace BusinessObjects
 
         public virtual ICollection<JewelryMaterial> JewelryMaterials { get; set; }
 
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-
-        public virtual ICollection<PromotionDetail> PromotionDetails { get; set; }
-
         public virtual Warranty Warranties { get; set; }
         
         public virtual Category Category { get; set; }
