@@ -30,7 +30,7 @@ namespace DataAccessObjects
 
                 var connectionString = configuration.GetConnectionString("DefaultConnection");
                 optionsBuilder.UseLazyLoadingProxies();
-                optionsBuilder.UseSqlServer("Server=LAPTOP-CPT1C62T\\SQLEXPRESS;Database=JewelryDB;Uid=sa;Pwd=12345;TrustServerCertificate=True");
+                optionsBuilder.UseSqlServer(connectionString);
             }
         }
 
