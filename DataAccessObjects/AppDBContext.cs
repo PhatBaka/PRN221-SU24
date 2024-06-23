@@ -30,7 +30,7 @@ namespace DataAccessObjects
 
                 var connectionString = configuration.GetConnectionString("DefaultConnection");
                 optionsBuilder.UseLazyLoadingProxies();
-                optionsBuilder.UseSqlServer();
+                optionsBuilder.UseSqlServer(connectionString);
             }
         }
 
