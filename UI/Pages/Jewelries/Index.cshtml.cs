@@ -10,6 +10,8 @@ using DataAccessObjects;
 using Services.Interfaces;
 using Services.Impls;
 using BusinessObjects.Enums;
+using Microsoft.CodeAnalysis;
+using System.Diagnostics;
 
 namespace UI.Pages.Jewelries
 {
@@ -24,10 +26,11 @@ namespace UI.Pages.Jewelries
 
         public List<Jewelry> Jewelry { get;set; } = default!;
 
-        public async Task OnGetAsync()
+        public void OnGetAsync()
         {
            List<Jewelry> jewelryList = jewelryService.GetJewelries();
-            if(jewelryList == null)
+
+            if (jewelryList == null)
             {
                 throw new Exception("Cannot get jewelry list");
             }
@@ -39,6 +42,38 @@ namespace UI.Pages.Jewelries
                 ViewData[$"ItemBasePrice_{item.JewelryId}"] = Decimal.Parse("200000000");
             }
 
+        }
+
+        public IActionResult OnPostBuy(int id)
+        {
+            var jewelry = jewelryService.GetJewelryById(id);
+            if (jewelry != null)
+            {
+
+                Dictionary<int, int> cart;
+                var cartString = HttpContext.Session.GetString("Cart");
+                if (string.IsNullOrEmpty(cartString))
+                {
+                    cart = new Dictionary<int, int>();
+                }
+                else
+                {
+                    cart = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, int>>(cartString);
+                }
+
+                if (cart.ContainsKey(id))
+                {
+                    cart[id]++;
+                }
+                else
+                {
+                    cart[id] = 1;
+                }
+
+                HttpContext.Session.SetString("Cart", Newtonsoft.Json.JsonConvert.SerializeObject(cart));
+            }
+
+            return RedirectToPage();
         }
     }
 }

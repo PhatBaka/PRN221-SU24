@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using BusinessObjects;
 
 namespace Services.Interfaces
 {
-    public class IOrderService
+    public interface IOrderService
     {
+        Task<Order> CreateOrderAsync(Order order, List<OrderDetail> orderDetails);
+        Task<Order> GetOrderByIdAsync(int orderId);
+        Task<List<Order>> GetAllOrdersAsync();
     }
 }

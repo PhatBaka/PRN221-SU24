@@ -14,7 +14,7 @@ namespace BusinessObjects
 
         public int JewelryId { get; set; }
 
-        public int PromotionDetailId { get; set; }
+        public int? PromotionDetailId { get; set; }
 
         [Required]
         public double DiscountPercent { get; set; }

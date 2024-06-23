@@ -30,7 +30,7 @@ namespace DataAccessObjects
 
                 var connectionString = configuration.GetConnectionString("DefaultConnection");
                 optionsBuilder.UseLazyLoadingProxies();
-                optionsBuilder.UseSqlServer("Server=LAPTOP-CPT1C62T\\SQLEXPRESS;Database=JewelryDB;Uid=sa;Pwd=12345;TrustServerCertificate=True");
+                optionsBuilder.UseSqlServer();
             }
         }
 
@@ -167,7 +167,7 @@ namespace DataAccessObjects
 
                 entity.HasOne(d => d.PromotionDetail)
                     .WithOne(d => d.OrderDetail)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.NoAction);
             });
 
             modelBuilder.Entity<Promotion>(entity =>
@@ -206,7 +206,7 @@ namespace DataAccessObjects
 
                 entity.HasOne(d => d.OrderDetail)
                     .WithOne(d => d.PromotionDetail)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.NoAction);
             });
 
             modelBuilder.Entity<Warranty>(entity =>

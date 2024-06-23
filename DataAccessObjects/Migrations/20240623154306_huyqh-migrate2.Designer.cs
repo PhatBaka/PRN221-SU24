@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessObjects.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240531175042_UpdateDatabasV2")]
-    partial class UpdateDatabasV2
+    [Migration("20240623154306_huyqh-migrate2")]
+    partial class huyqhmigrate2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,30 +32,23 @@ namespace DataAccessObjects.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AccountId"), 1L, 1);
 
-                    b.Property<byte[]>("Avatar")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ObjectStatus")
                         .HasColumnType("int");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -65,14 +58,9 @@ namespace DataAccessObjects.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.HasKey("AccountId");
 
-                    b.ToTable("Account");
+                    b.ToTable("Account", (string)null);
                 });
 
             modelBuilder.Entity("BusinessObjects.Category", b =>
@@ -90,7 +78,7 @@ namespace DataAccessObjects.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
                 });
 
             modelBuilder.Entity("BusinessObjects.Jewelry", b =>
@@ -110,7 +98,6 @@ namespace DataAccessObjects.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<byte[]>("JewelryImage")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("JewelryName")
@@ -118,11 +105,12 @@ namespace DataAccessObjects.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<decimal>("LaborPrice")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("WorkPrice");
+
                     b.Property<double>("MarkupPercentage")
                         .HasColumnType("float");
-
-                    b.Property<int?>("PromotionId")
-                        .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -130,19 +118,15 @@ namespace DataAccessObjects.Migrations
                     b.Property<int>("StatusSale")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Weight")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("WorkPrice")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<decimal>("TotalWeight")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("Weight");
 
                     b.HasKey("JewelryId");
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("PromotionId");
-
-                    b.ToTable("Jewelry");
+                    b.ToTable("Jewelry", (string)null);
                 });
 
             modelBuilder.Entity("BusinessObjects.JewelryMaterial", b =>
@@ -160,7 +144,7 @@ namespace DataAccessObjects.Migrations
 
                     b.HasIndex("MaterialId");
 
-                    b.ToTable("JewelryMaterial");
+                    b.ToTable("JewelryMaterial", (string)null);
                 });
 
             modelBuilder.Entity("BusinessObjects.Material", b =>
@@ -171,20 +155,48 @@ namespace DataAccessObjects.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaterialId"), 1L, 1);
 
+                    b.Property<decimal>("BidPrice")
+                        .HasColumnType("money");
+
+                    b.Property<int>("Clarity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("GemCertificate")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<bool>("IsMetail")
                         .HasColumnType("bit");
 
                     b.Property<double>("MaterialCost")
                         .HasColumnType("float");
 
+                    b.Property<byte[]>("MaterialImage")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("MaterialName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<decimal>("OfferPrice")
+                        .HasColumnType("money");
+
+                    b.Property<double>("Purity")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Sharp")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("MaterialId");
 
-                    b.ToTable("Material");
+                    b.ToTable("Material", (string)null);
                 });
 
             modelBuilder.Entity("BusinessObjects.Order", b =>
@@ -198,51 +210,37 @@ namespace DataAccessObjects.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<double>("DiscountPrice")
-                        .HasColumnType("float");
-
-                    b.Property<double>("FinalPrice")
-                        .HasColumnType("float");
-
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("OrderType")
                         .HasColumnType("int");
 
-                    b.Property<int>("PromotionId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("TotalPrice")
-                        .HasColumnType("float");
-
                     b.HasKey("OrderId");
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("PromotionId");
-
-                    b.ToTable("Order");
+                    b.ToTable("Order", (string)null);
                 });
 
             modelBuilder.Entity("BusinessObjects.OrderDetail", b =>
                 {
-                    b.Property<int>("OrderId")
+                    b.Property<int>("OrderDetailId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderDetailId"), 1L, 1);
+
+                    b.Property<decimal>("DiscountPercent")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("JewelryId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Dicount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("DiscountPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("FinalPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("PromotionId")
+                    b.Property<int?>("PromotionDetailId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -251,13 +249,17 @@ namespace DataAccessObjects.Migrations
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("OrderId", "JewelryId");
+                    b.HasKey("OrderDetailId");
 
                     b.HasIndex("JewelryId");
 
-                    b.HasIndex("PromotionId");
+                    b.HasIndex("OrderId");
 
-                    b.ToTable("OrderDetail");
+                    b.HasIndex("PromotionDetailId")
+                        .IsUnique()
+                        .HasFilter("[PromotionDetailId] IS NOT NULL");
+
+                    b.ToTable("OrderDetail", (string)null);
                 });
 
             modelBuilder.Entity("BusinessObjects.Promotion", b =>
@@ -268,22 +270,8 @@ namespace DataAccessObjects.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PromotionId"), 1L, 1);
 
-                    b.Property<decimal>("AcceptedPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("DiscountStatus")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("DiscountValue")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("PromotionCode")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PromotionName")
                         .IsRequired()
@@ -295,7 +283,33 @@ namespace DataAccessObjects.Migrations
 
                     b.HasKey("PromotionId");
 
-                    b.ToTable("Promotion");
+                    b.ToTable("Promotion", (string)null);
+                });
+
+            modelBuilder.Entity("BusinessObjects.PromotionDetail", b =>
+                {
+                    b.Property<int>("PromotionDetailId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PromotionDetailId"), 1L, 1);
+
+                    b.Property<decimal>("DiscountPercent")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("JewelryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PromotionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PromotionDetailId");
+
+                    b.HasIndex("JewelryId");
+
+                    b.HasIndex("PromotionId");
+
+                    b.ToTable("PromotionDetail", (string)null);
                 });
 
             modelBuilder.Entity("BusinessObjects.Warranty", b =>
@@ -312,21 +326,17 @@ namespace DataAccessObjects.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("WarrantyId1")
-                        .HasColumnType("int");
-
                     b.Property<double>("WarrantyPeriod")
                         .HasColumnType("float");
 
                     b.HasKey("WarrantyId");
 
-                    b.HasIndex("JewelryId");
+                    b.HasIndex("JewelryId")
+                        .IsUnique();
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("WarrantyId1");
-
-                    b.ToTable("Warranties");
+                    b.ToTable("Warranties", (string)null);
                 });
 
             modelBuilder.Entity("BusinessObjects.WarrantyHistory", b =>
@@ -350,7 +360,7 @@ namespace DataAccessObjects.Migrations
 
                     b.HasIndex("WarrantyId");
 
-                    b.ToTable("WarrantyHistories");
+                    b.ToTable("WarrantyHistories", (string)null);
                 });
 
             modelBuilder.Entity("BusinessObjects.Jewelry", b =>
@@ -360,10 +370,6 @@ namespace DataAccessObjects.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("BusinessObjects.Promotion", null)
-                        .WithMany("Jewelries")
-                        .HasForeignKey("PromotionId");
 
                     b.Navigation("Category");
                 });
@@ -395,15 +401,7 @@ namespace DataAccessObjects.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BusinessObjects.Promotion", "Promotion")
-                        .WithMany()
-                        .HasForeignKey("PromotionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Customer");
-
-                    b.Navigation("Promotion");
                 });
 
             modelBuilder.Entity("BusinessObjects.OrderDetail", b =>
@@ -411,7 +409,7 @@ namespace DataAccessObjects.Migrations
                     b.HasOne("BusinessObjects.Jewelry", "Jewelry")
                         .WithMany("OrderDetails")
                         .HasForeignKey("JewelryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("BusinessObjects.Order", "Order")
@@ -420,20 +418,42 @@ namespace DataAccessObjects.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BusinessObjects.Promotion", null)
-                        .WithMany("OrderDetails")
-                        .HasForeignKey("PromotionId");
+                    b.HasOne("BusinessObjects.PromotionDetail", "PromotionDetail")
+                        .WithOne("OrderDetail")
+                        .HasForeignKey("BusinessObjects.OrderDetail", "PromotionDetailId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Jewelry");
 
                     b.Navigation("Order");
+
+                    b.Navigation("PromotionDetail");
+                });
+
+            modelBuilder.Entity("BusinessObjects.PromotionDetail", b =>
+                {
+                    b.HasOne("BusinessObjects.Jewelry", "Jewelry")
+                        .WithMany("PromotionDetails")
+                        .HasForeignKey("JewelryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BusinessObjects.Promotion", "Promotion")
+                        .WithMany("PromotionDetails")
+                        .HasForeignKey("PromotionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Jewelry");
+
+                    b.Navigation("Promotion");
                 });
 
             modelBuilder.Entity("BusinessObjects.Warranty", b =>
                 {
                     b.HasOne("BusinessObjects.Jewelry", "Jewelry")
-                        .WithMany("Warranties")
-                        .HasForeignKey("JewelryId")
+                        .WithOne("Warranties")
+                        .HasForeignKey("BusinessObjects.Warranty", "JewelryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -442,10 +462,6 @@ namespace DataAccessObjects.Migrations
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("BusinessObjects.Warranty", null)
-                        .WithMany("Warranties")
-                        .HasForeignKey("WarrantyId1");
 
                     b.Navigation("Jewelry");
 
@@ -479,7 +495,10 @@ namespace DataAccessObjects.Migrations
 
                     b.Navigation("OrderDetails");
 
-                    b.Navigation("Warranties");
+                    b.Navigation("PromotionDetails");
+
+                    b.Navigation("Warranties")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BusinessObjects.Material", b =>
@@ -496,15 +515,17 @@ namespace DataAccessObjects.Migrations
 
             modelBuilder.Entity("BusinessObjects.Promotion", b =>
                 {
-                    b.Navigation("Jewelries");
+                    b.Navigation("PromotionDetails");
+                });
 
-                    b.Navigation("OrderDetails");
+            modelBuilder.Entity("BusinessObjects.PromotionDetail", b =>
+                {
+                    b.Navigation("OrderDetail")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BusinessObjects.Warranty", b =>
                 {
-                    b.Navigation("Warranties");
-
                     b.Navigation("WarrantyHistories");
                 });
 #pragma warning restore 612, 618
