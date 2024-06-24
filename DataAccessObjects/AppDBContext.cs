@@ -28,7 +28,7 @@ namespace DataAccessObjects
                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                     .Build();
 
-                var connectionString = configuration.GetConnectionString("DefaultConnection");
+                var connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException("Connection string is null");
                 optionsBuilder.UseLazyLoadingProxies();
                 optionsBuilder.UseSqlServer(connectionString);
             }
