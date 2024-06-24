@@ -167,7 +167,7 @@ namespace DataAccessObjects
 
                 entity.HasOne(d => d.PromotionDetail)
                     .WithOne(d => d.OrderDetail)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.NoAction);
             });
 
             modelBuilder.Entity<Promotion>(entity =>
@@ -206,7 +206,7 @@ namespace DataAccessObjects
 
                 entity.HasOne(d => d.OrderDetail)
                     .WithOne(d => d.PromotionDetail)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.NoAction);
             });
 
             modelBuilder.Entity<Warranty>(entity =>

@@ -9,6 +9,7 @@ using Services.Helpers;
 using Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Text;
@@ -97,7 +98,7 @@ namespace Services.Impls
 
         public Jewelry GetJewelryById(int id)
         {
-            Jewelry jewelry = _jewelryRepo.GetByIdAsync(id).Result;
+            Jewelry jewelry =_jewelryRepo.GetByIdAsync(id).Result;
             return jewelry;
         }
 

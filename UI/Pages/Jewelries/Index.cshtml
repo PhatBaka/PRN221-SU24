@@ -73,6 +73,9 @@
                 <a asp-page="./Edit" asp-route-id="@item.JewelryId">Edit</a> |
                 <a asp-page="./Details" asp-route-id="@item.JewelryId">Details</a> |
                 <a asp-page="./Delete" asp-route-id="@item.JewelryId">Delete</a>
+                    <form method="post" asp-page-handler="Buy" asp-route-id="@item.JewelryId" style="display:inline;">
+                        <button type="submit" class="btn btn-primary">Buy</button>
+                    </form>
             </td>
         </tr>
 }

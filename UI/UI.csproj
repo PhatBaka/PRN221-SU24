@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <Folder Include="Pages\Accounts\" />
-    <Folder Include="Pages\Orders\" />
     <Folder Include="Pages\Promotions\" />
   </ItemGroup>
 

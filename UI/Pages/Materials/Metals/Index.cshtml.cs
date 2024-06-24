@@ -47,6 +47,7 @@ namespace UI.Pages.Materials.Metals
                     response.EnsureSuccessStatusCode();
 
                     string result = await response.Content.ReadAsStringAsync();
+                    
                     // MetalPriceDto metalPrice = JsonConvert.DeserializeObject<MetalPriceDto>(result);
 
                 }
