@@ -40,7 +40,7 @@ else
                                 <input type="number" name="CartItems[@i].Quantity" value="@Model.CartItems[i].Quantity" min="1" class="form-control" />
                             </td>
                             <td>@Model.CartItems[i].Jewelry.LaborPrice.ToString("C")</td>
-                            <td>@(Model.CartItems[i].Quantity * Model.CartItems[i].Jewelry.LaborPrice).ToString("C")</td>
+                            <td>$@(Model.CartItems[i].Quantity * Model.CartItems[i].Jewelry.LaborPrice)</td>
                             <td>
                                 <button type="submit" asp-page-handler="Remove" asp-route-id="@Model.CartItems[i].Jewelry.JewelryId" class="btn btn-danger btn-sm">Remove</button>
                             </td>

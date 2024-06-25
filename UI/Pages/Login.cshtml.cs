@@ -58,11 +58,11 @@ namespace UI.Pages
                     case AccountRole.STAFF:
                         HttpContext.Session.SetInt32("ID", existedAccount.AccountId);
                         HttpContext.Session.SetString("ROLE", "STAFF");
-                        return RedirectToPage("Staff");
+                        return RedirectToPage("./Jewelries/Index");
                     case AccountRole.MANAGER:
                         HttpContext.Session.SetInt32("ID", existedAccount.AccountId);
                         HttpContext.Session.SetString("ROLE", "MANAGER");
-                        return RedirectToPage("Manager");
+                        return RedirectToPage("./Accounts/Index");
                 }
             }
             else
