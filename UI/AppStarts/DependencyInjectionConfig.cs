@@ -8,6 +8,7 @@ using Repositories.Impls;
 using Repositories.Interfaces;
 using Services.Impls;
 using Services.Interfaces;
+using UI.Test;
 
 namespace UI.AppStarts
 {
@@ -29,8 +30,7 @@ namespace UI.AppStarts
 
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IAccountDAO, AccountDAO>();
-
             services.AddScoped(typeof(IGenericDAO<>), typeof(GenericDAO<>));
-        }
-    }
+		}
+	}
 }

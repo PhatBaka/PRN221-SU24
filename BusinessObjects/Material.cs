@@ -12,10 +12,6 @@ namespace BusinessObjects
     [Table("Material")]
     public class Material
     {
-        public Material()
-        {
-            JewelryMaterials = new HashSet<JewelryMaterial>();
-        }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -33,7 +29,7 @@ namespace BusinessObjects
         public ClarityEnum Clarity { get; set; }
 
         [Column(TypeName = "float")]
-        public decimal Purity { get; set; }
+        public float Purity { get; set; }
 
         public string? Color { get; set; }
 
@@ -47,7 +43,6 @@ namespace BusinessObjects
 
         public string? Description { get; set; }
 
-        [Required(ErrorMessage = "Material image is required")]
         public byte[]? MaterialImage { get; set; }
 
         public byte[]? GemCertificate { get; set; }

@@ -53,8 +53,9 @@ namespace UI.Payload.JewelryPayload
         [AllowNull]
         public List<IFormFile>? ImageDataFile { get; set; }
 
-        //TODO public ICollection<JewelryMaterial> JewelryMaterials { get; set; }
-
         //TODO  public virtual Warranty Warranties { get; set; }
     }
+
+
+    
 }

@@ -12,9 +12,9 @@ namespace UI.Pages.Categories
 {
     public class DetailsModel : PageModel
     {
-        private readonly DataAccessObjects.AppDBContext _context;
+        private readonly AppDBContext _context;
 
-        public DetailsModel(DataAccessObjects.AppDBContext context)
+        public DetailsModel(AppDBContext context)
         {
             _context = context;
         }

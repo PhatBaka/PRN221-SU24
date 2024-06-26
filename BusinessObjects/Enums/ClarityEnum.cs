@@ -17,6 +17,7 @@ namespace BusinessObjects.Enums
         SI2,  // Slightly Included 2
         I1,   // Included 1
         I2,   // Included 2
-        I3    // Included 3
+        I3,    // Included 3
+        NONE  // None
     }
 }

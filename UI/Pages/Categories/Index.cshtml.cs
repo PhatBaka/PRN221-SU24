@@ -12,9 +12,9 @@ namespace UI.Pages.Categories
 {
     public class IndexModel : PageModel
     {
-        private readonly DataAccessObjects.AppDBContext _context;
+        private readonly AppDBContext _context;
 
-        public IndexModel(DataAccessObjects.AppDBContext context)
+        public IndexModel(AppDBContext context)
         {
             _context = context;
         }

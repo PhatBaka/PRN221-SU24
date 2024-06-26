@@ -12,9 +12,9 @@ namespace UI.Pages.Categories
 {
     public class DeleteModel : PageModel
     {
-        private readonly DataAccessObjects.AppDBContext _context;
+        private readonly AppDBContext _context;
 
-        public DeleteModel(DataAccessObjects.AppDBContext context)
+        public DeleteModel(AppDBContext context)
         {
             _context = context;
         }
