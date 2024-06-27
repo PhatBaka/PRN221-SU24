@@ -15,7 +15,7 @@ namespace UI.AppStarts
     {
         public static void ConfigDI(this IServiceCollection services)
         {
-            services.AddScoped(typeof(AppDBContext));
+            services.AddDbContext<AppDBContext>();
             //services.AddScoped(typeof(GenericDAO<>));
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddAutoMapper(typeof(MapperConfig));
@@ -29,8 +29,7 @@ namespace UI.AppStarts
 
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IAccountDAO, AccountDAO>();
-
             services.AddScoped(typeof(IGenericDAO<>), typeof(GenericDAO<>));
-        }
-    }
+		}
+	}
 }

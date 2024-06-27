@@ -13,9 +13,9 @@ namespace UI.Pages.Categories
 {
     public class EditModel : PageModel
     {
-        private readonly DataAccessObjects.AppDBContext _context;
+        private readonly AppDBContext _context;
 
-        public EditModel(DataAccessObjects.AppDBContext context)
+        public EditModel(AppDBContext context)
         {
             _context = context;
         }

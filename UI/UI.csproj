@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataAccessObjects\DataAccessObjects.csproj" />
-    <ProjectReference Include="..\Services\Services.csproj" />
+    <ProjectReference Include="..\DataAccessObjects\DataAccessObjects.csproj">
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Services\Services.csproj">
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -21,10 +25,4 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pages\Accounts\" />
-    <Folder Include="Pages\Promotions\" />
-  </ItemGroup>
-
 </Project>

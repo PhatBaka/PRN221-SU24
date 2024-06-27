@@ -12,7 +12,7 @@ namespace UI.Pages.Categories
 {
     public class CreateModel : PageModel
     {
-        private readonly DataAccessObjects.AppDBContext _context;
+        private readonly AppDBContext _context;
 
         public CreateModel(DataAccessObjects.AppDBContext context)
         {

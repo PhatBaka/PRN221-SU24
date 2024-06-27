@@ -12,9 +12,9 @@ namespace UI.Pages
 {
     public class RegisterModel : PageModel
     {
-        private readonly DataAccessObjects.AppDBContext _context;
+        private readonly AppDBContext _context;
 
-        public RegisterModel(DataAccessObjects.AppDBContext context)
+        public RegisterModel(AppDBContext context)
         {
             _context = context;
         }

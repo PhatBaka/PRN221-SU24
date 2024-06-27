@@ -47,7 +47,8 @@ namespace Services.Impls
 
         public Material GetMaterialById(int id)
         {
-            throw new NotImplementedException();
+            var material = _materialRepository.GetByIdAsync(id).Result;
+            return material;
         }
 
         public Material GetMaterialByName(string name)
