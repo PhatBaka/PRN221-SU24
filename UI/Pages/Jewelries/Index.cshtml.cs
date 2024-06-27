@@ -12,6 +12,8 @@ using Services.Impls;
 using BusinessObjects.Enums;
 using Microsoft.CodeAnalysis;
 using System.Diagnostics;
+using NuGet.Protocol.Core.Types;
+using BusinessObjects.FilterModels;
 
 namespace UI.Pages.Jewelries
 {
@@ -26,20 +28,32 @@ namespace UI.Pages.Jewelries
 
         public List<Jewelry> Jewelry { get;set; } = default!;
 
+        [BindProperty(SupportsGet = true)]
+        public String search { get; set; } = default!;
+
         public void OnGetAsync()
         {
            List<Jewelry> jewelryList = jewelryService.GetJewelries();
+            if(!string.IsNullOrEmpty(search))
+            {
+                
+                JewelryFilter searchFilter = new JewelryFilter
+                {
+                    SearchKeyword = search
+                };
+			
+			jewelryList = jewelryService.SearchFilterJewelries(searchFilter);
+		}
 
             if (jewelryList == null)
             {
                 throw new Exception("Cannot get jewelry list");
             }
             Jewelry = jewelryList;
-            //Jewelry.ForEach(jewelry => ViewData[$"ItemStatusSale_{jewelry.JewelryId}"] = StatusSaleExtension.GetDisplayName(jewelry.StatusSale));
             foreach (var item in Jewelry)
             {
                 ViewData[$"ItemStatusSale_{item.JewelryId}"] = StatusSaleExtension.GetDisplayName(item.StatusSale);
-                ViewData[$"ItemBasePrice_{item.JewelryId}"] = Decimal.Parse("200000000");
+                ViewData[$"ItemBasePrice_{item.JewelryId}"] = (decimal) jewelryService.GetJewelrySalePrice(item);
             }
 
         }

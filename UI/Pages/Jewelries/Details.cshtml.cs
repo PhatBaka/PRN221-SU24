@@ -52,7 +52,7 @@ namespace UI.Pages.Jewelries
             {
                 Jewelry = jewelry;
                 ViewData["StatusSaleDisplay"] = StatusSaleExtension.GetDisplayName(jewelry.StatusSale);
-                ViewData["BasePriceDisplay"] = Decimal.Parse("200000000");
+                ViewData["BasePriceDisplay"] = (Decimal) jewerlryService.GetJewelrySalePrice(jewelry);
             }
             return Page();
         }

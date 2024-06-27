@@ -17,7 +17,7 @@ namespace UI.Payload.JewelryPayload
         public int? JewelryId { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "The field is required")]
-        [MaxLength(200, ErrorMessage = "The max length of jewelry name is {0} characters")]
+        [MaxLength(50, ErrorMessage = "The max length of jewelry name is {0} characters")]
         [ModelBinder(BinderType = typeof(TrimAndRemoveInnerSpaceModelBinder))]
         public string JewelryName { get; set; }
 

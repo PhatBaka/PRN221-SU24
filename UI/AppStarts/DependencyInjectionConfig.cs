@@ -8,7 +8,6 @@ using Repositories.Impls;
 using Repositories.Interfaces;
 using Services.Impls;
 using Services.Interfaces;
-using UI.Test;
 
 namespace UI.AppStarts
 {
