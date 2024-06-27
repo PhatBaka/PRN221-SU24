@@ -1,0 +1,74 @@
+﻿.container-jewelry{
+    margin-top: 50px;
+    margin-left: 80px;
+    margin-right: 80px;
+    margin-bottom: 50px;
+
+}
+#table-list {
+    width: 100%;
+    margin-top: 40px;
+    text-align: left;
+}
+
+#tableSearch {
+    margin-top: 40px;
+    text-align: left;
+    width: 500px;
+    display: flex;
+    flex-direction: row;
+}
+
+#tableSearch {
+    height: 44px;
+    border-radius: 5px;
+    border: 2px solid #ccc;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    
+    
+}
+
+#tableSearch input{
+    height: 40px;
+    width: 100%;
+    border: none;
+    padding-left: 10px;
+
+}
+.btnsearch {
+    background-color: gray;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    height: 44px;
+    width: 80px;
+  
+}
+
+.badge-info {
+    background-color: #17a2b8;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+}
+
+.badge-secondary {
+    background-color: #6c757d;
+}
+
+.badge {
+    width: 90px;
+    height: 30px;
+    align-content: center;
+    font-weight: lighter;
+    font-size: inherit;
+
+}
