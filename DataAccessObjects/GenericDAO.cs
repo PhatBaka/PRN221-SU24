@@ -193,5 +193,19 @@ namespace DataAccessObjects
         {
             return await Task.Run(() => _dbSet.Max(predicate));
         }
-    }
+
+        public void Detach(TEntity entity)
+        {
+			_context.Entry(entity).State = EntityState.Detached;
+		}
+
+		public async Task<bool> UpdateAsync<TEntity>(TEntity entity)
+		{
+			return await Task.Run(async () =>
+            {
+                _context.Entry(entity).State = EntityState.Modified;
+				return await _context.SaveChangesAsync() > 0;
+			});
+		}
+	}
 }

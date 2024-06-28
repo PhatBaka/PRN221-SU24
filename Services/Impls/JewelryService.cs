@@ -2,6 +2,7 @@
 using BusinessObjects.Enums;
 using BusinessObjects.FilterModels;
 using Castle.Core.Internal;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Repositories;
@@ -15,6 +16,7 @@ using System.Linq.Dynamic.Core;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Transactions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Services.Impls
@@ -23,6 +25,7 @@ namespace Services.Impls
 	{
 		private IGenericRepository<Jewelry> _jewelryRepo;
 		private IGenericRepository<JewelryMaterial> _jewelryMaterialRepo;
+		private IGenericRepository<Category> _categoryRepo;
 		private ICategoryService _categoryService;
 
 		public JewelryService(IServiceProvider service)
@@ -30,14 +33,14 @@ namespace Services.Impls
 			_jewelryRepo = service.GetRequiredService<IGenericRepository<Jewelry>>();
 			_categoryService = service.GetRequiredService<ICategoryService>();
 			_jewelryMaterialRepo = service.GetRequiredService<IGenericRepository<JewelryMaterial>>();
+			_categoryRepo = service.GetRequiredService<IGenericRepository<Category>>();
 		}
 
 		public Jewelry AddJewelry(Jewelry jewelry)
 		{
 			//check duplicate name
-			String formattedName = Util.CapitalizeFirstLetterOfSentence(Regex.Replace(jewelry.JewelryName, @"\s+", " "));
-			jewelry.JewelryName = formattedName;
-
+			jewelry.JewelryName = Util.CapitalizeFirstLetterOfSentence(Regex.Replace(jewelry.JewelryName, @"\s+", " ")).Trim();
+			jewelry.Description = Util.CapitalizeFirstLetterOfSentence(Regex.Replace(jewelry.Description, @"\s+", " ")).Trim();
 			Jewelry jewelryHasDuplicatedName = _jewelryRepo.FistOrDefault(jew => jew.JewelryName.ToLower().Equals(jewelry.JewelryName.ToLower())).Result;
 			if (jewelryHasDuplicatedName != null)
 			{
@@ -45,7 +48,7 @@ namespace Services.Impls
 			}
 
 			//check category name is valid
-			Category category = _categoryService.GetCategoryByName(jewelry.Category.CategoryName);
+			Category category = _categoryRepo.FistOrDefault(c => c.CategoryName.Equals(jewelry.Category.CategoryName)).Result;
 			if (category == null)
 			{
 				if (String.IsNullOrEmpty(jewelry.Category.CategoryName))
@@ -113,8 +116,9 @@ namespace Services.Impls
 
 			if (!string.IsNullOrEmpty(jewelryFilter.SearchKeyword))
 			{
+				Console.WriteLine(jewelryFilter.SearchKeyword);
 				string keyword = jewelryFilter.SearchKeyword.ToLower();
-				query = query.Where(j => j.JewelryName.ToLower().Contains(keyword) || j.Description.ToLower().Contains(keyword));
+				query = query.Where(j => j.JewelryName.ToLower().Contains(keyword));
 			}
 
 			if (jewelryFilter.CategoryFilterOptions != null && jewelryFilter.CategoryFilterOptions.Count > 0)
@@ -128,7 +132,7 @@ namespace Services.Impls
 			//    query = query.Where(j => j.JewelryMaterials.Any(jm => jewelryFilter.MaterialFilterOptions.Contains(jm.Material.MaterialName)));
 			//}
 
-			List<Jewelry> listPagination = new List<Jewelry>();
+			List<Jewelry> listPagination = query.ToList();
 			if (jewelryFilter.PageNumber.HasValue && jewelryFilter.PageSize.HasValue)
 			{
 				listPagination = new PaginatedList<Jewelry>(query.ToList(), query.Count(), jewelryFilter.PageNumber.Value, jewelryFilter.PageSize.Value).ToList();
@@ -138,75 +142,113 @@ namespace Services.Impls
 			return listPagination;
 		}
 
-		public Jewelry UpdateJewelry(Jewelry jewelry)
+		public async Task<Jewelry> UpdateJewelry(Jewelry jewelry)
 		{
-			//check if id is valid
-			Jewelry jewelryToUpdate = _jewelryRepo.GetByIdAsync(jewelry.JewelryId).Result;
-			if (jewelryToUpdate == null)
+			using (var scope = new TransactionScope(TransactionScopeOption.Required, TransactionScopeAsyncFlowOption.Enabled))
 			{
-				throw new Exception("Jewelry id is invalid");
-			}
-
-			//check duplicate name
-			String formattedName = Util.CapitalizeFirstLetterOfSentence(Regex.Replace(jewelry.JewelryName, @"\s+", " "));
-			jewelry.JewelryName = formattedName;
-
-			Jewelry jewelryHasDuplicatedName = _jewelryRepo.FistOrDefault(jew => jew.JewelryName.ToLower().Equals(jewelry.JewelryName.ToLower())).Result;
-			if (jewelryHasDuplicatedName != null && jewelryHasDuplicatedName.JewelryId != jewelry.JewelryId)
-			{
-				throw new Exception("Jewelry name is duplicated");
-			}
-
-			//check category name is valid
-			Category category = _categoryService.GetCategoryByName(jewelry.Category.CategoryName);
-			if (category == null)
-			{
-				if (String.IsNullOrEmpty(jewelry.Category.CategoryName))
+				try
 				{
-					throw new Exception("Category is required");
+					// Check if id is valid
+					Jewelry jewelryToUpdate = await _jewelryRepo.GetByIdAsync(jewelry.JewelryId);
+					if (jewelryToUpdate == null)
+					{
+						throw new Exception("Jewelry id is invalid");
+					}
+
+					// Standardize and validate names
+					jewelry.JewelryName = Util.CapitalizeFirstLetterOfSentence(Regex.Replace(jewelry.JewelryName, @"\s+", " ")).Trim();
+					jewelry.Description = Util.CapitalizeFirstLetterOfSentence(Regex.Replace(jewelry.Description, @"\s+", " ")).Trim();
+
+					// Check duplicate name
+					Jewelry jewelryHasDuplicatedName = await _jewelryRepo.FirstOrDefaultAsync(j => j.JewelryName.ToLower() == jewelry.JewelryName.ToLower() && j.JewelryId != jewelry.JewelryId);
+					if (jewelryHasDuplicatedName != null)
+					{
+						throw new Exception("Jewelry name is duplicated");
+					}
+
+					// Validate category
+					Category category = await _categoryRepo.FirstOrDefaultAsync(c => c.CategoryName.Equals(jewelry.Category.CategoryName));
+					if (category == null)
+					{
+						if (string.IsNullOrEmpty(jewelry.Category.CategoryName))
+						{
+							throw new Exception("Category is required");
+						}
+						jewelry.Category.CategoryName = Util.CapitalizeFirstLetterOfSentence(Regex.Replace(jewelry.Category.CategoryName.Trim(), @"\s+", " "));
+						category = _categoryService.AddCategory(jewelry.Category);
+						if (category == null)
+						{
+							throw new Exception("Failed to add category");
+						}
+					}
+					jewelry.CategoryId = category.CategoryId;
+					jewelry.Category = category;
+
+					// Set sale status based on quantity
+					jewelry.StatusSale = jewelry.Quantity <= 0 ? StatusSale.OUT_OF_STOCK : StatusSale.IN_STOCK;
+
+					// Update jewelry materials
+					foreach (var material in jewelry.JewelryMaterials)
+					{
+						material.JewelryId = jewelry.JewelryId;
+						material.MaterialId = material.Material.MaterialId;
+					}
+
+					// Update jewelry
+					bool success = await _jewelryRepo.UpdateByIdAsync(jewelry, jewelry.JewelryId);
+					if (!success)
+					{
+						throw new Exception("Failed to update jewelry");
+					}
+
+					// Retrieve updated jewelry to get the latest state
+					Jewelry jewelryAfterUpdate = await _jewelryRepo.GetByIdAsync(jewelry.JewelryId);
+
+					// Update or insert jewelry materials
+					IQueryable<JewelryMaterial> jewelryMaterialsDB = jewelryAfterUpdate.JewelryMaterials.AsQueryable();
+
+					foreach (var material in jewelry.JewelryMaterials)
+					{
+						var existingMaterial = jewelryMaterialsDB.FirstOrDefault(jm => jm.MaterialId == material.MaterialId && jm.JewelryId == material.JewelryId);
+						if (existingMaterial != null)
+						{
+							existingMaterial.JewelryWeight = material.JewelryWeight;
+							await _jewelryMaterialRepo.UpdateAsync(existingMaterial);
+						}
+						else
+						{
+							var newMaterial = new JewelryMaterial
+							{
+								JewelryId = jewelry.JewelryId,
+								MaterialId = material.MaterialId,
+								JewelryWeight = material.JewelryWeight
+							};
+							await _jewelryMaterialRepo.InsertAsync(newMaterial);
+						}
+					}
+
+					// Delete removed jewelry materials
+					foreach (var material in jewelryMaterialsDB)
+					{
+						if (!jewelry.JewelryMaterials.Any(jm => jm.MaterialId == material.MaterialId && jm.JewelryId == material.JewelryId))
+						{
+							await _jewelryMaterialRepo.DeleteAsync(material);
+						}
+					}
+
+					scope.Complete(); // Commit the transaction
 				}
-				jewelry.Category.CategoryName = Util.CapitalizeFirstLetterOfSentence(Regex.Replace(jewelry.Category.CategoryName.Trim(), @"\s+", " "));
-				Category savedCategory = _categoryService.AddCategory(jewelry.Category);
-				if (savedCategory != null)
+				catch (Exception ex)
 				{
-					category = savedCategory;
-
-				}
-
-			}
-			jewelry.CategoryId = category.CategoryId;
-			jewelry.Category = category;
-
-
-			//check quantity to set sale status
-			if (jewelry.Quantity <= 0)
-			{
-				jewelry.StatusSale = StatusSale.OUT_OF_STOCK;
-			}
-			else
-			{
-				jewelry.StatusSale = StatusSale.IN_STOCK;
-			}
-
-			//TODO: check promotion id is valid
-			//TODO: check material id is valid
-
-			//Add jewelry
-			try
-			{
-				bool success = _jewelryRepo.UpdateByIdAsync(jewelry, jewelry.JewelryId).Result;
-				if (!success)
-				{
-					throw new Exception();
+					Console.WriteLine(ex.Message);
+					throw new Exception("Error when updating jewelry", ex);
 				}
 			}
-			catch (Exception ex)
-			{
-				throw new Exception("Error when update jewelry");
-			}
-			Jewelry jewelrySaved = _jewelryRepo.GetByIdAsync(jewelry.JewelryId).Result;
-			return jewelrySaved;
+
+			// Return updated jewelry
+			return await _jewelryRepo.GetByIdAsync(jewelry.JewelryId);
 		}
+
 
 		public byte[] FormatJewelryImageDataString(string imageData)
 		{
@@ -216,6 +258,30 @@ namespace Services.Impls
 		public string GetJewelryImageString(byte[] imageData)
 		{
 			throw new NotImplementedException();
+		}
+
+		public double GetJewelrySalePrice(Jewelry jewelry)
+		{
+			double totalMetalCost = 0;
+			double totalStoneCost = 0;
+			double laborCost = 0;
+			double markupPercentage = 0;
+
+			foreach (var metal in jewelry.JewelryMaterials.Where(jm => jm.Material.IsMetail))
+			{
+				totalMetalCost += (double)metal.Material.BidPrice * metal.JewelryWeight;
+			}
+
+			foreach (var gemstone in jewelry.JewelryMaterials.Where(jm => !jm.Material.IsMetail))
+			{
+				totalStoneCost += (double)gemstone.Material.MaterialCost * gemstone.JewelryWeight;
+			}
+			laborCost = (double)jewelry.LaborPrice;
+			markupPercentage = jewelry.MarkupPercentage;
+
+			double totalCost = (totalMetalCost + totalStoneCost + laborCost) * (1 + markupPercentage / 100);
+			return totalCost;
+
 		}
 	}
 }

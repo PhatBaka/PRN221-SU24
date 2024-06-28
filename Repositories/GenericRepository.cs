@@ -1,4 +1,6 @@
-﻿using DataAccessObjects;
+﻿using BusinessObjects;
+using DataAccessObjects;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +35,7 @@ namespace Repositories
 
         public async Task<bool> DeleteAsync(TEntity entity)
         {
-            return await dao.DeleteAsync(entity);
+			return await dao.DeleteAsync(entity);
         }
 
         public async Task DeleteRangeAsync(IQueryable<TEntity> entities)
@@ -41,7 +43,12 @@ namespace Repositories
             await dao.DeleteRangeAsync(entities);
         }
 
-        public async Task<IQueryable<TEntity>> FindAll(Func<TEntity, bool> predicate)
+		public void Detach(TEntity jewelryToUpdate)
+		{
+			dao.Detach(jewelryToUpdate);
+		}
+
+		public async Task<IQueryable<TEntity>> FindAll(Func<TEntity, bool> predicate)
         {
             return await dao.FindAll(predicate);
         }
@@ -146,7 +153,12 @@ namespace Repositories
             return await dao.SaveChagesAysnc();
         }
 
-        public async Task<bool> UpdateByIdAsync(TEntity entity, object id)
+		public async Task<bool> UpdateAsync(TEntity entity)
+		{
+			return await dao.UpdateAsync(entity);
+		}
+
+		public async Task<bool> UpdateByIdAsync(TEntity entity, object id)
         {
             return await dao.UpdateByIdAsync(entity, id);
         }

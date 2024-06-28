@@ -35,7 +35,28 @@ namespace Services.Helpers
             return result;
         }
 
-        public static bool IsImageFile(string fileName)
+		public static string GetImageBase64FromFile(IFormFile file)
+		{
+            String base64Image = null;
+				if (file.Length > 0)
+				{
+					if (IsImageFile(file.FileName))
+					{
+						using var memoryStream = new MemoryStream();
+						file.CopyTo(memoryStream);
+						base64Image = Convert.ToBase64String(memoryStream.ToArray());
+					}
+					else
+					{
+						throw new Exception("The file is not an image file");
+					}
+
+				}
+			
+			return base64Image;
+		}
+
+		public static bool IsImageFile(string fileName)
         {
             string ext = Path.GetExtension(fileName).ToLower();
             return ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".gif" || ext == ".bmp";
