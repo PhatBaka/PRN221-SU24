@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BusinessObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -22,6 +23,7 @@ namespace Repositories
         public Task<bool> InsertAsync(TEntity entity);
         public Task<bool> InsertRangeAsync(IQueryable<TEntity> entities);
         public Task<bool> UpdateByIdAsync(TEntity entity, object id);
+        public Task<bool> UpdateAsync(TEntity entity);
         public Task<bool> UpdateRangeAsync(IQueryable<TEntity> entities);
         public Task<TEntity> AnyAsync(Func<TEntity, bool> predicate);
         public Task<int> CountAsync(Func<TEntity, bool> predicate);
@@ -37,5 +39,7 @@ namespace Repositories
         public Task<bool> IsMinAsync(Expression<Func<TEntity, bool>> predicate);
         public Task<bool> GetMinAsync(Func<TEntity, bool> predicate);
         public Task<bool> GetMaxAsync(Func<TEntity, bool> predicate);
-    }
+		public void Detach(TEntity entity);
+
+	}
 }

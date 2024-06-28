@@ -24,7 +24,8 @@ namespace DataAccessObjects
         public Task<bool> InsertRangeAsync(IQueryable<TEntity> entities);
         public Task<bool> UpdateByIdAsync(TEntity entity, object id);
         public Task<bool> UpdateRangeAsync(IQueryable<TEntity> entities);
-        public Task<TEntity> AnyAsync(Func<TEntity, bool> predicate);
+		public Task<bool> UpdateAsync<TEntity>(TEntity entity);
+		public Task<TEntity> AnyAsync(Func<TEntity, bool> predicate);
         public Task<int> CountAsync(Func<TEntity, bool> predicate);
         public Task<int> CountAsync();
         public Task<TEntity> FistOrDefault(Func<TEntity, bool> predicate);
@@ -38,5 +39,7 @@ namespace DataAccessObjects
         public Task<bool> IsMinAsync(Expression<Func<TEntity, bool>> predicate);
         public Task<bool> GetMinAsync(Func<TEntity, bool> predicate);
         public Task<bool> GetMaxAsync(Func<TEntity, bool> predicate);
-    }
+        public void Detach(TEntity entity);
+        
+	}
 }
