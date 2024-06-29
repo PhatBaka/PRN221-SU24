@@ -2,7 +2,8 @@
 @model UI.Pages.Jewelries.EditModel
 
 @{
-	ViewData["Title"] = "Edit";
+	ViewData["Title"] = "Create";
+	Layout = "/Pages/Shared/_DefaultLayout.cshtml"; // Use the relative path from the root of the project
 }
 <head>
 	<meta charset="utf-8" />
@@ -92,7 +93,7 @@
 			<div id="material-container">
 				<div id="material-template" style="display: none;">
 					<div class="row material-info product-info">
-						<div class="form-group col-md-3">
+						<div class="form-group col-md-2">
 							<label class="control-label">Metal Type</label>
 							<select class="form-control metal-dropdown">
 								<option value="" disabled selected>Select Metal Type</option>
@@ -106,11 +107,11 @@
 							<label class="control-label">Material Weight (Gam)</label>
 							<input type="number" class="form-control metal-weight" placeholder="0" min="0" step="0.01" />
 						</div>
-						<div class="form-group col-md-2">
+						<div class="form-group col-md-3">
 							<label class="control-label">Bid Price (VNĐ/Gam)</label>
 							<input type="text" class="form-control metal-bidprice" readonly />
 						</div>
-						<div class="form-group col-md-2">
+						<div class="form-group col-md-3">
 							<label class="control-label">Offer Price (VNĐ/Gam)</label>
 							<input type="text" class="form-control metal-offerprice" readonly />
 						</div>
@@ -225,16 +226,19 @@
 		<div>
 			<input type="hidden" id="metalsJson" asp-for="MetalsJson" />
 			<input type="hidden" id="gemstonesJson" asp-for="GemstonesJson" />
-		</div>
-		<div class="form-group" style="text-align: end;">
-			<input style="width: 200px; font-weight: bolder" type="submit" value="Update" class="btn-lg btn-primary mt-4 mb-3" />
-		</div>
-		<div class="form-group" style="text-align: start;">
-			<div>
-				<a class="btn btn-secondary" asp-page="./Index">Cancel</a>
+			<div style="text-align: end; align-items: center; display: flex; flex-direction: row;justify-content:space-between; margin-left: 50px; margin-top: 40px; margin-right: 50px;">
+				<div >
+					<a style="font-weight: bolder" class="btn btn-secondary btn-lg" asp-page="./Index">Cancel</a>
+				</div>
+				<div>
+					<input  type="submit" value="Update" class="btn-lg btn-primary" />
+				</div>
 			</div>
-		</div>
+		</div>	
+		
+	
 </form>
+
 
 
 @section Scripts {
