@@ -9,6 +9,5 @@ namespace Repositories.Interfaces
 {
     public interface IAccountRepository : IGenericRepository<Account>
     {
-        public Account GetAccountByEmailAndPassword(string email, string password);
     }
 }

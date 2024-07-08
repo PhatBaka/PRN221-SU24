@@ -1,4 +1,5 @@
 ﻿using BusinessObjects;
+using DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace Services.Interfaces
 {
     public interface IAccountService
     {
-        public Account GetAccount(string email, string password);
+        public Task<GetAccountDTO> GetAccount(string email, string password);
     }
 }

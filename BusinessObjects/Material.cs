@@ -1,57 +1,58 @@
-﻿using BusinessObjects.Enums;
-using System;
-using System.Collections.Generic;
+﻿using BusinessObjects;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BusinessObjects
+namespace BusinessObjects;
+
+[Table("Material")]
+public class Material
 {
-    [Table("Material")]
-    public class Material
+    public Material()
     {
-        public Material()
-        {
-            JewelryMaterials = new HashSet<JewelryMaterial>();
-        }
-
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int MaterialId { get; set; }
-
-        [Required]
-        public string? MaterialName { get; set; }
-
-        [Required]
-        public bool IsMetail { get; set; }
-
-        [Column(TypeName = "money")]
-        public double MaterialCost { get; set; }
-
-        public ClarityEnum Clarity { get; set; }
-
-        [Column(TypeName = "float")]
-        public decimal Purity { get; set; }
-
-        public string? Color { get; set; }
-
-        public string? Sharp { get; set; }
-
-        [Column(TypeName = "money")]
-        public decimal BidPrice { get; set; }
-
-        [Column(TypeName = "money")]
-        public decimal OfferPrice { get; set; }
-
-        public string? Description { get; set; }
-
-        [Required(ErrorMessage = "Material image is required")]
-        public byte[]? MaterialImage { get; set; }
-
-        public byte[]? GemCertificate { get; set; }
-
-        public virtual ICollection<JewelryMaterial> JewelryMaterials { get; set; }
+        Jewelries = new HashSet<Jewelry>();
     }
+
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid MaterialId { get; set; }
+
+    [Required]
+    public string? Name { get; set; }
+
+    public string? Description { get; set; }
+
+    public DateTime? CreatedDate { get; set; }
+
+    public DateTime? UpdatedDate { get; set; }
+
+    [Column(TypeName = "money")]
+    public decimal CurrentPrice { get; set; }
+
+    [Column(TypeName = "money")]
+    public decimal SellPrice { get; set; }
+
+    [Column(TypeName = "money")]
+    public decimal BuyPrice { get; set; }
+
+    public byte[] ?MaterialImageData { get; set; }
+
+    public byte[]? CertificateImageData { get; set; } 
+
+    public bool IsMetal { get; set; }
+
+    [Column(TypeName = "decimal(18, 2)")]
+    public decimal Weight { get; set; }
+
+    [Column(TypeName = "decimal(18, 2)")]
+    public decimal Purity { get; set; }
+
+    public string? Clarity { get; set; }
+
+    public string? Color { get; set; }
+
+    public string? Sharp { get; set; }
+
+    public string? MaterialStatus { get; set; }
+
+    public virtual ICollection<Jewelry> Jewelries { get; set; }
 }

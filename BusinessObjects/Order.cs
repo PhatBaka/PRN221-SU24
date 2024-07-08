@@ -1,37 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BusinessObjects.Enums;
+using BusinessObjects;
 
-namespace BusinessObjects
+namespace BusinessObjects;
+
+[Table("Order")]
+public class Order
 {
-    [Table("Order")]
-    public class Order
+    public Order()
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int OrderId { get; set; }
-
-        [Required]
-        public DateTime OrderDate { get; set; }
-
-        [Required]
-        public OrderEnum OrderType { get; set; }
-
-        [Required]
-        public int CustomerId { get; set; }
-
-        [Required]
-        public virtual Account Customer { get; set; }
-
-        [Required]
-        public virtual ICollection<Warranty> Warranties { get; set; }
-
-        [Required]
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        OrderDetails = new HashSet<OrderDetail>();
     }
+
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+
+    public Guid OrderId { get; set; }
+
+    public DateTime? OrderDate { get; set; }
+
+    [Column(TypeName = "money")]
+    public decimal? TotalPrice { get; set; }
+
+    [Column(TypeName = "money")]
+    public decimal? DiscountPrice { get; set; }
+
+    [Column(TypeName = "money")]
+    public decimal? FinalPrice { get; set; }
+
+    public string? Status { get; set; }
+
+    public string? OrderType { get; set; }
+
+    public Guid AccountId { get; set; }
+
+    public Guid CustomerId { get; set; }
+
+    public virtual Account? Account { get; set; }
+
+    public virtual Customer? Customer { get; set; }
+
+    public virtual ICollection<OrderDetail> OrderDetails { get; set; }
 }

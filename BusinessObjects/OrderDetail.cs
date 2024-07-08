@@ -1,34 +1,38 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BusinessObjects
+namespace BusinessObjects;
+
+[Table("OrderDetail")]
+public class OrderDetail
 {
-    [Table("OrderDetail")]
-    public class OrderDetail
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int OrderDetailId { get; set; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid OrderDetailId { get; set; }
 
-        public int OrderId { get; set; }
+    public Guid OrderId { get; set; }
 
-        public int JewelryId { get; set; }
+    public Guid? JewelryId { get; set; }
 
-        public int? PromotionDetailId { get; set; }
+    [Column(TypeName = "money")]
+    public decimal UnitPrice { get; set; }
 
-        [Required]
-        public double DiscountPercent { get; set; }
+    [Column(TypeName = "money")]
+    public decimal TotalPrice { get; set; }
 
-        [Required]
-        public int Quantity { get; set; }
+    [Column(TypeName = "money")]
+    public decimal? DiscountPrice { get; set; }
 
-        [Required]
-        public double UnitPrice{ get; set; }
+    [Column(TypeName = "money")]
+    public decimal FinalPrice { get; set; }
 
-        public virtual Order Order { get; set; }
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal DiscountValue { get; set; }
 
-        public virtual Jewelry Jewelry { get; set; }
+    [Required]
+    public int Quantity { get; set; }
 
-        public virtual PromotionDetail PromotionDetail { get; set; }
-    }
+    public virtual Jewelry? Jewelry { get; set; }
+
+    public virtual Order? Order { get; set; }
 }

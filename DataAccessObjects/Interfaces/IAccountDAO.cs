@@ -9,6 +9,5 @@ namespace DataAccessObjects.Interfaces
 {
     public interface IAccountDAO : IGenericDAO<Account>
     {
-        public Account GetAccountByEmailAndPassword(string email, string password);
     }
 }

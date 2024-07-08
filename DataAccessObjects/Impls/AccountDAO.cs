@@ -16,18 +16,5 @@ namespace DataAccessObjects.Impls
         {
             _context = context;
         }
-
-        public Account GetAccountByEmailAndPassword(string email, string password)
-        {
-            try
-            {
-                return _context.Accounts.FirstOrDefault(x => x.Email == email 
-                                                            && x.Password == password);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
     }
 }

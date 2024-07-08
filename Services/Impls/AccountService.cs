@@ -1,5 +1,6 @@
-﻿using BusinessObjects;
-using Repositories;
+﻿using AutoMapper;
+using BusinessObjects;
+using DTOs;
 using Repositories.Interfaces;
 using Services.Interfaces;
 using System;
@@ -12,21 +13,22 @@ namespace Services.Impls
 {
     public class AccountService : IAccountService
     {
-        private readonly IGenericRepository<Account> _genericAccountRepository;
         private readonly IAccountRepository _accountRepository;
+        private readonly IMapper _mapper;
 
-        public AccountService(IGenericRepository<Account> genericAccountRepository,
-                                IAccountRepository accountRepository)
+        public AccountService(IAccountRepository accountRepository,
+                                IMapper mapper)
         {
-            _genericAccountRepository = genericAccountRepository;
+            _mapper = mapper;
             _accountRepository = accountRepository;
         }
 
-        public Account GetAccount(string email, string password)
+        public async Task<GetAccountDTO> GetAccount(string email, string password)
         {
             try
             {
-                return _accountRepository.GetAccountByEmailAndPassword(email, password);
+                var account = await _accountRepository.GetFirstOrDefaultAsync(x => x.Email.Equals(email) && x.Password.Equals(password));
+                return _mapper.Map<GetAccountDTO>(account);
             }
             catch (Exception ex)
             {

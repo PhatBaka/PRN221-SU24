@@ -7,7 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataAccessObjects\DataAccessObjects.csproj" />
+    <Compile Remove="Pages\Promotions\**" />
+    <Content Remove="Pages\Promotions\**" />
+    <EmbeddedResource Remove="Pages\Promotions\**" />
+    <None Remove="Pages\Promotions\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DTOs\DTOs.csproj" />
     <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
 
@@ -20,11 +27,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pages\Accounts\" />
-    <Folder Include="Pages\Promotions\" />
   </ItemGroup>
 
 </Project>
