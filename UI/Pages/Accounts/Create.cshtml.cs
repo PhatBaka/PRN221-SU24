@@ -7,16 +7,26 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BusinessObjects;
 using DataAccessObjects;
+using Services.Interfaces;
+using DTOs;
+using DTOs.Enums;
 
 namespace UI.Pages.Accounts
 {
     public class CreateModel : PageModel
     {
-        private readonly DataAccessObjects.AppDBContext _context;
+        private readonly IAccountService _accountService;
 
-        public CreateModel(DataAccessObjects.AppDBContext context)
+        public CreateModel(IAccountService accountService)
         {
-            _context = context;
+            _accountService = accountService;
+            RoleOptions = Enum.GetValues(typeof(RoleEnum))
+                                 .Cast<RoleEnum>()
+                                 .Select(e => new SelectListItem
+                                 {
+                                     Value = ((int)e).ToString(),
+                                     Text = e.ToString()
+                                 }).ToList();
         }
 
         public IActionResult OnGet()
@@ -25,19 +35,21 @@ namespace UI.Pages.Accounts
         }
 
         [BindProperty]
-        public Account Account { get; set; } = default!;
-        
+        public AccountDTO Account { get; set; } = default!;
+        public List<SelectListItem>? RoleOptions { get; set; } = default!;
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Accounts == null || Account == null)
+            if (!ModelState.IsValid || Account == null)
             {
                 return Page();
             }
 
-            _context.Accounts.Add(Account);
-            await _context.SaveChangesAsync();
+            if (await _accountService.CreateAccount(Account))
+            {
+                return Page();
+            }
 
             return RedirectToPage("./Index");
         }

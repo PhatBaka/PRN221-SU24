@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessObjects;
 using DTOs;
+using DTOs.Enums;
 using Repositories.Interfaces;
 using Services.Interfaces;
 using System;
@@ -29,6 +30,7 @@ namespace Services.Impls
             try
             {
                 var entity = _mapper.Map<Account>(accountDTO);
+                entity.Status = ObjectStatusEnum.ACTIVE.ToString();
                 return await _accountRepository.AddAsync(entity);
             }
             catch (Exception ex)

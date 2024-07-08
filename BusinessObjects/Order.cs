@@ -13,7 +13,7 @@ public class Order
     }
 
     [Key]
-    [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 
     public Guid OrderId { get; set; }
 

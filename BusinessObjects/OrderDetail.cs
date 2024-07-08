@@ -7,7 +7,7 @@ namespace BusinessObjects;
 public class OrderDetail
 {
     [Key]
-    [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid OrderDetailId { get; set; }
 
     public Guid OrderId { get; set; }

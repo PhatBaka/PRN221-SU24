@@ -6,50 +6,55 @@
     Layout = "_AdminLayout";
 }
 
-<h1>Create</h1>
-
-<h4>Account</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Account.Email" class="control-label"></label>
-                <input asp-for="Account.Email" class="form-control" />
-                <span asp-validation-for="Account.Email" class="text-danger"></span>
+<section id="center" class="center_shop">
+    <div class="container">
+        <div class="row">
+            <div class="center_shop_t clearfix">
+                <div class="col-sm-6">
+                    <div class="center_shop_tl clearfix d-flex align-items-center">
+                        <h4 class="mgt">NEW GEM</h4>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="center_shop_tr text-right clearfix">
+                        <h6 class="col_2">You are here: <a asp-page="Gems/Index">Home</a> / Gem</h6>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Account.Password" class="control-label"></label>
-                <input asp-for="Account.Password" class="form-control" />
-                <span asp-validation-for="Account.Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Account.PhoneNumber" class="control-label"></label>
-                <input asp-for="Account.PhoneNumber" class="form-control" />
-                <span asp-validation-for="Account.PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Account.Status" class="control-label"></label>
-                <input asp-for="Account.Status" class="form-control" />
-                <span asp-validation-for="Account.Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Account.Role" class="control-label"></label>
-                <input asp-for="Account.Role" class="form-control" />
-                <span asp-validation-for="Account.Role" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+</section>
+<form method="post">
+    <section id="checkout" class="clearfix">
+        <div class="container">
+            <div class="row">
+                <div class="checkout_1 clearfix">
+                    <div class="checkout_1l1 clearfix">
+                        <div class="col-sm-6 space_left">
+                            <h5>Email <span class="col_1">*</span></h5>
+                            <input asp-for="@Model.Account.Email" class="form-control" type="text">
+                        </div>
+                        <div class="col-sm-6 space_left">
+                            <h5>Password <span class="col_1">*</span></h5>
+                            <input asp-for="@Model.Account.Password" class="form-control" type="number">
+                        </div>
 
-<div>
-    <a asp-page="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+                    </div>
+                    <div class="checkout_1l1 clearfix">
+                        <div class="col-sm-6 space_left">
+                            <h5>Phone number <span class="col_1">*</span></h5>
+                            <input asp-for="@Model.Account.PhoneNumber" class="form-control" type="number">
+                        </div>
+                        <div class="col-sm-6 space_left">
+                            <h5>Role <span class="col_1">*</span></h5>
+                            <select asp-for="@Model.Account.Role" class="form-control" asp-items="Model.RoleOptions"></select>
+                        </div>
+                    </div>
+                    <div class="checkout_1l1 clearfix">
+                        <h4 class="mgt"><input class="button" type="submit" value="CREATE" /></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

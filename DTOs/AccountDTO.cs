@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DTOs.Enums;
 
 namespace DTOs
 {
@@ -18,9 +19,9 @@ namespace DTOs
 
         public string? PhoneNumber { get; set; }
 
-        public string? Status { get; set; }
+        public ObjectStatusEnum? Status { get; set; }
 
-        public string? Role { get; set; }
+        public RoleEnum? Role { get; set; }
     }
 
     public class GetAccountDTO : AccountDTO

@@ -13,7 +13,7 @@ public class Material
     }
 
     [Key]
-    [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid MaterialId { get; set; }
 
     [Required]

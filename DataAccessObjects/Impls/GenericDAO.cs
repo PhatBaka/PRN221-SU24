@@ -40,42 +40,97 @@ namespace DataAccessObjects.Impls
 
         public async Task<TEntity> GetByIdAsync(object id)
         {
-            return await _dbSet.FindAsync(id);
+            try
+            {
+                return await _dbSet.FindAsync(id);
+            }
+            catch (Exception ex)
+            {
+                // Handle or log the exception
+                throw new Exception("Error occurred while fetching by Id", ex);
+            }
         }
 
         public async Task<DbSet<TEntity>> GetAllAsync()
         {
-            return _dbSet;
+            try
+            {
+                return _dbSet;
+            }
+            catch (Exception ex)
+            {
+                // Handle or log the exception
+                throw new Exception("Error occurred while fetching all entities", ex);
+            }
         }
 
         public async Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await _dbSet.FirstOrDefaultAsync(predicate);
+            try
+            {
+                return await _dbSet.FirstOrDefaultAsync(predicate);
+            }
+            catch (Exception ex)
+            {
+                // Handle or log the exception
+                throw new Exception("Error occurred while fetching first entity with predicate", ex);
+            }
         }
 
         public async Task<IEnumerable<TEntity>> GetWhereAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await _dbSet.Where(predicate).ToListAsync();
+            try
+            {
+                return await _dbSet.Where(predicate).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Handle or log the exception
+                throw new Exception("Error occurred while fetching entities with predicate", ex);
+            }
         }
 
         public async Task<bool> AddAsync(TEntity entity)
         {
-            await _dbSet.AddAsync(entity);
-            return await _context.SaveChangesAsync() > 0;
+            try
+            {
+                await _dbSet.AddAsync(entity);
+                return await _context.SaveChangesAsync() > 0;
+            }
+            catch (Exception ex)
+            {
+                // Handle or log the exception
+                throw new Exception("Error occurred while adding entity", ex);
+            }
         }
 
         public async Task<bool> UpdateAsync(TEntity entity)
         {
-            _dbSet.Attach(entity);
-            _context.Entry(entity).State = EntityState.Modified;
-            return await _context.SaveChangesAsync() > 0;
+            try
+            {
+                _dbSet.Attach(entity);
+                _context.Entry(entity).State = EntityState.Modified;
+                return await _context.SaveChangesAsync() > 0;
+            }
+            catch (Exception ex)
+            {
+                // Handle or log the exception
+                throw new Exception("Error occurred while updating entity", ex);
+            }
         }
 
         public async Task<bool> DeleteAsync(TEntity entity)
         {
-            _dbSet.Remove(entity);
-            return await _context.SaveChangesAsync() > 0;
+            try
+            {
+                _dbSet.Remove(entity);
+                return await _context.SaveChangesAsync() > 0;
+            }
+            catch (Exception ex)
+            {
+                // Handle or log the exception
+                throw new Exception("Error occurred while deleting entity", ex);
+            }
         }
     }
 }
-
