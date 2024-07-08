@@ -1,0 +1,16 @@
+{
+  "status": "success",
+  "timestamp": "2024-06-24T06:52:00.760Z",
+  "currency": "USD",
+  "unit": "toz",
+  "metal": "gold",
+  "rate": {
+    "price": 2322.8599999999997,
+    "ask": 2323.07,
+    "bid": 2322.75,
+    "high": 2327.34,
+    "low": 2317.775,
+    "change": 0.985,
+    "change_percent": 0.04
+  }
+}

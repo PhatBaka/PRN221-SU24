@@ -1,0 +1,16 @@
+{
+  "status": "success",
+  "timestamp": "2024-06-24T05:48:02.255Z",
+  "currency": "USD",
+  "unit": "toz",
+  "metal": "palladium",
+  "rate": {
+    "price": 921.1625,
+    "ask": 922.407,
+    "bid": 919.918,
+    "high": 921.1625,
+    "low": 909.018,
+    "change": 9.643,
+    "change_percent": 1.06
+  }
+}

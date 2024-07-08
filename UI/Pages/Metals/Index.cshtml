@@ -1,0 +1,98 @@
+﻿@page
+@model UI.Pages.Metals.IndexModel
+@{
+    
+}
+
+<style>
+    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+        padding: 8px;
+        line-height: 1.42857143;
+        vertical-align: middle;
+        border-top: 1px solid #ddd
+    }
+
+    .up-rectangle {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background-color: green; /* Color for up */
+        margin-left: 5px; /* Space between text and rectangle */
+    }
+
+    .down-rectangle {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background-color: red; /* Color for down */
+        margin-left: 5px; /* Space between text and rectangle */
+    }
+</style>
+
+
+<section id="center" class="center_shop">
+    <div class="container">
+        <div class="row">
+            <div class="center_shop_t clearfix">
+                <div class="col-sm-6">
+                    <div class="center_shop_tl clearfix d-flex align-items-center">
+                        <h4 class="mgt"><a class="button" asp-page="">UPDATE PRICE</a></h4>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="center_shop_tr text-right clearfix">
+                        <h6 class="col_2">PRICE AT @Model.UpdatedDate</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="center" class="center_shop">
+    <div class="container">
+        <div class="row">
+            <div class="center_shop_t clearfix">
+                <div class="center_shop_tl clearfix">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Metal</th>
+                                <th>Price</th>
+                                <th>Ask</th>
+                                <th>Bid</th>
+                                <th>High</th>
+                                <th>Low</th>
+                                <th>Change</th>
+                                <th>Change %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var metal in Model.MetalDTOs)
+                            {
+                                var change = metal.Rate?.Change ?? 0;
+                                var changeClass = change > 0 ? "up-rectangle" : "down-rectangle";
+                                <tr>
+                                    <td>@metal.Metal</td>
+                                    <td>@metal.Rate?.Price.ToString("0.00")</td>
+                                    <td>@metal.Rate?.Ask.ToString("0.00")</td>
+                                    <td>@metal.Rate?.Bid.ToString("0.00")</td>
+                                    <td>@metal.Rate?.High.ToString("0.00")</td>
+                                    <td>@metal.Rate?.Low.ToString("0.00")</td>
+                                    <td>
+                                        @metal.Rate?.Change.ToString("0.00")%
+                                        <span class="@changeClass"></span>
+                                    </td>
+                                    <td>
+                                        @metal.Rate?.ChangePercent.ToString()%
+                                        <span class="@changeClass"></span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
