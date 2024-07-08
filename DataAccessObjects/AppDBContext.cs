@@ -18,6 +18,7 @@ namespace DataAccessObjects
         public DbSet<Material> Materials { get; set; }
         public DbSet<Warranty> Warranties { get; set; }
         public DbSet<WarrantyHistory> WarrantyHistories { get; set; }
+        public DbSet<Customer>? Customer { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

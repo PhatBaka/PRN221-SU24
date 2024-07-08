@@ -22,11 +22,21 @@ namespace BusinessObjects
         [Required]
         public OrderEnum OrderType { get; set; }
 
+        //[Required]
+        //public int CustomerId { get; set; }
+
+        //[Required]
+        //public virtual Account Customer { get; set; }
+
+        [Required]
+        public int AccountId { get; set; }
+
+        public virtual Account? Staff { get; set; }
+
         [Required]
         public int CustomerId { get; set; }
 
-        [Required]
-        public virtual Account Customer { get; set; }
+        public virtual Customer? Customer { get; set; }
 
         [Required]
         public virtual ICollection<Warranty> Warranties { get; set; }
