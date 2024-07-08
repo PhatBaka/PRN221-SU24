@@ -1,0 +1,63 @@
+﻿@page
+@model UI.Pages.LoginModel
+@{
+	Layout = "_Layout";
+}
+
+
+<section id="center" class="center_shop">
+	<div class="container">
+		<div class="row">
+			<div class="center_shop_t clearfix">
+				<div class="col-sm-6">
+					<div class="center_shop_tl clearfix">
+						<h4 class="mgt">Login</h4>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="center_shop_tr text-right clearfix">
+						<h6 class="col_2">You are here: <a asp-page="Login">Login</a></h6>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section id="contact_top">
+	<div class="container">
+		<div class="row">
+			<div class="">
+				<div class="col-sm-6">
+					<div class="">
+						<img src="~/img/login.jpg"
+							 width="100%" height="500px" />
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="detail_14 clearfix">
+						<form method="post">
+							<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+							<div class="form-group">
+								<label asp-for="Account.Email" class="control-label"></label>
+								<input asp-for="Account.Email" type="text" class="form-control" placeholder="Email*">
+								<span asp-validation-for="Account.Email" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label asp-for="Account.Password" class="control-label"></label>
+								<input asp-for="Account.Password" type="password" class="form-control" placeholder="Password*">
+								<span asp-validation-for="Account.Password" class="text-danger"></span>
+							</div>
+							<h4><input class="button" type="submit" value="Login" />
+						</form>
+					</div>
+					@if (Model.Message != null)
+					{
+						<p>@Model.Message</p>
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+

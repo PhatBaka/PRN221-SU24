@@ -12,7 +12,7 @@ public class Customer
     }
 
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
     public Guid CustomerId { get; set; }
 
     [Required]

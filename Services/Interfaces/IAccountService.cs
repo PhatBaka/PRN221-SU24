@@ -11,5 +11,9 @@ namespace Services.Interfaces
     public interface IAccountService
     {
         public Task<GetAccountDTO> GetAccount(string email, string password);
+        public Task<IList<GetAccountDTO>> GetAccounts();
+        public Task<bool> CreateAccount(AccountDTO accountDTO);
+        public Task<bool> UpdateAccount(AccountDTO accountDTO, Guid id);
+        public Task<bool> DeleteAccount(Guid id);
     }
 }

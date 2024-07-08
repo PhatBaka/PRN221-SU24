@@ -13,12 +13,12 @@ namespace DataAccessObjects.Migrations
                 name: "Account",
                 columns: table => new
                 {
-                    AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Role = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
+                    Email = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(10)", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(50)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -29,10 +29,10 @@ namespace DataAccessObjects.Migrations
                 name: "Customer",
                 columns: table => new
                 {
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(10)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(50)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -44,15 +44,15 @@ namespace DataAccessObjects.Migrations
                 columns: table => new
                 {
                     JewelryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    JewelryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JewelryName = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     ManufacturingFees = table.Column<decimal>(type: "money", nullable: true),
-                    JewelryType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    JewelryType = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(50)", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     TotalWeight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     UnitPrice = table.Column<decimal>(type: "money", nullable: false),
                     MaterialPrice = table.Column<decimal>(type: "money", nullable: false),
-                    JewelryCategory = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JewelryCategory = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     JewelryImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     TotalGemPrice = table.Column<decimal>(type: "money", nullable: false),
                     TotalMetalPrice = table.Column<decimal>(type: "money", nullable: false),
@@ -68,8 +68,8 @@ namespace DataAccessObjects.Migrations
                 name: "Material",
                 columns: table => new
                 {
-                    MaterialId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MaterialId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
+                    Name = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -81,10 +81,10 @@ namespace DataAccessObjects.Migrations
                     IsMetal = table.Column<bool>(type: "bit", nullable: false),
                     Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Purity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Clarity = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Color = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Sharp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MaterialStatus = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Clarity = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Color = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Sharp = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    MaterialStatus = table.Column<string>(type: "nvarchar(50)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -95,13 +95,13 @@ namespace DataAccessObjects.Migrations
                 name: "Order",
                 columns: table => new
                 {
-                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     TotalPrice = table.Column<decimal>(type: "money", nullable: true),
                     DiscountPrice = table.Column<decimal>(type: "money", nullable: true),
                     FinalPrice = table.Column<decimal>(type: "money", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OrderType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    OrderType = table.Column<string>(type: "nvarchar(50)", nullable: true),
                     AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },

@@ -12,7 +12,7 @@ public partial class Account
     }
 
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
     public Guid AccountId { get; set; }
 
     [Required]
