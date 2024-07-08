@@ -9,27 +9,23 @@ using Microsoft.AspNetCore.Http;
 
 namespace DTOs
 {
-    public class MaterialDTO
+    public class GemDTO
     {
-        public Guid MaterialId { get; set; }
+		public string? CertificateCode { get; set; }
 
-        public string? Name { get; set; }
-
-        public string? Description { get; set; }
+		public string? Description { get; set; }
 
         public DateTime? CreatedDate { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
 
-        public decimal CurrentPrice { get; set; }
-
         public decimal SellPrice { get; set; }
 
         public decimal BuyPrice { get; set; }
 
-        public IFormFile? MaterialImageData { get; set; }
+        public IFormFile? MaterialImageFile { get; set; }
 
-        public IFormFile? CertificateImageData { get; set; }
+        public IFormFile? CertificateImageFile { get; set; }
 
         public bool IsMetal { get; set; }
 
@@ -41,17 +37,23 @@ namespace DTOs
 
         public string? Color { get; set; }
 
-        public string? Sharp { get; set; }
+        public string? Cut { get; set; }
+
+        public string? Shape { get; set; }
 
         public string? MaterialStatus { get; set; }
-    }
 
-    public class GetMaterialDTO : MaterialDTO
+		public string? GemType { get; set; }
+	}
+
+    public class GetGemDTO : GemDTO
     {
-        public GetMaterialDTO()
+        public GetGemDTO()
         {
             Jewelries = new HashSet<GetJewelryDTO>();
         }
+
+        public Guid MaterialId { get; set; }
 
         public byte[]? MaterialImageData { get; set; }
 

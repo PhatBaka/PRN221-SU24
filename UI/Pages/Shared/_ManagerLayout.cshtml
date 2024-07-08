@@ -1,17 +1,20 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+
+<html>
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Jewelry</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/global.css" rel="stylesheet">
-    <link href="css/contact.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
-    <link href="https://fonts.googleapis.com/css?family=Alata&display=swap" rel="stylesheet">
-    <script src="js/jquery-2.1.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Jewelry</title>
+	<link href="~/css/bootstrap.min.css" rel="stylesheet">
+	<link href="~/css/global.css" rel="stylesheet">
+	<link href="~/css/shop.css" rel="stylesheet">
+	<link href="~/css/cart.css" rel="stylesheet">
+	<link href="~/css/checkout.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="~/css/font-awesome.min.css" />
+	<link href="https://fonts.googleapis.com/css?family=Alata&display=swap" rel="stylesheet">
+	<script src="~/js/jquery-2.1.1.min.js"></script>
+	<script src="~/js/bootstrap.min.js"></script>
 </head>
 <body>
 	<section id="menu" class="clearfix cd-secondary-nav">
@@ -25,7 +28,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" asp-page="Manager">
+					<a class="navbar-brand" href="index.html">
 						<i class="fa fa-diamond"></i> <span class="col">Jewe</span>lry
 					</a>
 				</div>
@@ -33,14 +36,7 @@
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav nav_m">
-						<li class="dropdown">
-							<a class="m_tag" href="#" data-toggle="dropdown" role="button"
-							   aria-expanded="false">Material<span class="caret"></span></a>
-							<ul class="dropdown-menu drop_3" role="menu">
-								<li><a asp-page="Materials/Gems/Index">Gem</a></li>
-								<li><a class="border_none" asp-page="Materials/Metals/Index">Metal</a></li>
-							</ul>
-						</li>
+						<li><a class="m_tag" asp-page="/Accounts/Index">Account</a></li>
 					</ul>
 				</div>
 				<!-- /.navbar-collapse -->
@@ -50,12 +46,10 @@
 
 	</section>
 
-    @RenderBody()
+	<div>
+		@RenderBody()
+	</div>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
 
-    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

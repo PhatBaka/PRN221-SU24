@@ -23,9 +23,9 @@ namespace UI.AppStarts
             CreateMap<Jewelry, GetJewelryDTO>().ReverseMap();
             #endregion
 
-            #region MATERIAL
-            CreateMap<Material, MaterialDTO>().ReverseMap();
-            CreateMap<Material, GetMaterialDTO>().ReverseMap();
+            #region GEM
+            CreateMap<Material, GemDTO>().ReverseMap();
+            CreateMap<Material, GetGemDTO>().ReverseMap();
             #endregion
 
             #region

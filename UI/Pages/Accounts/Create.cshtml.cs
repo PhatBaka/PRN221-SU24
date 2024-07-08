@@ -48,10 +48,10 @@ namespace UI.Pages.Accounts
 
             if (await _accountService.CreateAccount(Account))
             {
-                return Page();
+                return RedirectToPage("./Index");
             }
 
-            return RedirectToPage("./Index");
+            return Page();
         }
     }
 }

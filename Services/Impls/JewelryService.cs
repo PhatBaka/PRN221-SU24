@@ -1,5 +1,6 @@
 ﻿using BusinessObjects;
 using Castle.Core.Internal;
+using DTOs;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Repositories.Interfaces;
@@ -19,5 +20,14 @@ namespace Services.Impls
 {
     public class JewelryService : IJewelryService
     {
+        public Task<bool> CreateJewelry(JewelryDTO jewelryDTO)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IList<GetJewelryDTO>> GetJewelries()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

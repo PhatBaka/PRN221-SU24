@@ -48,7 +48,7 @@ namespace DTOs
     {
         public GetJewelryDTO()
         {
-            Materials = new HashSet<GetMaterialDTO>();
+            Materials = new HashSet<GetGemDTO>();
             OrderDetails = new HashSet<GetOrderDetailDTO>();
         }
 
@@ -56,7 +56,7 @@ namespace DTOs
 
         public byte[]? JewelryImageData { get; set; }
 
-        public virtual ICollection<GetMaterialDTO> Materials { get; set; }
+        public virtual ICollection<GetGemDTO> Materials { get; set; }
 
         public virtual ICollection<GetOrderDetailDTO> OrderDetails { get; set; }
     }

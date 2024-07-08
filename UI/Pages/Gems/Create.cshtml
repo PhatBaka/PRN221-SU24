@@ -1,0 +1,129 @@
+﻿@page
+@model UI.Pages.Gems.CreateModel
+@{
+    Layout = "_ManagerLayout";
+}
+
+<section id="center" class="center_shop">
+    <div class="container">
+        <div class="row">
+            <div class="center_shop_t clearfix">
+                <div class="col-sm-6">
+                    <div class="center_shop_tl clearfix d-flex align-items-center">
+                        <h4 class="mgt">NEW GEM</h4>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="center_shop_tr text-right clearfix">
+                        <h6 class="col_2">You are here: <a asp-asp-page="Gems/Index">Home</a> / Gem</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<form method="post" enctype="multipart/form-data">
+    <section id="checkout" class="clearfix">
+        <div class="container">
+            <div class="row">
+                <div class="checkout_1 clearfix">
+                    <div class="col-sm-8">
+                        <div class="checkout_1l1 clearfix">
+                            <div class="col-sm-6 space_left">
+                                <h5>Certificate code <span class="col_1">*</span></h5>
+                                <input asp-for="@Model.Gem.CertificateCode" class="form-control" type="text">
+                            </div>
+                            <div class="col-sm-2 space_left">
+                                <h5>Sell price <span class="col_1">*</span></h5>
+                                <input asp-for="@Model.Gem.SellPrice" class="form-control" type="number">
+                            </div>
+                            <div class="col-sm-2 space_left">
+                                <h5>Weight <span class="col_1">*</span></h5>
+                                <input asp-for="@Model.Gem.Weight" class="form-control">
+                            </div>
+                            <div class="col-sm-2 space_left">
+                                <h5>Purity <span class="col_1">*</span></h5>
+                                <input asp-for="@Model.Gem.Purity" class="form-control">
+                            </div>
+                        </div>
+                        <div class="checkout_1l1 clearfix">
+                            <div class="col-sm-3 space_left">
+                                <h5>Color <span class="col_1">*</span></h5>
+                                <select asp-for="@Model.Gem.Color" class="form-control" asp-items="Model.ColorOptions"></select>
+                            </div>
+                            <div class="col-sm-3 space_left">
+                                <h5>Sharp <span class="col_1">*</span></h5>
+                                <select asp-for="@Model.Gem.Shape" class="form-control" asp-items="Model.ShapeOptions"></select>
+                            </div>
+                            <div class="col-sm-2 space_left">
+                                <h5>Clarity <span class="col_1">*</span></h5>
+                                <select asp-for="@Model.Gem.Clarity" class="form-control" asp-items="Model.ClarityOptions"></select>
+                            </div>
+                            <div class="col-sm-2 space_left">
+                                <h5>Type <span class="col_1">*</span></h5>
+                                <select asp-for="@Model.Gem.GemType" class="form-control" asp-items="Model.GemOptions"></select>
+                            </div>
+                            <div class="col-sm-2 space_left">
+                                <h5>Cut <span class="col_1">*</span></h5>
+                                <select asp-for="@Model.Gem.Cut" class="form-control" asp-items="Model.CutOptions"></select>
+                            </div>
+                        </div>
+                        <div class="checkout_1l1 clearfix">
+                            <div class="col-sm-12 space_left">
+                                <h5>Description</h5>
+                                <textarea asp-for="@Model.Gem.Description" class="form-control" type="text" style="height:350px"></textarea>
+                                <h4 class="mgt"><input class="button" type="submit" value="CREATE" /></h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="checkout_1l1 clearfix">
+                            <h5>Gem image <span class="col_1">*</span></h5>
+                            <input asp-for="Gem.MaterialImageFile" type="file" class="form-control" id="materialImageInput" accept="image/*">
+                            <div class="mt-6" id="materialImagePreviewContainer">
+                                <!-- Preview images will be shown here -->
+                            </div>
+                            <h5>Certificate image <span class="col_1">*</span></h5>
+                            <input asp-for="Gem.CertificateImageFile" type="file" class="form-control" id="gemCertificateInput" accept="image/*">
+                            <div class="mt-6" id="gemCertificatePreviewContainer">
+                                <!-- Preview images will be shown here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+<script>
+    // Function to handle file input change and show preview
+    function handleFileSelect(inputId, previewContainerId) {
+        const input = document.getElementById(inputId);
+        const previewContainer = document.getElementById(previewContainerId);
+
+        input.addEventListener('change', function () {
+            while (previewContainer.firstChild) {
+                previewContainer.removeChild(previewContainer.firstChild);
+            }
+
+            const file = input.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const imgElement = document.createElement('img');
+                imgElement.setAttribute('src', e.target.result);
+                imgElement.setAttribute('class', 'img-thumbnail');
+                previewContainer.appendChild(imgElement);
+            }
+
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Call handleFileSelect for each file input
+    document.addEventListener('DOMContentLoaded', function () {
+        handleFileSelect('materialImageInput', 'materialImagePreviewContainer');
+        handleFileSelect('gemCertificateInput', 'gemCertificatePreviewContainer');
+    });
+</script>

@@ -39,13 +39,13 @@ namespace UI.Pages.Accounts
 
             CurrentFilter = searchString;
 
-            IQueryable<GetAccountDTO> studentsIQ = _accountService.GetAccounts().Result.AsQueryable();
+            IQueryable<GetAccountDTO> accountsIQ = _accountService.GetAccounts().Result.AsQueryable();
 
             if (!String.IsNullOrEmpty(searchString))
-                studentsIQ = studentsIQ.Where(s => s.Email.Contains(searchString));
+                accountsIQ = accountsIQ.Where(s => s.Email.Contains(searchString));
 
             Accounts = PaginatedList<GetAccountDTO>.Create(
-                studentsIQ.AsNoTracking(), pageIndex ?? 1, 5);
+                accountsIQ.AsNoTracking(), pageIndex ?? 1, 5);
         }
     }
 }
