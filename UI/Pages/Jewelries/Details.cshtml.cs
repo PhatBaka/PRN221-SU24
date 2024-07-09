@@ -38,6 +38,7 @@ namespace UI.Pages.Jewelries
             }
 
             Jewelry jewelry = jewerlryService.GetJewelryById(id.Value);
+            
 
             ImageDataBase64String = imageDataBase64;
             if (jewelry.JewelryImage != null && jewelry.JewelryImage.Length > 0)
