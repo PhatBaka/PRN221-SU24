@@ -18,24 +18,30 @@ namespace DTOs
 
         public Guid? JewelryId { get; set; }
 
-        [Required]
         public string? JewelryName { get; set; }
 
         public decimal? ManufacturingFees { get; set; }
-
-        public string? JewelryType { get; set; }
 
         public string? Status { get; set; }
 
         public int Quantity { get; set; }
 
+        public decimal TotalGemWeight { get; set; }
+        public decimal TotalMetalWeight { get; set; }
+
         public decimal TotalWeight { get; set; }
 
-        public decimal MaterialPrice { get; set; }
+        public decimal TotalSellMaterialPrice { get; set; }
 
-        public IFormFile? JewelryImageFile { get; set; }
+        public decimal TotalBuyMaterialPrice { get; set; }
+
+        public decimal SellJewelryPrice { get; set; }
+
+        public decimal BuyJewelryPrice { get; set; }
 
         public string? JewelryCategory { get; set; }
+
+        public IFormFile? JewelryImageFile { get; set; }
 
         public decimal TotalSellGemPrice { get; set; }
 
@@ -49,9 +55,6 @@ namespace DTOs
 
         public DateTime? UpdatedDate { get; set; }
 
-        public decimal TotalGemWeight { get; set; }
-
-        public decimal TotalMetalWeight { get; set; }
 
         public virtual ICollection<GetMaterialDTO> Materials { get; set; }
     }

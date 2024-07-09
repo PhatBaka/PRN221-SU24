@@ -263,17 +263,13 @@
                 <div class="checkout_1 clearfix">
                     <div class="col-sm-6">
                         <div class="checkout_1l1 clearfix">
-                            <div class="col-sm-4 space_left">
+                            <div class="col-sm-6 space_left">
                                 <h5>Jewelry ID <span class="col_1">*</span></h5>
                                 <input asp-for="@Model.Jewelry.JewelryId" class="form-control" type="text">
                             </div>
-                            <div class="col-sm-4 space_left">
+                            <div class="col-sm-6 space_left">
                                 <h5>Jewelry Name <span class="col_1">*</span></h5>
                                 <input asp-for="@Model.Jewelry.JewelryName" class="form-control" type="tex">
-                            </div>
-                            <div class="col-sm-4 space_left">
-                                <h5>Work Fee <span class="col_1">*</span></h5>
-                                <input asp-for="@Model.Jewelry.ManufacturingFees" class="form-control" type="number">
                             </div>
                         </div>
                         <div class="checkout_1l1 clearfix">
@@ -281,9 +277,13 @@
                                 <h5>Clarity <span class="col_1">*</span></h5>
                                 <select asp-for="@Model.Jewelry.JewelryCategory" class="form-control" asp-items="Model.JewelryOptions"></select>
                             </div>
-                            <div class="checkout_1l1 clearfix">
-                                <h4 class="mgt"><input class="button" type="submit" value="CREATE" /></h4>
+                            <div class="col-sm-6 space_left">
+                                <h5>Work Fee <span class="col_1">*</span></h5>
+                                <input asp-for="@Model.Jewelry.ManufacturingFees" class="form-control" type="number">
                             </div>
+                        </div>
+                        <div class="checkout_1l1 clearfix">
+                            <h4 class="mgt"><input class="button" type="submit" value="CREATE" /></h4>
                         </div>
                     </div>
                     <div class="col-sm-6">

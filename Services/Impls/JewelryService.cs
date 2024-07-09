@@ -134,6 +134,12 @@ namespace Services.Impls
                 entity.TotalBuyMetalPrice = buyMetalPrice;
                 entity.TotalSellMetalPrice = sellMetalPrice;
 
+                entity.TotalBuyMaterialPrice = buyGemPrice + buyMetalPrice;
+                entity.TotalSellMaterialPrice = sellMetalPrice + sellGemPrice;
+
+                entity.BuyJewelryPrice = entity.TotalBuyMaterialPrice +  (decimal) jewelryDTO.ManufacturingFees;
+                entity.SellJewelryPrice = entity.TotalSellMaterialPrice + (decimal) jewelryDTO.ManufacturingFees;
+
                 entity.JewelryImageData = await ImageHelper.ConvertToByteArrayAsync(jewelryDTO.JewelryImageFile);
 
                 // Add the Jewelry entity to the repository

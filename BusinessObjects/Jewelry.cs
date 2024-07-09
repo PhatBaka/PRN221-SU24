@@ -20,8 +20,6 @@ public class Jewelry
     [Column(TypeName = "money")]
     public decimal? ManufacturingFees { get; set; }
 
-    public string? JewelryType { get; set; }
-
     public string? Status { get; set; }
 
     public int Quantity { get; set; }
@@ -38,7 +36,19 @@ public class Jewelry
 
     [Required]
     [Column(TypeName = "money")]
-    public decimal MaterialPrice { get; set; }
+    public decimal TotalSellMaterialPrice { get; set; }
+
+    [Required]
+    [Column(TypeName = "money")]
+    public decimal TotalBuyMaterialPrice { get; set; }
+
+    [Required]
+    [Column(TypeName = "money")]
+    public decimal SellJewelryPrice { get; set; }
+
+    [Required]
+    [Column(TypeName = "money")]
+    public decimal BuyJewelryPrice { get; set; }
 
     [Required]
     public string? JewelryCategory { get; set; }
