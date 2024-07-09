@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Services.Impls;
 using System.Diagnostics;
 using BusinessObjects.Enums;
+using Castle.Core.Internal;
 
 namespace UI.Pages.Orders
 {
@@ -75,37 +76,54 @@ namespace UI.Pages.Orders
 
         public async Task<IActionResult> OnPostSubmitOrder()
         {
-            
+            // Retrieve account ID from session
+            int? accountID = HttpContext.Session.GetInt32("ID");
+            if (accountID == null)
+            {
+                // Handle case where user is not logged in
+                return RedirectToPage("/Login");
+            }
+
+            // Check if cart is empty
             if (CartItems == null || CartItems.Count == 0)
             {
-                Debug.WriteLine("Count: " + CartItems.Count);
                 return RedirectToPage();
             }
 
+            // Create new order
             var newOrder = new Order
             {
                 OrderDate = DateTime.Now,
-                OrderType = OrderEnum.NEW, // Assuming 1 is the type for customer orders
-                CustomerId = 1
+                OrderType = OrderEnum.NEW,
+                CustomerId = accountID.Value
             };
 
+            // Initialize list of order details
             List<OrderDetail> items = new List<OrderDetail>();
+
+            // Add order details from cart items
             foreach (var cartItem in CartItems)
             {
                 Debug.WriteLine(cartItem.Jewelry.JewelryName);
                 var orderDetail = new OrderDetail
                 {
-                    OrderId = newOrder.OrderId,
                     JewelryId = cartItem.Jewelry.JewelryId,
                     Quantity = cartItem.Quantity,
-                    PromotionDetailId = null,
                     UnitPrice = (double)cartItem.Jewelry.LaborPrice,
                     DiscountPercent = 0
                 };
                 items.Add(orderDetail);
             }
+
+            // Save order and order details
             await _orderService.CreateOrderAsync(newOrder, items);
+
+            // Clear cart
+            HttpContext.Session.Remove("Cart");
+
+            // Redirect to order confirmation page
             return RedirectToPage("OrderConfirmation", new { orderId = newOrder.OrderId });
         }
+
     }
 }

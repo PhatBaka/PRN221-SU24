@@ -48,5 +48,10 @@ namespace Services.Impls
         {
             return (await _orderRepository.GetAllAsync()).ToList();
         }
+
+        public async Task<IEnumerable<Order>> GetOrdersByUserIdAsync(int userId)
+        {
+            return await _orderRepository.GetWhereAsync(o => o.CustomerId == userId);
+        }
     }
 }

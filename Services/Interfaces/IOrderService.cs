@@ -9,5 +9,6 @@ namespace Services.Interfaces
         Task<Order> CreateOrderAsync(Order order, List<OrderDetail> orderDetails);
         Task<Order> GetOrderByIdAsync(int orderId);
         Task<List<Order>> GetAllOrdersAsync();
+        Task<IEnumerable<Order>> GetOrdersByUserIdAsync(int userId);
     }
 }
