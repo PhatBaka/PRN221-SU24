@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace Services.Interfaces
 {
-    public class ICustomerService 
+    public interface ICustomerService 
     {
+        public Task<GetCustomerDTO> GetCustomerByPhoneNumber(string phoneNumber);
     }
 }

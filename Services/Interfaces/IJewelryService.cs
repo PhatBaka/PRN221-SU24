@@ -10,6 +10,7 @@ namespace Services.Interfaces
 {
     public interface IJewelryService
     {
+        public Task<GetJewelryDTO> GetJewelryById(Guid id);
         public Task<IList<GetJewelryDTO>> GetJewelries();
         public Task<GetJewelryDTO> CreateJewelry(JewelryDTO jewelryDTO, IList<GetMaterialDTO> materialCart, IList<GetPriceDTO> priceDTOs);
     }

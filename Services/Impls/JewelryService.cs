@@ -166,5 +166,18 @@ namespace Services.Impls
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<GetJewelryDTO> GetJewelryById(Guid id)
+        {
+            try
+            {
+                var entity = _jewelryRepository.GetByIdAsync(id).Result;
+                return _mapper.Map<GetJewelryDTO>(entity);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

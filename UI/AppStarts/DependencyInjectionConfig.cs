@@ -32,6 +32,7 @@ namespace UI.AppStarts
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IJewelryRepository, JewelryRepository>();
             services.AddScoped<IMaterialRepository, MaterialRepository>();
+            services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IJewelryService, JewelryService>();
