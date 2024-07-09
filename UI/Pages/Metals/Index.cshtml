@@ -65,6 +65,7 @@
                                 <th>Low</th>
                                 <th>Change</th>
                                 <th>Change %</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -86,6 +87,9 @@
                                     <td>
                                         @metal.Rate?.ChangePercent.ToString()%
                                         <span class="@changeClass"></span>
+                                    </td>
+                                    <td>
+                                        <img src="@metal.ImagePath" width="50px" height="50px" class="iw">
                                     </td>
                                 </tr>
                             }

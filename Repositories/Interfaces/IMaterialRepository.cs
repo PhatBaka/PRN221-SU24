@@ -9,5 +9,6 @@ namespace Repositories.Interfaces
 {
     public interface IMaterialRepository : IGenericRepository<Material>
     {
+
     }
 }

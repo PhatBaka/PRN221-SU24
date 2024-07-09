@@ -10,6 +10,7 @@ namespace Services.Interfaces
     public interface IGemService
     {
         public Task<IList<GetGemDTO>> GetGems();
-        public Task<bool> CreateGem(GemDTO gemDTO);
+        public Task<GemDTO> CreateGem(GemDTO gemDTO);
+        public Task<GetGemDTO> GetGemById(Guid id);
     }
 }

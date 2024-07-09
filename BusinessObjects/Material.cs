@@ -17,6 +17,8 @@ public class Material
     public Guid MaterialId { get; set; }
 
     [Required]
+    public string? Name { get; set; }
+
     public string? CertificateCode { get; set; }
 
     public string? Description { get; set; }
@@ -26,13 +28,16 @@ public class Material
     public DateTime? UpdatedDate { get; set; }
 
     [Column(TypeName = "money")]
-    public decimal CurrentPrice { get; set; }
-
-    [Column(TypeName = "money")]
     public decimal SellPrice { get; set; }
 
     [Column(TypeName = "money")]
     public decimal BuyPrice { get; set; }
+
+    [Column(TypeName = "money")]
+    public decimal BidPrice { get; set; }
+
+    [Column(TypeName = "money")]
+    public decimal AskPrice { get; set; }
 
     public byte[] ?MaterialImageData { get; set; }
 
@@ -53,10 +58,6 @@ public class Material
     public string? Cut { get; set; }
 
     public string? Shape { get; set; }
-
-    public string? GemType { get; set; }
-
-    public string? MaterialStatus { get; set; }
 
     public virtual ICollection<Jewelry> Jewelries { get; set; }
 }

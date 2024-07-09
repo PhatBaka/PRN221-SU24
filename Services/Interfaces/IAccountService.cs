@@ -12,7 +12,7 @@ namespace Services.Interfaces
     {
         public Task<GetAccountDTO> GetAccount(string email, string password);
         public Task<IList<GetAccountDTO>> GetAccounts();
-        public Task<bool> CreateAccount(AccountDTO accountDTO);
+        public Task<GetAccountDTO> CreateAccount(AccountDTO accountDTO);
         public Task<bool> UpdateAccount(AccountDTO accountDTO, Guid id);
         public Task<bool> DeleteAccount(Guid id);
     }

@@ -25,7 +25,7 @@ namespace Services.Impls
             _mapper = mapper;
         }
 
-        public async Task<bool> CreateGem(GemDTO gemDTO)
+        public async Task<GemDTO> CreateGem(GemDTO gemDTO)
         {
             try
             {
@@ -34,8 +34,20 @@ namespace Services.Impls
                 entity.CertificateImageData = await ImageHelper.ConvertToByteArrayAsync(gemDTO.CertificateImageFile);
                 entity.MaterialImageData = await ImageHelper.ConvertToByteArrayAsync(gemDTO.MaterialImageFile);
                 entity.CreatedDate = DateTime.Now;
-                entity.MaterialStatus = ObjectStatusEnum.ACTIVE.ToString();
-                return await _materialRepository.AddAsync(entity);
+                return _mapper.Map<GemDTO>(await _materialRepository.AddAsync(entity));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<GetGemDTO> GetGemById(Guid id)
+        {
+            try
+            {
+                var entity = await _materialRepository.GetByIdAsync(id);
+                return _mapper.Map<GetGemDTO>(entity);
             }
             catch (Exception ex)
             {

@@ -67,7 +67,7 @@ namespace UI.Pages.Gems
                 return Page();
             }
 
-            if (await _gemService.CreateGem(Gem))
+            if (await _gemService.CreateGem(Gem) != null)
             {
                 return RedirectToPage("./Index");
             }

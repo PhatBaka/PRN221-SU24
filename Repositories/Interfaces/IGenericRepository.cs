@@ -14,7 +14,7 @@ namespace Repositories.Interfaces
         Task<DbSet<TEntity>> GetAllAsync();
         Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
         Task<IEnumerable<TEntity>> GetWhereAsync(Expression<Func<TEntity, bool>> predicate);
-        Task<bool> AddAsync(TEntity entity);
+        Task<TEntity> AddAsync(TEntity entity);
         Task<bool> UpdateAsync(TEntity entity);
         Task<bool> DeleteAsync(TEntity entity);
     }

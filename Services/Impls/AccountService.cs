@@ -25,13 +25,13 @@ namespace Services.Impls
             _accountRepository = accountRepository;
         }
 
-        public async Task<bool> CreateAccount(AccountDTO accountDTO)
+        public async Task<GetAccountDTO> CreateAccount(AccountDTO accountDTO)
         {
             try
             {
                 var entity = _mapper.Map<Account>(accountDTO);
                 entity.Status = ObjectStatusEnum.ACTIVE.ToString();
-                return await _accountRepository.AddAsync(entity);
+                return _mapper.Map<GetAccountDTO>(await _accountRepository.AddAsync(entity));
             }
             catch (Exception ex)
             {

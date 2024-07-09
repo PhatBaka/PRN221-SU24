@@ -46,7 +46,7 @@ namespace UI.Pages.Accounts
                 return Page();
             }
 
-            if (await _accountService.CreateAccount(Account))
+            if (await _accountService.CreateAccount(Account) != null)
             {
                 return RedirectToPage("./Index");
             }

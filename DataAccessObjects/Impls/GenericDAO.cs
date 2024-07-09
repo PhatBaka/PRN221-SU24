@@ -90,12 +90,13 @@ namespace DataAccessObjects.Impls
             }
         }
 
-        public async Task<bool> AddAsync(TEntity entity)
+        public async Task<TEntity> AddAsync(TEntity entity)
         {
             try
             {
                 await _dbSet.AddAsync(entity);
-                return await _context.SaveChangesAsync() > 0;
+                await _context.SaveChangesAsync();
+                return entity;
             }
             catch (Exception ex)
             {

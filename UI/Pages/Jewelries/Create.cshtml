@@ -1,0 +1,333 @@
+﻿@page
+@model UI.Pages.Jewelries.CreateModel
+@{
+    Layout = "_ManagerLayout";
+}
+
+<style>
+    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+        padding: 8px;
+        line-height: 1.42857143;
+        vertical-align: middle;
+        border-top: 1px solid #ddd
+    }
+
+    .wrap-text {
+        word-wrap: break-word; /* IE */
+        overflow-wrap: break-word; /* CSS3 */
+        white-space: normal;
+        max-width: 150px;
+    }
+</style>
+
+<section id="center" class="center_shop">
+    <div class="container">
+        <div class="row">
+            <div class="center_shop_t clearfix">
+                <div class="col-sm-6">
+                    <div class="center_shop_tl clearfix d-flex align-items-center">
+                        <h4 class="mgt">NEW GEM</h4>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="center_shop_tr text-right clearfix">
+                        <h6 class="col_2">You are here: <a asp-asp-page="Gems/Index">Home</a> / Gem</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+
+        <div class="cart_3 clearfix">
+
+            <div class="col-sm-6">
+
+                <!-- Metal cart -->
+                <div class="cart_3r clearfix">
+                    <h5 class="mgt head_1">METAL</h5>
+                </div>
+                @{
+                    var metalsInCart = Model.MetalCarts;
+                    if (metalsInCart != null && metalsInCart.Count > 0)
+                    {
+                        foreach (var metal in metalsInCart)
+                        {
+                            <div class="cart_3l1 clearfix">
+                                <div class="col-sm-3 space_left">
+                                    <div class="cart_3l1i clearfix">
+                                        <img src="@metal.ImagePath" alt="abc" class="iw">
+                                    </div>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="cart_3l1i1 clearfix">
+                                        <h5 class="mgt">
+                                            @metal.Name.ToUpper()
+                                        </h5>
+                                        <h5 class="normal">@metal.CurrentPrice</h5>
+                                        <h5>Weight</h5>
+                                    </div>
+                                    <div class="cart_3l1i2 clearfix">
+                                    <form method="post" asp-page-handler="HandleMetalCart">
+                                        <input type="hidden" name="metalName" value="@metal.Name" />
+                                        <div class="input-group number-spinner">
+                                            <input type="text" class="form-control text-center" name="weight" >
+                                        </div>
+                                        <h6 class="mgt"><button class="button mgt" name="action" value="update">UPDATE CART</button></h6>
+                                        <h6 class="mgt"><button class="button_1 mgt" name="action" value="remove">REMOVE</button></h6>
+                                    </form>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>You don't add any metal right now</p>
+                    }
+                }
+
+                <!-- Summanry -->
+                <div class="cart_3r clearfix">
+                    <h5 class="mgt head_1">MATERIALS</h5>
+                </div>
+                @{
+                    if (Model.MaterialCarts != null && Model.MaterialCarts.Count > 0)
+                    {
+                        <table class="table table-striped table-center">
+                            <thead>
+                                <tr>
+                                    <th>Certificate code</th>
+                                    <th>Name</th>
+                                    <th>Current Price</th>
+                                    <th>Weight</th>
+                                    <th>Sell Price</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var material in Model.MaterialCarts)
+                                {
+
+                                    <tr class="d-flex justify-content-center">
+                                        <td>@material.CertificateCode</td>
+                                        <td>@material.Name</td>
+                                        @if (material.IsMetal)
+                                        {
+                                            <td>@material.CurrentPrice</td>
+                                            <td>@material.Weight</td>
+                                            <td>@material.SellPrice</td>
+                                            switch (material.Name)
+                                            {
+                                                case "GOLD":
+                                                    <td>
+                                                        <img src="~/img/gold.jpg" style="max-width: 100px; max-height: 100px;" />
+                                                    </td>
+                                                    break;
+                                                case "SILVER":
+                                                    <td>
+                                                        <img src="~/img/silver.jpg" style="max-width: 100px; max-height: 100px;" />
+                                                    </td>
+                                                    break;
+                                                case "PALLADIUM":
+                                                    <td>
+                                                        <img src="~/img/palladium.jpg" style="max-width: 100px; max-height: 100px;" />
+                                                    </td>
+                                                    break;
+                                            }
+                                        }
+                                        @if (!material.IsMetal)
+                                        {
+                                            <td></td>
+                                            <td></td>
+                                            <td>@material.SellPrice</td>
+                                            <td>
+                                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(material.MaterialImageData)" alt="@material.CertificateCode" style="max-width: 100px; max-height: 100px;" />
+                                            </td>
+                                            <td>
+                                                <a class="button" asp-page="/Gems/Detail" asp-route-id="@material.MaterialId">Details</a>
+                                            </td>
+                                            <td>
+                                                <form asp-page-handler="RemoveMaterialFromCart" method="post">
+                                                    <input type="hidden" name="MaterialId" value="@material.MaterialId" />
+                                                    <button class="button" type="submit">Remove</button>
+                                                </form>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p>You don't have any material right now</p>
+                    }
+                }
+                <hr />
+
+            </div>
+
+            <div class="col-sm-6">
+
+                <!-- Load metal -->
+                <div class="cart_3r clearfix">
+                    <h5 class="mgt head_1">METAL at @Model.UpdatedDate.ToString()</h5>
+                </div>
+                <div class="feature_2 clearfix">
+                    <div id="carousel-example" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="item active">
+                                @foreach (var metal in Model.PriceDTOS)
+                                {
+                                    <div class="col-sm-4">
+                                        <div class="feature_2im clearfix">
+                                            <div class="feature_2im1 clearfix">
+                                                <img src="@metal.ImagePath" width="200px" height="200px" class="iw" alt="Gold">
+                                            </div>
+                                            <div class="feature_2im4 clearfix">
+                                                <div class="col-sm-6 space_left">
+                                                    <h6><a class="bg_3" href="#">@metal.Rate.Ask</a></h6>
+                                                </div>
+                                                <div class="col-sm-6 feature_2im4r space_right">
+                                                    <ul>
+                                                        <form asp-page-handler="AddMetalToCart" method="post">
+                                                            <li><button type="submit" name="metalName" value="@metal.Metal" class="fa fa-shopping-cart" /></li>
+                                                        </form>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Load gem -->
+                <div class="cart_3r clearfix">
+                    <h5 class="mgt head_1">GEM</h5>
+                </div>
+                <table class="table table-striped table-center">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Type</th>
+                            <th>Sell Price</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var gem in Model.GemDTOs)
+                        {
+
+                            <tr class="d-flex justify-content-center">
+                                <td>@gem.CertificateCode</td>
+                                <td>@gem.Name</td>
+                                <td>@gem.SellPrice</td>
+                                <td>
+                                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(gem.MaterialImageData)" alt="@gem.CertificateCode" style="max-width: 100px; max-height: 100px;" />
+                                </td>
+                                <td>
+                                    <a class="button" asp-page="/Gems/Detail" asp-route-id="@gem.MaterialId">Details</a>
+                                </td>
+                                <td>
+                                    <form asp-page-handler="AddGemToCart" method="post">
+                                        <input type="hidden" name="MaterialId" value="@gem.MaterialId" />
+                                        <button class="button" type="submit" >Cart</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<form method="post" enctype="multipart/form-data" asp-page-handler="CreateJewelry">
+    <section id="checkout" class="clearfix">
+        <div class="container">
+            <div class="row">
+                <div class="checkout_1 clearfix">
+                    <div class="col-sm-6">
+                        <div class="checkout_1l1 clearfix">
+                            <div class="col-sm-4 space_left">
+                                <h5>Jewelry ID <span class="col_1">*</span></h5>
+                                <input asp-for="@Model.Jewelry.JewelryId" class="form-control" type="text">
+                            </div>
+                            <div class="col-sm-4 space_left">
+                                <h5>Jewelry Name <span class="col_1">*</span></h5>
+                                <input asp-for="@Model.Jewelry.JewelryName" class="form-control" type="tex">
+                            </div>
+                            <div class="col-sm-4 space_left">
+                                <h5>Work Fee <span class="col_1">*</span></h5>
+                                <input asp-for="@Model.Jewelry.ManufacturingFees" class="form-control" type="number">
+                            </div>
+                        </div>
+                        <div class="checkout_1l1 clearfix">
+                            <div class="col-sm-6 space_left">
+                                <h5>Clarity <span class="col_1">*</span></h5>
+                                <select asp-for="@Model.Jewelry.JewelryCategory" class="form-control" asp-items="Model.JewelryOptions"></select>
+                            </div>
+                            <div class="checkout_1l1 clearfix">
+                                <h4 class="mgt"><input class="button" type="submit" value="CREATE" /></h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="checkout_1l1 clearfix">
+                            <h5>Jewelry Image <span class="col_1">*</span></h5>
+                            <input asp-for="Jewelry.JewelryImageFile" type="file" class="form-control" id="materialImageInput" accept="image/*">
+                            <div class="mt-6" id="materialImagePreviewContainer">
+                                <!-- Preview images will be shown here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+<script>
+    // Function to handle file input change and show preview
+    function handleFileSelect(inputId, previewContainerId) {
+        const input = document.getElementById(inputId);
+        const previewContainer = document.getElementById(previewContainerId);
+
+        input.addEventListener('change', function () {
+            while (previewContainer.firstChild) {
+                previewContainer.removeChild(previewContainer.firstChild);
+            }
+
+            const file = input.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const imgElement = document.createElement('img');
+                imgElement.setAttribute('src', e.target.result);
+                imgElement.setAttribute('class', 'img-thumbnail');
+                previewContainer.appendChild(imgElement);
+            }
+
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Call handleFileSelect for each file input
+    document.addEventListener('DOMContentLoaded', function () {
+        handleFileSelect('materialImageInput', 'materialImagePreviewContainer');
+    });
+</script>

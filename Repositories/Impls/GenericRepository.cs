@@ -12,7 +12,7 @@ namespace Repositories.Impls
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
-        public Task<bool> AddAsync(TEntity entity) => GenericDAO<TEntity>.Instance.AddAsync(entity);
+        public Task<TEntity> AddAsync(TEntity entity) => GenericDAO<TEntity>.Instance.AddAsync(entity);
 
         public Task<bool> DeleteAsync(TEntity entity) => GenericDAO<TEntity>.Instance.DeleteAsync(entity);
 

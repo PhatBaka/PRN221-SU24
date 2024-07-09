@@ -26,13 +26,15 @@ public class Jewelry
 
     public int Quantity { get; set; }
 
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal TotalGemWeight { get; set; }
+
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal TotalMetalWeight { get; set; }
+
     [Required]
     [Column(TypeName = "decimal(18,2)")]
     public decimal TotalWeight { get; set; }
-
-    [Required]
-    [Column(TypeName = "money")]
-    public decimal UnitPrice { get; set; }
 
     [Required]
     [Column(TypeName = "money")]
@@ -44,10 +46,16 @@ public class Jewelry
     public byte[]? JewelryImageData { get; set; }
 
     [Column(TypeName = "money")]
-    public decimal TotalGemPrice { get; set; }
+    public decimal TotalSellGemPrice { get; set; }
 
     [Column(TypeName = "money")]
-    public decimal TotalMetalPrice { get; set; }
+    public decimal TotalBuyGemPrice { get; set; }
+
+    [Column(TypeName = "money")]
+    public decimal TotalSellMetalPrice { get; set; }
+
+    [Column(TypeName = "money")]
+    public decimal TotalBuyMetalPrice { get; set; }
 
     public DateTime? CreatedDate { get; set; }
 
