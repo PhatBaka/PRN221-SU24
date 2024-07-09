@@ -8,7 +8,7 @@ public class Jewelry
 {
     public Jewelry()
     {
-        Materials = new HashSet<Material>();
+        JewelryMaterials = new HashSet<JewelryMaterial>();
         OrderDetails = new HashSet<OrderDetail>();
     }
 
@@ -61,7 +61,7 @@ public class Jewelry
 
     public DateTime? UpdatedDate { get; set; }
 
-    public virtual ICollection<Material> Materials { get; set; } 
+    public virtual ICollection<JewelryMaterial> JewelryMaterials { get; set; } 
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } 
 }

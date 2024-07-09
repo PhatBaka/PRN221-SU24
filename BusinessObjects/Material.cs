@@ -9,7 +9,7 @@ public class Material
 {
     public Material()
     {
-        Jewelries = new HashSet<Jewelry>();
+        JewelryMaterials = new HashSet<JewelryMaterial>();
     }
 
     [Key]
@@ -59,5 +59,5 @@ public class Material
 
     public string? Shape { get; set; }
 
-    public virtual ICollection<Jewelry> Jewelries { get; set; }
+    public ICollection<JewelryMaterial> JewelryMaterials { get; set; }
 }

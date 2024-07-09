@@ -26,5 +26,23 @@ namespace DataAccessObjects
                 optionsBuilder.UseSqlServer(connectionString);
             }
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<JewelryMaterial>()
+                .HasKey(jm => new { jm.JewelryId, jm.MaterialId });
+
+            modelBuilder.Entity<JewelryMaterial>()
+                .HasOne(jm => jm.Jewelry)
+                .WithMany(j => j.JewelryMaterials)
+                .HasForeignKey(jm => jm.JewelryId);
+
+            modelBuilder.Entity<JewelryMaterial>()
+                .HasOne(jm => jm.Material)
+                .WithMany(m => m.JewelryMaterials)
+                .HasForeignKey(jm => jm.MaterialId);
+        }
     }
 }

@@ -94,7 +94,14 @@ namespace DataAccessObjects.Impls
         {
             try
             {
-                await _dbSet.AddAsync(entity);
+                // Attach the entity to the context if it's not already being tracked
+                var entry = _context.Entry(entity);
+                if (entry.State == EntityState.Detached)
+                {
+                    _dbSet.Attach(entity);
+                }
+
+                _dbSet.Add(entity);
                 await _context.SaveChangesAsync();
                 return entity;
             }
@@ -104,6 +111,7 @@ namespace DataAccessObjects.Impls
                 throw new Exception("Error occurred while adding entity", ex);
             }
         }
+
 
         public async Task<bool> UpdateAsync(TEntity entity)
         {

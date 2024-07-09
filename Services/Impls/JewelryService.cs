@@ -37,6 +37,7 @@ namespace Services.Impls
         {
             try
             {
+                // Map JewelryDTO to Jewelry entity
                 Jewelry entity = _mapper.Map<Jewelry>(jewelryDTO);
 
                 decimal gemWeight = 0;
@@ -50,61 +51,100 @@ namespace Services.Impls
 
                 foreach (var material in materialCart)
                 {
-                    // add metal to database
+                    Material materialEntity = null;
+
                     if (material.IsMetal)
                     {
-                        var materialPrice = priceDTOs.FirstOrDefault(x => x.Metal.ToUpper().Equals(material.Name));
-                        Material metal = new Material()
+                        // Check if the material already exists
+                        materialEntity = await _materialRepository.GetByIdAsync(material.MaterialId);
+                        if (materialEntity == null)
                         {
-                            AskPrice = materialPrice.Rate.Ask,
-                            BidPrice = materialPrice.Rate.Bid,
-                            Name = material.Name.ToUpper(),
-                            BuyPrice = materialPrice.Rate.Bid * material.Weight,
-                            SellPrice = materialPrice.Rate.Ask * material.Weight,
-                            IsMetal = true,
-                            CreatedDate = DateTime.Now,
-                            Weight = material.Weight
+                            // Fetch the price for the metal
+                            var materialPrice = priceDTOs.FirstOrDefault(x => x.Metal.ToUpper().Equals(material.Name));
+                            if (materialPrice == null)
+                                throw new Exception($"Price information for metal '{material.Name}' is missing.");
+
+                            // Create new material if it does not exist
+                            materialEntity = new Material
+                            {
+                                AskPrice = materialPrice.Rate.Ask,
+                                BidPrice = materialPrice.Rate.Bid,
+                                Name = material.Name.ToUpper(),
+                                BuyPrice = materialPrice.Rate.Bid * material.Weight,
+                                SellPrice = materialPrice.Rate.Ask * material.Weight,
+                                IsMetal = true,
+                                CreatedDate = DateTime.Now,
+                                Weight = material.Weight
+                            };
+
+                            await _materialRepository.AddAsync(materialEntity);
+                        }
+
+                        // Create a new JewelryMaterial entry
+                        var jewelryMaterial = new JewelryMaterial
+                        {
+                            Jewelry = entity,
+                            Material = materialEntity,
                         };
 
-                        metalWeight += material.Weight;
-                        sellMetalPrice += metal.SellPrice;
-                        buyMetalPrice += metal.BuyPrice;
+                        entity.JewelryMaterials.Add(jewelryMaterial);
 
-                        Material newMetal = await _materialRepository.AddAsync(metal);
-
-                        entity.Materials.Add(newMetal);
+                        // Update pricing and weight
+                        metalWeight += materialEntity.Weight;
+                        sellMetalPrice += materialEntity.SellPrice;
+                        buyMetalPrice += materialEntity.BuyPrice;
                     }
                     else
                     {
-                        Material existedGem = await _materialRepository.GetByIdAsync(material.MaterialId);
-                        gemWeight += existedGem.Weight;
-                        buyGemPrice += existedGem.BuyPrice;
-                        sellGemPrice += existedGem.SellPrice;
-                        entity.Materials.Add(existedGem);
+                        // Get existing gem material
+                        materialEntity = await _materialRepository.GetByIdAsync(material.MaterialId);
+                        if (materialEntity != null)
+                        {
+                            gemWeight += materialEntity.Weight;
+                            buyGemPrice += materialEntity.BuyPrice;
+                            sellGemPrice += materialEntity.SellPrice;
+
+                            // Create a new JewelryMaterial entry
+                            var jewelryMaterial = new JewelryMaterial
+                            {
+                                Jewelry = entity,
+                                Material = materialEntity,
+                            };
+
+                            entity.JewelryMaterials.Add(jewelryMaterial);
+                        }
+                        else
+                        {
+                            throw new Exception($"Material with ID {material.MaterialId} does not exist.");
+                        }
                     }
                 }
 
+                // Set Jewelry properties
                 entity.Status = ObjectStatusEnum.ACTIVE.ToString();
                 entity.CreatedDate = DateTime.Now;
 
                 entity.TotalWeight = gemWeight + metalWeight;
                 entity.TotalGemWeight = gemWeight;
                 entity.TotalMetalWeight = metalWeight;
-                
+
                 entity.TotalSellGemPrice = sellGemPrice;
                 entity.TotalBuyGemPrice = buyGemPrice;
 
                 entity.TotalBuyMetalPrice = buyMetalPrice;
-                entity.TotalSellMetalPrice = sellGemPrice;
+                entity.TotalSellMetalPrice = sellMetalPrice;
 
                 entity.JewelryImageData = await ImageHelper.ConvertToByteArrayAsync(jewelryDTO.JewelryImageFile);
 
+                // Add the Jewelry entity to the repository
                 var newJewelry = await _jewelryRepository.AddAsync(entity);
+
                 return _mapper.Map<GetJewelryDTO>(newJewelry);
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                // Log the exception or rethrow with more details
+                throw new Exception("An error occurred while creating jewelry.", ex);
             }
         }
 
