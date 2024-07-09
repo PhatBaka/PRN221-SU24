@@ -14,6 +14,7 @@ using Microsoft.CodeAnalysis;
 using System.Diagnostics;
 using NuGet.Protocol.Core.Types;
 using BusinessObjects.FilterModels;
+using BusinessObjects.Commons;
 
 namespace UI.Pages.Jewelries
 {
@@ -54,6 +55,7 @@ namespace UI.Pages.Jewelries
             {
                 ViewData[$"ItemStatusSale_{item.JewelryId}"] = StatusSaleExtension.GetDisplayName(item.StatusSale);
                 ViewData[$"ItemBasePrice_{item.JewelryId}"] = (decimal) jewelryService.GetJewelrySalePrice(item);
+                ViewData[$"ItemImage_{item.JewelryId}"] = formatImage(item);
             }
 
         }
@@ -89,5 +91,15 @@ namespace UI.Pages.Jewelries
 
             return RedirectToPage();
         }
+
+        private string formatImage(Jewelry jewelry )
+        {
+			String imageDataBase64String = StringConstants.IMAGE_DATABASE64_DEFAULT;
+			if (jewelry.JewelryImage != null && jewelry.JewelryImage.Length > 0)
+			{
+				imageDataBase64String = Convert.ToBase64String(jewelry.JewelryImage);
+			}
+            return imageDataBase64String;
+		}
     }
 }

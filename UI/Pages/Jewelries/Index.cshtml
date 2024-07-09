@@ -38,6 +38,9 @@
 					S/N
 				</th>
 				<th>
+					Jewelry Image
+				</th>
+				<th>
 					Jewelry Name
 				</th>
 				<th>
@@ -73,6 +76,9 @@
 						}
 						@i
 					</td>
+					<td class="image-row">
+						<img src="data:image/*;base64,@ViewData[$"ItemImage_{item.JewelryId}"]" alt="Jewelry Image">			
+					</td>
 					<td style="text-align: left;">
 						@Html.DisplayFor(modelItem => item.JewelryName)
 					</td>
@@ -107,7 +113,7 @@
 					<td>
 						@(((Decimal)ViewData[$"ItemBasePrice_{item.JewelryId}"]).ToString("#,##0"))
 					</td>
-					<td>
+					<td class="action-btn">
 						<span>
 							<a class="btn btn-warning" asp-page="./Edit" asp-route-id="@item.JewelryId">Edit</a>
 						</span>
