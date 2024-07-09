@@ -12,6 +12,8 @@ namespace DataAccessObjects
         public DbSet<Order>? Orders { get; set; }
         public DbSet<OrderDetail>? OrderDetails { get; set; }
         public DbSet<Material>? Materials { get; set; }
+        public DbSet<Warranty>? Warranties { get; set; }
+        public DbSet<WarrantyRequest>? WarrantyRequests { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -43,6 +45,18 @@ namespace DataAccessObjects
                 .HasOne(jm => jm.Material)
                 .WithMany(m => m.JewelryMaterials)
                 .HasForeignKey(jm => jm.MaterialId);
+
+            modelBuilder.Entity<OrderDetail>()
+               .HasOne(od => od.Warranty)
+               .WithOne(w => w.OrderDetail)
+               .HasForeignKey<Warranty>(w => w.OrderDetailId)
+               .OnDelete(DeleteBehavior.Cascade); // Adjust the delete behavior as needed
+
+            modelBuilder.Entity<Warranty>()
+               .HasMany(w => w.WarrantyRequests)
+               .WithOne(wr => wr.Warranty)
+               .HasForeignKey(wr => wr.WarrantyId)
+               .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

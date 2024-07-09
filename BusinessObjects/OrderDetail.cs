@@ -14,6 +14,8 @@ public class OrderDetail
 
     public Guid? JewelryId { get; set; }
 
+    public Guid? WarrantyId { get; set; }
+
     [Column(TypeName = "money")]
     public decimal UnitPrice { get; set; }
 
@@ -35,4 +37,6 @@ public class OrderDetail
     public virtual Jewelry? Jewelry { get; set; }
 
     public virtual Order? Order { get; set; }
+
+    public virtual Warranty? Warranty { get; set; }
 }

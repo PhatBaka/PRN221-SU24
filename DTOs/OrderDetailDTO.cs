@@ -25,6 +25,8 @@ namespace DTOs
         public Guid AccountId { get; set; }
 
         public Guid CustomerId { get; set; }
+
+        public Guid? WarrantyId { get; set; }
     }
 
     public class GetOrderDetailDTO : OrderDetailDTO
@@ -39,6 +41,8 @@ namespace DTOs
         public virtual GetAccountDTO? Account { get; set; }
 
         public virtual GetCustomerDTO? Customer { get; set; }
+
+        public virtual GetWarrantyDTO? Warranty { get; set; }
 
         public virtual ICollection<GetOrderDetailDTO> OrderDetails { get; set; }
     }
