@@ -1,0 +1,86 @@
+﻿@page
+@model UI.Pages.Orders.CreateModel
+@{
+    Layout = "_StaffLayout";
+    var chunkSize = 4;
+    var jewelryChunks = Model.Jewelries
+                        .Select((j, index) => new { Jewelry = j, Index = index })
+                        .GroupBy(j => j.Index / chunkSize)
+                        .Select(g => g.Select(j => j.Jewelry).ToList())
+                        .ToList();
+}
+
+<section id="center" class="center_shop">
+    <div class="container">
+        <div class="row">
+            <div class="center_shop_t clearfix">
+                <div class="col-sm-6">
+                </div>
+                <div class="col-sm-6">
+                    <div class="center_shop_tr text-right clearfix">
+                        <h6 class="col_2">You are here: <a asp-asp-page="Gems/Index">Order</a></h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="center" class="center_shop">
+    <div class="container">
+        <div class="row">
+            <div class="center_shop_1 clearfix">
+                <div class="col-sm-7">
+                    <div class="center_shop_1r clearfix">
+                        @foreach (var jewelryChunk in jewelryChunks)
+                        {
+                            <div class="row">
+                                @foreach (var jewelry in jewelryChunk)
+                                {
+                                    <div class="col-sm-3">
+                                        <div class="collcet_1r clearfix">
+                                            <div class="feature_2im clearfix">
+                                                <div class="feature_2im1 clearfix">
+                                                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(jewelry.JewelryImageData)" alt="@jewelry.JewelryName" width="200px" height="150px" />
+                                                </div>
+                                                <div class="feature_2im4 clearfix">
+                                                    <h6><a class="bg_3" href="detail.html">@jewelry.SellJewelryPrice.ToString("F2")</a></h6>
+                                                </div>
+                                                <div class="feature_2im4 clearfix">
+                                                    <div class="col-sm-6 space_left">
+                                                    </div>
+                                                    <div class="col-sm-6 feature_2im4r space_right">
+                                                        <ul>
+                                                            <li>
+                                                                <a asp-page="/Orders/Detail" asp-route-id="@jewelry.JewelryId"><i class="fa fa-rocket"></i></a>
+                                                            </li>
+                                                            <li>
+                                                                <form method="post" asp-page-handler="AddToCart">
+                                                                    <input type="hidden" name="JewelryId" value="@jewelry.JewelryId" />
+                                                                    <input type="hidden" name="JewelyName" value="@jewelry.JewelryName" />
+                                                                    <input type="hidden" name="UnitPrice" value="@jewelry.SellJewelryPrice" />
+                                                                    <input type="hidden" name="Image" value="@Convert.ToBase64String(jewelry.JewelryImageData)" />
+                                                                    <i><button type="submit" class="fa fa-shopping-cart" /></i>
+                                                                </form>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="item_last text-center clearfix">
+                                                <h4>@jewelry.JewelryName</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <form method="post" asp-page-handler="ClearCart">
+                        <h4 class="mgt"><input class="button" type="submit" value="CLEAR CART" /></h4>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

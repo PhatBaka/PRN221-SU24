@@ -188,9 +188,12 @@ namespace UI.Pages.Jewelries
                 return Page();
             }
 
-
-
-            await _jewelryService.CreateJewelry(Jewelry, MaterialCarts, PriceDTOS);
+            if(await _jewelryService.CreateJewelry(Jewelry, MaterialCarts, PriceDTOS) != null)
+            {
+                HttpContext.Session.Remove("MATERIALCART");
+                HttpContext.Session.Remove("METALCART");
+                return RedirectToPage("./Index");
+            }
 
             return Page();
         }

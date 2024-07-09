@@ -154,9 +154,17 @@ namespace Services.Impls
             }
         }
 
-        public Task<IList<GetJewelryDTO>> GetJewelries()
+        public async Task<IList<GetJewelryDTO>> GetJewelries()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var entiries = _jewelryRepository.GetAllAsync().Result.ToList();
+                return _mapper.Map<IList<GetJewelryDTO>>(entiries);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }
