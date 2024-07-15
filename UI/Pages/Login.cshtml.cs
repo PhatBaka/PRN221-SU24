@@ -62,7 +62,7 @@ namespace UI.Pages
                     case AccountRole.MANAGER:
                         HttpContext.Session.SetInt32("ID", existedAccount.AccountId);
                         HttpContext.Session.SetString("ROLE", "MANAGER");
-                        return RedirectToPage("./Accounts/Index");
+                        return RedirectToPage("./Manager");
                 }
             }
             else
