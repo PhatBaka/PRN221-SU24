@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BusinessObjects.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,9 +17,17 @@ namespace BusinessObjects
 
         public double WarrantyPeriod { get; set; }
 
-        public int JewelryId { get; set; }
+		public TimeEnum PeriodUnitmeasure { get; set; }
+
+		public DateTime ActiveDate { get; set; }
+
+		public DateTime EndDate { get; set; }
+
+		public int JewelryId { get; set; }
 
         public int OrderId { get; set; }
+
+        public WarrantyStatus WarrantyStatus { get; set; }
 
         public virtual Order Order { get; set; }
 

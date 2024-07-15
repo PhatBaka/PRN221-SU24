@@ -1,4 +1,5 @@
-﻿.container-jewelry {
+﻿
+.container-jewelry {
     margin-top: 50px;
     margin-left: 80px;
     margin-right: 80px;
@@ -7,8 +8,7 @@
 
 #table-list {
     width: 100%;
-    margin-top: 40px;
-    text-align: left;
+    margin-top: 30px;
 }
 
 #tableSearch {
@@ -28,12 +28,12 @@
     align-content: center;
 }
 
-    #tableSearch input {
-        height: 40px;
-        width: 100%;
-        border: none;
-        padding-left: 10px;
-    }
+#tableSearch input {
+    height: 40px;
+    width: 100%;
+    border: none;
+    padding-left: 10px;
+}
 
 .btnsearch {
     background-color: gray;
@@ -69,9 +69,6 @@
     font-size: inherit;
 }
 
-th {
-    text-align: center;
-}
 
 .action-btn span {
     margin-right: 10px;
@@ -86,6 +83,6 @@ th {
 }
 
 .image-row img {
-    max-height: 80px;
-    width: 80px;
+    max-height: 70px;
+    width: 70px;
 }

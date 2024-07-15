@@ -1,0 +1,145 @@
+﻿@page
+@model UI.Pages.Warranties.FixRequests.CreateModel
+
+@{
+	ViewData["Title"] = "Create Warranty Fix Request";
+	Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+<style>
+	.form-details {
+		max-width: 1000px;
+		justify-content: center;
+		align-content: center;
+		margin: 0 auto;
+	}
+
+</style>
+<div class="form-details">
+	<h1>@ViewData["Title"]</h1>
+	@if (Model.WarrantyRequestToFix != null)
+	{
+		<h4>Warranty @Model.WarrantyRequestToFix.WarrantyId</h4>
+	}
+	<hr />
+	<div class="row">
+		<div class="col-md">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				@if (!string.IsNullOrEmpty(Model.Message))
+				{
+					<div class="alert alert-danger d-flex align-items-center" role="alert">
+						<div>
+							<div class="text-danger">@Model.Message</div>
+						</div>
+					</div>
+				}
+			</div>
+			<div style="margin: 30px auto;">
+				<form method="get">
+					<div class="form-group">
+						<label for="exampleInputEmail1">Warranty ID</label>
+						<input asp-for="OrderId" type="text" class="form-control" aria-describedby="requireOrderHelp" placeholder="Enter order id ">
+						<small style="color: orange;" id="requireOrderHelp" class="form-text text-muted">Enter the warranty id to create the warranty fix request</small>
+					</div>
+					<button type="submit" class="btn btn-primary">Request form create fix request</button>
+				</form>
+				<hr />
+			</div>
+			
+			<div style="margin-top: 20px;">
+				@if (Model.WarrantyRequestToFix != null && (Model.WarrantyRequestToFix.WarrantyStatus == BusinessObjects.Enums.WarrantyStatus.CANCELLED))
+				{
+					<div class="alert alert-warning d-flex align-items-center" role="alert">
+						<div>
+							<div class="text-warning">The warranty ID @Model.WarrantyRequestToFix.WarrantyId has been canceled</div>
+						</div>
+					</div>
+				}else if(Model.WarrantyRequestToFix != null && (Model.hasExpired == false))
+				{
+					<div class="alert alert-warning d-flex align-items-center" role="alert">
+						<div>
+							<div class="text-warning">Cannot create warranty fix request because warranty id @Model.WarrantyRequestToFix.WarrantyId has expired at @Model.WarrantyRequestToFix.EndDate </div>
+						</div>
+					</div>
+				}
+				else if (Model.WarrantyRequestToFix != null)
+				{
+					<form method="post">
+						<div class="row" style="margin-bottom: 20px;">
+							<div class="form-group col-md-6">
+								<h5 class="control-label">Warranty ID: @Model.WarrantyRequestToFix.WarrantyId</h5>
+								<input type="hidden" asp-for="WarrantyFixRequest.WarrantyId" class="form-control" value="@Model.WarrantyRequestToFix.WarrantyId" readonly />
+								<span asp-validation-for="WarrantyFixRequest.WarrantyId" class="text-danger"></span>
+							</div>
+						</div>
+						<div class="row">
+								<div class="form-group col-md-6">
+									<label class="control-label">Jewelry ID</label>
+									<input type="text" asp-for="WarrantyRequestToFix.Jewelry.JewelryId" class="form-control" readonly />
+								</div>
+								<div class="form-group col-md-6">
+									<label class="control-label">Jewelry Name</label>
+									<input type="text" asp-for="WarrantyRequestToFix.Jewelry.JewelryName" class="form-control" readonly />
+								</div>
+						</div>
+						<div class="row">
+							<div class="form-group col-md-6">
+								<label class="control-label">Customer Name</label>
+								<input asp-for="WarrantyFixRequest.CustomerName" class="form-control" />
+								<span asp-validation-for="WarrantyFixRequest.CustomerName" class="text-danger"></span>
+							</div>
+							<div class="form-group col-md-6">
+								<label class="control-label">Customer Phone</label>
+								<input asp-for="WarrantyFixRequest.CustomerPhone" class="form-control" />
+								<span asp-validation-for="WarrantyFixRequest.CustomerPhone" class="text-danger"></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label">Receive Date</label>
+							<input asp-for="WarrantyFixRequest.ReceivedDate" class="form-control" />
+							<span asp-validation-for="WarrantyFixRequest.ReceivedDate" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label class="control-label">Return Date</label>
+							<input asp-for="WarrantyFixRequest.ReturnDate" class="form-control" />
+							<span asp-validation-for="WarrantyFixRequest.ReturnDate" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label class="control-label">Customer Require Fix Description </label>
+							<textarea style="height: 200px;" asp-for="WarrantyFixRequest.RequireDescription" class="form-control "></textarea>
+							<span asp-validation-for="WarrantyFixRequest.RequireDescription" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label class="control-label">Result Return Report</label>
+							<textarea style="height: 200px;" asp-for="WarrantyFixRequest.ResultReport" class="form-control "></textarea>
+							<span asp-validation-for="WarrantyFixRequest.ResultReport" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<input type="submit" value="Create" class="btn btn-primary" />
+						</div>
+					</form>
+				}
+			</div>
+		</div>
+	</div>
+	<div style="margin-top: 50px;">
+		<p>
+			<a asp-page="./Index">Back to List</a>
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+				<path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z"></path>
+			</svg>
+		</p>
+		<p>
+			<a asp-page="/Warranties/Index">Back to Warranty List</a>
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+				<path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z"></path>
+			</svg>
+		</p>
+	</div>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

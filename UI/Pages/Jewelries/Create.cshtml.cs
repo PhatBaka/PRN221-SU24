@@ -179,7 +179,6 @@ namespace UI.Pages.Jewelries
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine(e.StackTrace);
 				ModelState.AddModelError("Error", e.Message);
 				setupReturnPageWhenError(message: e.Message);
 				return Page();
