@@ -28,10 +28,11 @@ namespace DataAccessObjects
                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                     .Build();
 
-                var connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException("Connection string is null");
+               // var connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException("Connection string is null");
                 optionsBuilder.UseLazyLoadingProxies();
-                optionsBuilder.UseSqlServer(connectionString);
-            }
+              //  optionsBuilder.UseSqlServer(connectionString);
+				optionsBuilder.UseSqlServer("Server=(local);Database=JewelryDB;Uid=sa;Pwd=hanh3533.;");
+			}
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -86,9 +87,9 @@ namespace DataAccessObjects
                     .HasForeignKey(d => d.JewelryId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasOne(d => d.Warranties)
+                entity.HasMany(d => d.Warranties)
                     .WithOne(p => p.Jewelry)
-                    .HasForeignKey<Warranty>(d => d.JewelryId)
+                    .HasForeignKey(d => d.JewelryId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -219,8 +220,9 @@ namespace DataAccessObjects
                 entity.Property(e => e.WarrantyPeriod).HasColumnType("float").IsRequired();
 
                 entity.HasOne(d => d.Jewelry)
-                    .WithOne(p => p.Warranties)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .WithMany(p => p.Warranties)
+					.HasForeignKey(d => d.JewelryId)
+					.OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.Warranties)

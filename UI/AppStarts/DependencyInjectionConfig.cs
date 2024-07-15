@@ -26,7 +26,8 @@ namespace UI.AppStarts
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IMaterialService, MaterialService>();
-
+            services.AddScoped<IWarrantyService, WarrantyService>();
+            services.AddScoped<IWarrantyHistoryService, WarrantyHistoryService>();
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IAccountDAO, AccountDAO>();
             services.AddScoped(typeof(IGenericDAO<>), typeof(GenericDAO<>));

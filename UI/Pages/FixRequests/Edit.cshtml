@@ -1,0 +1,154 @@
+﻿@page
+@model UI.Pages.Warranties.FixRequests.EditModel
+@using BusinessObjects.Enums
+
+@{
+    ViewData["Title"] = "Edit Warranty History";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<style>
+    .form-details {
+        max-width: 1000px;
+        justify-content: center;
+        align-content: center;
+        margin: 0 auto;
+    }
+
+    .form-footer .status-btn {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-top: 20px;
+        text-align: end;
+        justify-content: end;
+    }
+</style>
+
+<div class="form-details">
+    <h1>@ViewData["Title"]</h1>
+    <hr />
+    <div class="row">
+        <div class="col-md">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                @if (!string.IsNullOrEmpty(Model.Message))
+                {
+                    <div class="alert alert-danger d-flex align-items-center" role="alert">
+                        <div>
+                            <div class="text-danger">@Model.Message</div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div style="margin-top: 20px;">
+                @if (Model.WarrantyHistory != null && (Model.WarrantyHistory.status != BusinessObjects.Enums.WarrantyFixStatus.PROCESSING))
+                {
+                    <div class="alert alert-warning d-flex align-items-center" role="alert">
+                        <div>
+                            <div class="text-warning">Cannot Update. The Warranty History ID @Model.WarrantyHistory.WarrantyHistoryId is in the status @Model.WarrantyHistory.status.ToString().ToUpper()</div>
+                        </div>
+                    </div>
+                }
+                else if (Model.WarrantyHistory != null)
+                {
+                    <div class="status-btn" style="text-align: end;">
+                        <form method="post" asp-page-handler="ChangeStatus" asp-route-id="@Model.WarrantyHistory.WarrantyHistoryId" asp-route-statusChange="@WarrantyFixStatus.SUCCESS_RETURNED" style="display: inline;">
+                            <button type="submit" class="btn btn-success">Success Return</button>
+                        </form>
+                        <form method="post" asp-page-handler="ChangeStatus" asp-route-id="@Model.WarrantyHistory.WarrantyHistoryId" asp-route-statusChange="@WarrantyFixStatus.CANCELLED" style="display: inline;">
+                            <button type="submit" class="btn btn-danger">Stop this request</button>
+                        </form>
+                        <p>
+                            <small style="color: darkslateblue;" id="requireOrderHelp" class="form-text text-muted">Update Warranty Fix Request Status</small>
+                        </p>
+                    </div>
+
+                    <form method="post">
+                        <div class="row" style="margin-bottom: 20px;">
+                            <div class="form-group col-md-6">
+                                <h3 class="control-label">Warranty History ID: @Model.WarrantyHistory.WarrantyHistoryId</h3>
+                                <input type="hidden" asp-for="WarrantyHistory.WarrantyHistoryId" class="form-control" value="@Model.WarrantyHistory.WarrantyHistoryId" readonly />
+                                <span asp-validation-for="WarrantyHistory.WarrantyHistoryId" class="text-danger"></span>
+                                <p>Created At: @Model.WarrantyHistory.DateCreated</p>
+                                <p>Modified At: @Model.WarrantyHistory.DateModified</p>
+                                <p>
+                                    <span class="badge badge-primary">@Model.WarrantyHistory.status</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Warranty ID</label>
+                            <input type="text" asp-for="WarrantyHistory.WarrantyId" class="form-control" readonly />
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Jewelry ID</label>
+                                <input type="text" asp-for="WarrantyHistory.Warranty.Jewelry.JewelryId" class="form-control" readonly />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Jewelry Name</label>
+                                <input type="text" asp-for="WarrantyHistory.Warranty.Jewelry.JewelryName" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Customer Name</label>
+                                <input asp-for="WarrantyHistory.CustomerName" class="form-control" />
+                                <span asp-validation-for="WarrantyHistory.CustomerName" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Customer Phone</label>
+                                <input asp-for="WarrantyHistory.CustomerPhone" class="form-control" />
+                                <span asp-validation-for="WarrantyHistory.CustomerPhone" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Receive Date</label>
+                            <input asp-for="WarrantyHistory.ReceivedDate" class="form-control" />
+                            <span asp-validation-for="WarrantyHistory.ReceivedDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Return Date</label>
+                            <input asp-for="WarrantyHistory.ReturnDate" class="form-control" />
+                            <span asp-validation-for="WarrantyHistory.ReturnDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Customer Require Fix Description</label>
+                            <textarea style="height: 200px;" asp-for="WarrantyHistory.RequireDescription" class="form-control"></textarea>
+                            <span asp-validation-for="WarrantyHistory.RequireDescription" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Result Return Report</label>
+                            <textarea style="height: 200px;" asp-for="WarrantyHistory.ResultReport" class="form-control"></textarea>
+                            <span asp-validation-for="WarrantyHistory.ResultReport" class="text-danger"></span>
+                        </div>
+                        <div class="form-footer" style="text-align: end;">
+                            <button type="submit" class="btn btn-primary btn-lg">Update</button>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+        <div style="margin-top: 10px; margin-bottom: 50px;">
+            <p>
+                <a asp-page="./Index">Back to List</a>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z"></path>
+                </svg>
+            </p>
+            <p>
+                <a asp-page="/Warranties/Index">Back to Warranty List</a>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z"></path>
+                </svg>
+            </p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

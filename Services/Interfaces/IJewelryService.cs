@@ -14,10 +14,8 @@ namespace Services.Interfaces
         List<Jewelry> SearchFilterJewelries(JewelryFilter jewelryFilter);
         Jewelry GetJewelryById(int id);
 		Jewelry AddJewelry(Jewelry jewelry);
-        Task<Jewelry> UpdateJewelry(Jewelry jewelry);
-        void DeleteJewelry(int id);
-        byte[] FormatJewelryImageDataString(string imageData);
-        string GetJewelryImageString(byte[] imageData);
+        Task<Jewelry> UpdateJewelryAsync(Jewelry jewelry);
+        Task DeleteJewelryAsync(int id);
         double GetJewelrySalePrice(Jewelry jewelry);
     }
 }

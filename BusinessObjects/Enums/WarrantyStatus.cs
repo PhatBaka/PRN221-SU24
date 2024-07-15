@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace BusinessObjects.Enums
 {
-    public enum AccountRole
+    public enum WarrantyStatus
     {
-        STAFF,
-        MANAGER,
-        CUSTOMER
+        ACTIVATED,
+        INACTIVE,
+        CANCELLED,
+        EXPIRED
     }
 }

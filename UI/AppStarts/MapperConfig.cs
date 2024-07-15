@@ -9,6 +9,7 @@ using Services.ResponseModels;
 using UI.Payload.JewelryPayload;
 using UI.Payload.MaterialPayload.GemPayload;
 using UI.Payload.MaterialPayload.MetalPayload;
+using UI.Payload.WarrantyPayload;
 
 namespace UI.AppStarts
 {
@@ -65,7 +66,14 @@ namespace UI.AppStarts
             #region MATERIAL
             CreateMap<Material, CreateGemRequest>().ReverseMap();
             CreateMap<Material, CreateMetalRequest>().ReverseMap();
-            #endregion
-        }
-    }
+        
+			#endregion
+
+			#region WARRANTY
+            CreateMap<Warranty, WarrantyCreateRequest>().ReverseMap();
+            CreateMap<WarrantyHistory, WarrantyFixRequest>().ReverseMap();
+			#endregion
+
+		}
+	}
 }

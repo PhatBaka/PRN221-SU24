@@ -1,0 +1,212 @@
+﻿@page
+@model UI.Pages.Warranties.FixRequests.IndexModel
+
+@{
+	ViewData["Title"] = "Warranty Fix Requests";
+	Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"]</title>
+	<link rel="stylesheet" href="~/css/jewelryindex.css" />
+
+</head>
+<style>
+	.table-header {
+		justify-content: center;
+	}
+
+		.table-header tr, td {
+			justify-content: center;
+			align-content: center;
+			height: inherit;
+		}
+
+		.table-header th {
+			text-align: center;
+			justify-content: center;
+			align-content: center;
+			height: 70px;
+		}
+		.badge{
+			width: 120px;
+		}
+
+	.form-row {
+		display: flex;
+		flex-direction: row;
+		gap: 10px;
+	}
+
+	.form-col {
+		flex: 1;
+	}
+</style>
+
+<div class="container-lg container-jewelry">
+	<h1 id="title">@ViewData["Title"]</h1>
+	<div style="margin-top: 50px; text-align: end;">
+		<a class="btn btn-primary" asp-page="Create">Create New Warranty Fix Request</a>
+	</div>
+	<div style="margin-top: 40px;">
+		<form method="get">
+			<div class="form-row">
+				<div class="form-col">
+					<label>Search Keyword</label>
+					<input type="text" class="form-control" name="Keyword" placeholder="Search Keyword" value="@Model.Keyword">
+				</div>
+				<div class="form-col">
+					<label>Warranty History ID</label>
+					<input type="text" class="form-control" name="WarrantyHistoryId" placeholder="Warranty History ID" value="@Model.WarrantyId">
+				</div>
+				<div class="form-col">
+					<label>Warranty ID</label>
+					<input type="text" class="form-control" name="WarrantyId" placeholder="Warranty ID" value="@Model.WarrantyId">
+				</div>
+				<div class="form-col">
+					<label>Jewelry ID</label>
+					<input type="text" class="form-control" name="JewelryId" placeholder="Jewelry ID" value="@Model.JewelryId">
+				</div>
+				<div class="form-col">
+					<label>Sort by ASC</label>
+					<select class="form-control" asp-for="SortBy" asp-items="@(new SelectList(new List<SelectListItem> {
+						new SelectListItem { Text = "Sort By", Value = "" },
+						new SelectListItem { Text = "Received Date", Value = "ReceivedDate" },
+						new SelectListItem { Text = "Return Date", Value = "ReturnDate" }
+								}, "Value", "Text", Model.SortBy))">
+					</select>
+				</div>
+				<div class="form-col">
+					<label>Filter Status</label>
+					<select class="form-control" asp-for="WarrantyFixStatusSelect" asp-items="@(new SelectList(new List<SelectListItem> {
+						new SelectListItem { Text = "All Statuses", Value = "" },
+						new SelectListItem { Text = "Processing", Value = @BusinessObjects.Enums.WarrantyFixStatus.PROCESSING.ToString() },
+						new SelectListItem { Text = "Success Return", Value = @BusinessObjects.Enums.WarrantyFixStatus.SUCCESS_RETURNED.ToString() },
+						new SelectListItem { Text = "Cancelled", Value = @BusinessObjects.Enums.WarrantyFixStatus.CANCELLED.ToString() },
+								}, "Value", "Text", Model.WarrantyFixStatusSelect))">
+					</select>
+				</div>
+
+			</div>
+			<div class="col" style="margin-top: 30px; display: flex; flex-direction: row; justify-content: end;">
+				<button type="submit" class="btn btn-primary">Search</button>
+				<div style="margin-left: 40px;">
+					<a class="btn btn-success" asp-page="./Index">Refresh</a>
+				</div>
+			</div>
+		</form>
+
+	</div>
+	<hr />
+	<div class="table-responsive-lg">
+		<table id="table-list" class="table table-striped">
+			<thead class="table-header">
+				<tr>
+					<th>
+						No.
+					</th>
+					<th>
+						Warranty History ID
+					</th>
+					<th>
+						Warranty ID
+					</th>
+					<th>
+						Customer Name
+					</th>
+					<th>
+						Customer Phone
+					</th>
+					<th>
+						Jewerly ID
+					</th>
+					<th>
+						Jewelry Name
+					</th>
+					<th>
+						Created At
+					</th>
+					<th>
+						Date Received
+					</th>
+					<th>
+						Date Return
+					</th>
+					<th>
+						Status
+					</th>
+					<th>
+						Actions
+					</th>
+				</tr>
+			</thead>
+			<tbody style="text-align: center;">
+				@for (int i = 0; i < Model.WarrantyHistory.Count; i++)
+				{
+					<tr>
+						<td>
+							@(i + 1)
+						</td>
+						<td>
+							@Model.WarrantyHistory[i].WarrantyHistoryId
+						</td>
+						<td>
+							@Model.WarrantyHistory[i].WarrantyId
+						</td>
+						<td>
+							@Model.WarrantyHistory[i].CustomerName
+						</td>
+						<td>
+							@Model.WarrantyHistory[i].CustomerPhone
+						</td>
+						<td>
+							@Model.WarrantyHistory[i].Warranty.Jewelry.JewelryId
+						</td>
+						<td>
+							@Model.WarrantyHistory[i].Warranty.Jewelry.JewelryName
+						</td>
+						<td>
+							@Model.WarrantyHistory[i].DateCreated.ToString("MM/dd/yyyy")
+						</td>
+						<td>
+							@Model.WarrantyHistory[i].ReceivedDate.ToString("MM/dd/yyyy")
+						</td>
+						<td>
+							@Model.WarrantyHistory[i].ReturnDate.ToString("MM/dd/yyyy")
+						</td>
+						<td>
+							@switch (@Model.WarrantyHistory[i].status)
+							{
+								case BusinessObjects.Enums.WarrantyFixStatus.PROCESSING:
+									<span class="badge badge-info">@Model.WarrantyHistory[i].status.ToString().ToLower()</span>
+									break;
+								case BusinessObjects.Enums.WarrantyFixStatus.SUCCESS_RETURNED:
+									<span class="badge badge" style="background-color: green" >@Model.WarrantyHistory[i].status.ToString().ToLower()</span>
+									break;
+								case BusinessObjects.Enums.WarrantyFixStatus.CANCELLED:
+									<span class="badge badge-danger">@Model.WarrantyHistory[i].status.ToString().ToLower()</span>
+									break;
+								default:
+									<span class="badge badge-secondary">Unknown</span>
+									break;
+							}
+						</td>
+						<td class="action-btn">
+							<span>
+								<a class="btn btn-warning" asp-page="./Edit" asp-route-id=@Model.WarrantyHistory[i].WarrantyHistoryId>Edit</a>
+							</span>
+							<span>
+								<a class="btn btn-success" asp-page="./Details" asp-route-id=@Model.WarrantyHistory[i].WarrantyHistoryId>Details</a>
+							</span>
+							<span>
+								<a class="btn btn-danger" asp-page="./Delete" asp-route-id=@Model.WarrantyHistory[i].WarrantyHistoryId>Delete</a>
+							</span>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+
+	</div>
+</div>

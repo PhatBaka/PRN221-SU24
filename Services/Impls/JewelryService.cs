@@ -93,9 +93,21 @@ namespace Services.Impls
 			return jewelrySaved;
 		}
 
-		public void DeleteJewelry(int id)
+		public async Task DeleteJewelryAsync(int id)
 		{
-			throw new NotImplementedException();
+			Jewelry jewelry = _jewelryRepo.GetByIdAsync(id).Result;
+			if(jewelry == null)
+			{
+				throw new Exception("Jewelry is not found");
+			}
+			try
+			{
+				await _jewelryRepo.DeleteAsync(jewelry);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception("Error when deleting jewelry", ex);
+			}
 		}
 
 		public List<Jewelry> GetJewelries()
@@ -142,7 +154,7 @@ namespace Services.Impls
 			return listPagination;
 		}
 
-		public async Task<Jewelry> UpdateJewelry(Jewelry jewelry)
+		public async Task<Jewelry> UpdateJewelryAsync(Jewelry jewelry)
 		{
 			using (var scope = new TransactionScope(TransactionScopeOption.Required, TransactionScopeAsyncFlowOption.Enabled))
 			{
@@ -247,17 +259,6 @@ namespace Services.Impls
 
 			// Return updated jewelry
 			return await _jewelryRepo.GetByIdAsync(jewelry.JewelryId);
-		}
-
-
-		public byte[] FormatJewelryImageDataString(string imageData)
-		{
-			throw new NotImplementedException();
-		}
-
-		public string GetJewelryImageString(byte[] imageData)
-		{
-			throw new NotImplementedException();
 		}
 
 		public double GetJewelrySalePrice(Jewelry jewelry)

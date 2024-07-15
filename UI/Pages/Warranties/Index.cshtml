@@ -1,0 +1,167 @@
+﻿@page
+@model UI.Pages.Warranties.IndexModel
+
+@{
+	ViewData["Title"] = "Jewelries In Warranty";
+	Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"]</title>
+	<link rel="stylesheet" href="~/css/jewelryindex.css" />
+</head>
+<style>
+	.table-header {
+		justify-content: center;
+	}
+
+		.table-header tr, td {
+			justify-content: center;
+			align-content: center;
+			height: inherit;
+		}
+
+		.table-header th {
+			text-align: center;
+			justify-content: center;
+			align-content: center;
+			height: 70px;
+		}
+		.form-row{
+			display: flex;
+			flex-direction: row;
+			gap: 10px;
+		}
+
+	.form-col{
+		flex: 1;
+		}
+</style>
+<div class="container-lg container-jewelry">
+	<h1 id="title">@ViewData["Title"]</h1>
+	<div style="margin-top: 50px; text-align: end;">
+		<a class="btn btn-primary" asp-page="Create">Activate New Jewelry Warranty</a>
+	</div>
+	<div style="margin-top: 40px;">
+		<form method="get">
+			<div class="form-row">
+				<div class="form-col">
+					<label>Search Keyword</label>
+					<input type="text" class="form-control" name="Keyword" placeholder="Search Keyword" value="@Model.Keyword">
+				</div>
+				<div class="form-col">
+					<label>Warranty ID</label>
+					<input type="text" class="form-control" name="WarrantyId" placeholder="Warranty ID" value="@Model.WarrantyId">
+				</div>
+				<div class="form-col">
+					<label>Jewelry ID</label>
+					<input type="text" class="form-control" name="JewelryId" placeholder="Jewelry ID" value="@Model.JewelryId">
+				</div>
+				<div class="form-col">
+					<label>Order By ASD</label>
+					<select class="form-control" asp-for="SortBy" asp-items="@(new SelectList(new List<SelectListItem> {
+						new SelectListItem { Text = "Sort By", Value = "" },
+						new SelectListItem { Text = "Activate Date", Value = "ActivateDate" },
+						new SelectListItem { Text = "End Date", Value = "EndDate" }
+								}, "Value", "Text", Model.SortBy))">
+					</select>
+				</div>
+				<div class="form-col">
+					<label>Warranty Status</label>
+					<select class="form-control" asp-for="WarrantyStatusSelect" asp-items="@(new SelectList(new List<SelectListItem> {
+						new SelectListItem { Text = "All Statuses", Value = "" },
+						new SelectListItem { Text = "Activated", Value = @BusinessObjects.Enums.WarrantyStatus.ACTIVATED.ToString() },
+						new SelectListItem { Text = "Inactive", Value = @BusinessObjects.Enums.WarrantyStatus.INACTIVE.ToString() },
+						new SelectListItem { Text = "Cancelled", Value = @BusinessObjects.Enums.WarrantyStatus.CANCELLED.ToString() },
+						new SelectListItem { Text = "Expired", Value = @BusinessObjects.Enums.WarrantyStatus.EXPIRED.ToString() }
+								}, "Value", "Text", Model.WarrantyStatusSelect))">
+					</select>
+				</div>
+				
+			</div>
+			<div class="col" style="margin-top: 30px; display: flex; flex-direction: row; justify-content: end;">
+				<button type="submit" class="btn btn-primary">Search</button>
+				<div style="margin-left: 40px;">
+					<a class="btn btn-success" asp-page="./Index">Refresh</a>
+				</div>
+			</div>
+		</form>
+		
+	</div>
+	<hr />
+	<div class="table-responsive-lg" style="margin-top: 20px;">
+		<table id="table-list" class="table table-striped">
+			<thead class="table-header">
+				<tr>
+					<th>No.</th>
+					<th>Warranty ID</th>
+					<th>Jewelry ID</th>
+					<th>Jewelry Name</th>
+					<th>Order Id</th>
+					<th>Warranty Period</th>
+					<th>Period Unit Measure</th>
+					<th>Active Date</th>
+					<th>End Date</th>
+					<th>Customer Name</th>
+					<th>Customer Phone</th>
+					<th>Warranty Status</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody style="text-align: center;">
+				@for (int i = 0; i < Model.Warranty.Count; i++)
+				{
+					<tr>
+						<td>@(i + 1)</td>
+						<td>@Model.Warranty[i].WarrantyId</td>
+						<td>@Model.Warranty[i].JewelryId</td>
+						<td style="text-align: left;">@Model.Warranty[i].Jewelry.JewelryName</td>
+						<td>@Model.Warranty[i].OrderId</td>
+						<td>@Model.Warranty[i].WarrantyPeriod</td>
+						<td>@Model.Warranty[i].PeriodUnitmeasure</td>
+						<td>@Model.Warranty[i].ActiveDate.ToString("MM/dd/yyyy")</td>
+						<td>@Model.Warranty[i].EndDate.ToString("MM/dd/yyyy")</td>
+						<td>@Model.Warranty[i].Order.Customer.FullName</td>
+						<td>@Model.Warranty[i].Order.Customer.PhoneNumber</td>
+						<td>
+							@switch (@Model.Warranty[i].WarrantyStatus)
+							{
+								case BusinessObjects.Enums.WarrantyStatus.ACTIVATED:
+									<span class="badge badge-info">@Model.Warranty[i].WarrantyStatus.ToString().ToLower()</span>
+									break;
+								case BusinessObjects.Enums.WarrantyStatus.INACTIVE:
+									<span class="badge badge-secondary">@Model.Warranty[i].WarrantyStatus.ToString().ToLower()</span>
+									break;
+								case BusinessObjects.Enums.WarrantyStatus.CANCELLED:
+									<span class="badge badge-danger">@Model.Warranty[i].WarrantyStatus.ToString().ToLower()</span>
+									break;
+								case BusinessObjects.Enums.WarrantyStatus.EXPIRED:
+									<span class="badge badge-warning">@Model.Warranty[i].WarrantyStatus.ToString().ToLower()</span>
+									break;
+								default:
+									<span class="badge badge-secondary">Unknown</span>
+									break;
+							}
+						</td>
+						<td class="action-btn">
+							<span>
+								<a class="btn btn-warning" asp-page="./Edit" asp-route-id=@Model.Warranty[i].WarrantyId>Edit</a>
+							</span>
+							<span>
+								<a class="btn btn-success" asp-page="./Details" asp-route-id=@Model.Warranty[i].WarrantyId>Details</a>
+							</span>
+							<span>
+								<a class="btn btn-danger" asp-page="./Delete" asp-route-id=@Model.Warranty[i].WarrantyId>Delete</a>
+							</span>
+							<span>
+								<a class="btn btn-info" asp-page="/FixRequests/Create" asp-route-OrderId="@Model.Warranty[i].WarrantyId">Create Fix Request</a>
+							</span>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>

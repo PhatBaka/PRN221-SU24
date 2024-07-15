@@ -1,0 +1,213 @@
+﻿@page 
+@model UI.Pages.Warranties.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<style>
+    .form-details{
+       max-width: 1000px;
+       justify-content: center;
+       align-content: center;
+       margin: 0 auto;
+    }
+</style>
+<div class="form-details">
+    <h1>Edit</h1>
+    <h4>Warranty ID:  #@Model.Warranty.WarrantyId</h4>
+    <hr />
+    <div class="row">
+        <div class="form-group">
+            @* Display any custom message *@
+            @if (!string.IsNullOrEmpty(Model.Message))
+            {
+                <div class="alert alert-danger d-flex align-items-center mt-3 mb-3" role="alert">
+                    <div>
+                        <div class="text-danger">@Model.Message</div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-12">
+            <div class="status-btn" style="text-align: end;">
+                <form style="margin-top: 20px; text-align: end;" method="post" asp-page-handler="Cancel" asp-route-id="@Model.Warranty.WarrantyId">
+                    <button type="submit" class="btn btn-danger" style="margin-right: 18px;">Stop warranty</button>
+                </form>
+                <p>
+                    <small style="color: darkslateblue;" id="requireOrderHelp" class="form-text text-muted">Change Warranty Status</small>
+                </p>
+            </div>
+            <hr />
+            <form method="post">
+                <input type="hidden" asp-for="Warranty.WarrantyId" />
+                <div class="form-group">
+                    <label class="control-label">Order ID</label>
+                    <input asp-for="Warranty.OrderId" class="form-control" readonly />
+                    <span asp-validation-for="Warranty.OrderId" class="text-danger"></span>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label class="control-label">Jewelry ID</label>
+                        <input asp-for="Warranty.JewelryId" class="form-control" readonly />
+                        <span asp-validation-for="Warranty.JewelryId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-9">
+                        <label class="control-label">Jewelry Name</label>
+                        <input type="text" asp-for="Warranty.Jewelry.JewelryName" class="form-control" readonly />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="control-label">Warranty Period</label>
+                        <input asp-for="Warranty.WarrantyPeriod" class="form-control warranty-period" />
+                        <span asp-validation-for="Warranty.WarrantyPeriod" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="Warranty.PeriodUnitmeasure" class="control-label">Select Period Unit Measure</label>
+                        <select asp-for="Warranty.PeriodUnitmeasure" asp-items="@Model.timeEnumSelectList" class="form-control period-unit-measure">
+                        </select>
+                        <span asp-validation-for="Warranty.PeriodUnitmeasure" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="control-label">Active Date</label>
+                        <input asp-for="Warranty.ActiveDate" type="date" class="form-control active-date" readonly />
+                        <span asp-validation-for="Warranty.ActiveDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="control-label">End Date</label>
+                        <input asp-for="Warranty.EndDate" type="date" class="form-control end-date" />
+                        <span asp-validation-for="Warranty.EndDate" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Warranty.WarrantyStatus" class="control-label">Warranty Status</label>
+                    <input asp-for="Warranty.WarrantyStatus" class="form-control" readonly />
+                    <span asp-validation-for="Warranty.WarrantyStatus" class="text-danger"></span>
+                </div>
+                <div style="margin-top: 50px; text-align: end;">
+                    <button type="submit" class="btn btn-warning " style="margin-right: 18px;">Update</button>
+                </div>
+            </form>
+                     
+        </div>
+    </div>
+    <div style="margin-top: 50px;">
+        <p>
+            <a asp-page="./Index" style="">Back to List</a>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z"></path>
+            </svg>
+        </p>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script>
+    function calculateEndDate(warrantyPeriod, periodUnit, activeDate) {
+        const activeDateObj = new Date(activeDate);
+        if (isNaN(activeDateObj.getTime())) {
+            return "";
+        }
+
+        switch (periodUnit) {
+            case 'Day':
+                activeDateObj.setDate(activeDateObj.getDate() + parseInt(warrantyPeriod));
+                break;
+            case 'Month':
+                activeDateObj.setMonth(activeDateObj.getMonth() + parseInt(warrantyPeriod));
+                break;
+            case 'Year':
+                activeDateObj.setFullYear(activeDateObj.getFullYear() + parseInt(warrantyPeriod));
+                break;
+            default:
+                return "";
+        }
+        return activeDateObj.toISOString().split('T')[0]; // Return date in YYYY-MM-DD format
+    }
+
+    function updateEndDate() {
+        const warrantyPeriodInput = document.querySelector('.warranty-period');
+        const periodUnitSelect = document.querySelector('.period-unit-measure');
+        const endDateInput = document.querySelector('.end-date');
+        const activeDateInput = document.querySelector('.active-date');
+
+        const warrantyPeriod = warrantyPeriodInput.value;
+        const periodUnit = periodUnitSelect.value;
+        const activeDate = activeDateInput.value;
+
+        const endDate = calculateEndDate(warrantyPeriod, periodUnit, activeDate);
+        endDateInput.value = endDate;
+    }
+
+    function calculateWarrantyPeriod(endDate, periodUnit, activeDate) {
+        const activeDateObj = new Date(activeDate);
+        const endDateObj = new Date(endDate);
+        let warrantyPeriod = 0;
+
+        if (isNaN(activeDateObj.getTime()) || isNaN(endDateObj.getTime())) {
+            return "";
+        }
+
+        switch (periodUnit) {
+            case 'Day':
+                warrantyPeriod = Math.round((endDateObj - activeDateObj) / (1000 * 60 * 60 * 24));
+                break;
+            case 'Month':
+                warrantyPeriod = (endDateObj.getFullYear() - activeDateObj.getFullYear()) * 12 + (endDateObj.getMonth() - activeDateObj.getMonth());
+                break;
+            case 'Year':
+                warrantyPeriod = endDateObj.getFullYear() - activeDateObj.getFullYear();
+                break;
+            default:
+                return "";
+        }
+
+        return warrantyPeriod;
+    }
+
+    function updateWarrantyPeriod() {
+        const endDateInput = document.querySelector('.end-date');
+        const periodUnitSelect = document.querySelector('.period-unit-measure');
+        const warrantyPeriodInput = document.querySelector('.warranty-period');
+        const activeDateInput = document.querySelector('.active-date');
+
+        const endDate = endDateInput.value;
+        const periodUnit = periodUnitSelect.value;
+        const activeDate = activeDateInput.value;
+
+        const warrantyPeriod = calculateWarrantyPeriod(endDate, periodUnit, activeDate);
+        warrantyPeriodInput.value = warrantyPeriod;
+    }
+
+    function attachEventListeners() {
+        document.querySelectorAll('.warranty-period, .period-unit-measure').forEach(input => {
+            input.addEventListener('change', updateEndDate);
+            input.addEventListener('input', updateEndDate);
+        });
+
+        document.querySelector('.end-date').addEventListener('change', updateWarrantyPeriod);
+        document.querySelector('.end-date').addEventListener('input', updateWarrantyPeriod);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        attachEventListeners();
+        updateEndDate();
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('input[data-readonly="True"], select[data-readonly="True"]').forEach(function (element) {
+            element.setAttribute('readonly', 'readonly');
+            element.setAttribute('disabled', 'disabled');
+        });
+    });
+</script>

@@ -5,139 +5,153 @@
 	ViewData["Title"] = "Jewelry Catalog";
 }
 
+
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>@ViewData["Title"]</title>
 	<link rel="stylesheet" href="~/css/jewelryindex.css" />
-
 </head>
 
+<style>
+	.table-header {
+		justify-content: center;
+	}
+	.table-header tr, td {
+		justify-content: center;
+		align-content: center;
+		height: inherit;
+	}
 
-<form method="get">
-	<div class="container-lg container-jewelry">
-		<h1 id="title">@ViewData["Title"]</h1>
+	.table-header th {
+		text-align: center;
+		justify-content: center;
+		align-content: center;
+		height: 70px;
+	}
+</style>
+<div class="container-lg container-jewelry">
+	<h1 id="title">@ViewData["Title"]</h1>
+	<form method="get">
 		<div class="input-group" id="tableSearch">
 			<input asp-for="@Model.search" type="text" placeholder="Search..">
 			<div class="input-group-append btnsearchcontainer">
 				<input class="btn btn-outline-secondary btnsearch" type="submit" value="Search" />
 			</div>
 		</div>
-
-</form>
-
-
-<div style="margin-top: 40px;">
-	<a class="btn btn-success" asp-page="./Index">Refresh</a>
-</div>
-<div class="table-responsive-lg">
-	<table id="table-list" class="table table-striped">
-		<thead>
-			<tr>
-				<th>
-					S/N
-				</th>
-				<th>
-					Jewelry Image
-				</th>
-				<th>
-					Jewelry Name
-				</th>
-				<th>
-					Jewelry ID
-				</th>
-				<th>
-					Quantity
-				</th>
-				<th>
-					Sale Status
-				</th>
-				<th>
-					Category
-				</th>
-				<th>
-					Base Price (VNĐ)
-				</th>
-				<th>
-					Actions
-				</th>
-			</tr>
-		</thead>
-		<tbody style="text-align: center;">
-			@{
-				int i = 0;
-			}
-			@foreach (var item in Model.Jewelry)
-			{
-				<tr>
-					<td>
-						@{
-							i = i + 1;
-						}
-						@i
-					</td>
-					<td class="image-row">
-						<img src="data:image/*;base64,@ViewData[$"ItemImage_{item.JewelryId}"]" alt="Jewelry Image">			
-					</td>
-					<td style="text-align: left;">
-						@Html.DisplayFor(modelItem => item.JewelryName)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.JewelryId)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Quantity)
-					</td>
-					<td>
-
-						@switch (@ViewData[$"ItemStatusSale_{item.JewelryId}"])
-						{
-							case "In stock":
-								<span class="badge badge-info">@ViewData[$"ItemStatusSale_{item.JewelryId}"]</span>
-								break;
-							case "Out of stock":
-								<span class="badge badge-warning">@ViewData[$"ItemStatusSale_{item.JewelryId}"]</span>
-								break;
-							case "Discontinued":
-								<span class="badge badge-danger">@ViewData[$"ItemStatusSale_{item.JewelryId}"]</span>
-								break;
-							default:
-								<span class="badge badge-secondary">Unknown</span>
-								break;
-						}
-
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Category.CategoryName)
-					</td>
-					<td>
-						@(((Decimal)ViewData[$"ItemBasePrice_{item.JewelryId}"]).ToString("#,##0"))
-					</td>
-					<td class="action-btn">
-						<span>
-							<a class="btn btn-warning" asp-page="./Edit" asp-route-id="@item.JewelryId">Edit</a>
-						</span>
-						<span>
-							<a class="btn btn-success" asp-page="./Details" asp-route-id="@item.JewelryId">Details</a>
-						</span>
-						<span>
-							<a class="btn btn-danger" asp-page="./Delete" asp-route-id="@item.JewelryId">Delete</a>
-						</span>
-
-						<form method="post" asp-page-handler="Buy" asp-route-id="@item.JewelryId" style="display:inline;">
-							<button type="submit" class="btn btn-primary">Buy</button>
-						</form>
-					</td>
-				</tr>
-			}
-		</tbody>
-	</table>
-	<div style="margin-top: 50px; text-align: end;">
+	</form>
+	<div style="margin-top: 40px;">
+		<a class="btn btn-success" asp-page="./Index">Refresh</a>
+	</div>
+	<hr />
+	<div style="margin-top: 20px; text-align: end;">
 		<a class="btn btn-primary" asp-page="./Create">Create New</a>
 	</div>
+	<div class="table-responsive-lg">
+		<table id="table-list" class="table table-striped">
+			<thead class="table-header">
+				<tr>
+					<th>
+						No.
+					</th>
+					<th>
+						Jewelry Image
+					</th>
+					<th>
+						Jewelry Name
+					</th>
+					<th>
+						Jewelry ID
+					</th>
+					<th>
+						Quantity
+					</th>
+					<th>
+						Sale Status
+					</th>
+					<th>
+						Category
+					</th>
+					<th>
+						Base Price (VNĐ)
+					</th>
+					<th>
+						Actions
+					</th>
+				</tr>
+			</thead>
+			<tbody style="text-align: center;">
+				@{
+					int i = 0;
+				}
+				@foreach (var item in Model.Jewelry)
+				{
+					<tr>
+						<td>
+							@{
+								i = i + 1;
+							}
+							@i
+						</td>
+						<td class="image-row">
+							<img src="data:image/*;base64,@ViewData[$"ItemImage_{item.JewelryId}"]" alt="Jewelry Image">
+						</td>
+						<td style="text-align: left;">
+							@Html.DisplayFor(modelItem => item.JewelryName)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.JewelryId)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.Quantity)
+						</td>
+						<td>
 
-</div>
+							@switch (@ViewData[$"ItemStatusSale_{item.JewelryId}"])
+							{
+								case "In stock":
+									<span class="badge badge-info">@ViewData[$"ItemStatusSale_{item.JewelryId}"]</span>
+									break;
+								case "Out of stock":
+									<span class="badge badge-warning">@ViewData[$"ItemStatusSale_{item.JewelryId}"]</span>
+									break;
+								case "Discontinued":
+									<span class="badge badge-danger">@ViewData[$"ItemStatusSale_{item.JewelryId}"]</span>
+									break;
+								default:
+									<span class="badge badge-secondary">Unknown</span>
+									break;
+							}
 
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.Category.CategoryName)
+						</td>
+						<td>
+							@(((Decimal)ViewData[$"ItemBasePrice_{item.JewelryId}"]).ToString("#,##0"))
+						</td>
+						<td class="action-btn">
+							<span>
+								<a class="btn btn-warning" asp-page="./Edit" asp-route-id="@item.JewelryId">Edit</a>
+							</span>
+							<span>
+								<a class="btn btn-success" asp-page="./Details" asp-route-id="@item.JewelryId">Details</a>
+							</span>
+							<span>
+								<a class="btn btn-danger" asp-page="./Delete" asp-route-id="@item.JewelryId">Delete</a>
+							</span>
+
+							<form method="post" asp-page-handler="Buy" asp-route-id="@item.JewelryId" style="display:inline;">
+								<button type="submit" class="btn btn-primary">Buy</button>
+							</form>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+
+
+	</div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

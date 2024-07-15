@@ -1,0 +1,191 @@
+﻿@page
+@model UI.Pages.Warranties.FixRequests.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        .highlight {
+            font-weight: bold;
+        }
+
+        .section-title {
+            margin-top: 20px;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .info-card {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+
+        }
+
+        .info-row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .info-col {
+            flex: 1;
+            padding: 5px;
+        }
+
+        .form-footer {
+            text-align: end;
+            margin-top: 20px;
+        }
+
+        .form-text {
+            color: darkslateblue;
+        }
+
+        .badge {
+            width: 150px;
+            height: 25px;
+            font-size: 12px;
+            align-content: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .time-info {
+            display: flex;
+            flex-direction: row;
+            gap: 50px;
+        }
+
+        .form-details {
+            max-width: 1000px;
+            justify-content: center;
+            align-content: center;
+            margin: 0 auto;
+        }
+
+        .btn-options {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<div class="form-details">
+    <h1>@ViewData["Title"]</h1>
+    <h4 class="highlight">Warranty History ID: #@Model.WarrantyHistory.WarrantyHistoryId</h4>
+    <div class="time-info">
+        <div>
+            <p>Created At: @Model.WarrantyHistory.DateCreated</p>
+        </div>
+        <div>
+            <p>Modified At: @Model.WarrantyHistory.DateModified</p>
+        </div>
+    </div>
+    <div class="btn-options" style="margin-top: 20px;">
+        <p>
+            <a asp-page="./Index">Back to List</a>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z"></path>
+            </svg>
+        </p>
+        <a asp-page="./Edit" class="btn btn-warning" asp-route-id="@Model.WarrantyHistory?.WarrantyHistoryId">Edit</a>
+    </div>
+    <hr />
+    <div>
+        <div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                @if (!string.IsNullOrEmpty(Model.Message))
+                {
+                    <div class="alert alert-danger d-flex align-items-center" role="alert">
+                        <div>
+                            <div class="text-danger">@Model.Message</div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="form-details">
+            <h3 class="section-title">Warranty History Information</h3>
+
+            <div style="margin-top: 20px;">
+                <div class="info-card">
+                    <div class="info-row">
+                        <div class="info-col">
+                            <p>
+                                <strong>Current Status:</strong>
+                                @switch (@Model.WarrantyHistory.status)
+                                {
+                                    case BusinessObjects.Enums.WarrantyFixStatus.PROCESSING:
+                                        <span class="badge badge-info" style="background-color: deepskyblue">@Model.WarrantyHistory.status.ToString()</span>
+                                        break;
+                                    case BusinessObjects.Enums.WarrantyFixStatus.SUCCESS_RETURNED:
+                                        <span class="badge badge" style="background-color: green">@Model.WarrantyHistory.status.ToString()</span>
+                                        break;
+                                    case BusinessObjects.Enums.WarrantyFixStatus.CANCELLED:
+                                        <span class="badge badge-danger" style="background-color: red">@Model.WarrantyHistory.status.ToString()</span>
+                                        break;
+                                    default:
+                                        <span class="badge badge-secondary">Unknown</span>
+                                        break;
+                                }
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-col">
+                            <p><strong>Warranty ID:</strong> @Model.WarrantyHistory.WarrantyId</p>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-col">
+                            <p><strong>Jewelry ID:</strong> @Model.WarrantyHistory.Warranty.Jewelry.JewelryId</p>
+                        </div>
+                        <div class="info-col">
+                            <p><strong>Jewelry Name:</strong> @Model.WarrantyHistory.Warranty.Jewelry.JewelryName</p>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-col">
+                            <p><strong>Customer Name:</strong> @Model.WarrantyHistory.CustomerName</p>
+                        </div>
+                        <div class="info-col">
+                            <p><strong>Customer Phone:</strong> @Model.WarrantyHistory.CustomerPhone</p>
+                        </div>
+                    </div>
+                    <div class="info-row">
+
+                        <div class="info-col">
+                            <p><strong>Receive Date:</strong> @Model.WarrantyHistory.ReceivedDate</p>
+                        </div>
+                        <div class="info-col">
+                            <p><strong>Return Date:</strong> @Model.WarrantyHistory.ReturnDate</p>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="info-row">
+                        <div class="info-col">
+                            <p><strong>Customer Require Fix Description:</strong></p>
+                            <p>@Model.WarrantyHistory.RequireDescription</p>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-col">
+                            <p><strong>Result Return Report:</strong></p>
+                            <p>@Model.WarrantyHistory.ResultReport</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
