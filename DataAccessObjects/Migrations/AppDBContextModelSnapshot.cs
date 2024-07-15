@@ -17,7 +17,7 @@ namespace DataAccessObjects.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.30")
+                .HasAnnotation("ProductVersion", "6.0.32")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -64,7 +64,7 @@ namespace DataAccessObjects.Migrations
                         new
                         {
                             AccountId = 1,
-                            CreatedDate = new DateTime(2024, 7, 15, 18, 55, 0, 461, DateTimeKind.Local).AddTicks(1260),
+                            CreatedDate = new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8353),
                             Email = "customer1@example.com",
                             FullName = "Customer One",
                             ObjectStatus = 0,
@@ -75,7 +75,7 @@ namespace DataAccessObjects.Migrations
                         new
                         {
                             AccountId = 2,
-                            CreatedDate = new DateTime(2024, 7, 15, 18, 55, 0, 461, DateTimeKind.Local).AddTicks(1273),
+                            CreatedDate = new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8364),
                             Email = "customer2@example.com",
                             FullName = "Customer Two",
                             ObjectStatus = 0,
@@ -86,7 +86,7 @@ namespace DataAccessObjects.Migrations
                         new
                         {
                             AccountId = 3,
-                            CreatedDate = new DateTime(2024, 7, 15, 18, 55, 0, 461, DateTimeKind.Local).AddTicks(1274),
+                            CreatedDate = new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8366),
                             Email = "customer3@example.com",
                             FullName = "Customer Three",
                             ObjectStatus = 0,
@@ -97,7 +97,7 @@ namespace DataAccessObjects.Migrations
                         new
                         {
                             AccountId = 4,
-                            CreatedDate = new DateTime(2024, 7, 15, 18, 55, 0, 461, DateTimeKind.Local).AddTicks(1275),
+                            CreatedDate = new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8367),
                             Email = "customer4@example.com",
                             FullName = "Customer Four",
                             ObjectStatus = 0,
@@ -501,28 +501,28 @@ namespace DataAccessObjects.Migrations
                         {
                             OrderId = 1,
                             CustomerId = 1,
-                            OrderDate = new DateTime(2024, 7, 15, 18, 55, 0, 461, DateTimeKind.Local).AddTicks(1288),
+                            OrderDate = new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8382),
                             OrderType = 0
                         },
                         new
                         {
                             OrderId = 2,
                             CustomerId = 2,
-                            OrderDate = new DateTime(2024, 7, 15, 18, 55, 0, 461, DateTimeKind.Local).AddTicks(1290),
+                            OrderDate = new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8384),
                             OrderType = 0
                         },
                         new
                         {
                             OrderId = 3,
                             CustomerId = 3,
-                            OrderDate = new DateTime(2024, 7, 15, 18, 55, 0, 461, DateTimeKind.Local).AddTicks(1290),
+                            OrderDate = new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8384),
                             OrderType = 0
                         },
                         new
                         {
                             OrderId = 4,
                             CustomerId = 4,
-                            OrderDate = new DateTime(2024, 7, 15, 18, 55, 0, 461, DateTimeKind.Local).AddTicks(1291),
+                            OrderDate = new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8385),
                             OrderType = 0
                         });
                 });

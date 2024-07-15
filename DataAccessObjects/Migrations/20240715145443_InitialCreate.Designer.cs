@@ -12,14 +12,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessObjects.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240623154306_huyqh-migrate2")]
-    partial class huyqhmigrate2
+    [Migration("20240715145443_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.30")
+                .HasAnnotation("ProductVersion", "6.0.32")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -61,6 +61,52 @@ namespace DataAccessObjects.Migrations
                     b.HasKey("AccountId");
 
                     b.ToTable("Account", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            AccountId = 1,
+                            CreatedDate = new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8353),
+                            Email = "customer1@example.com",
+                            FullName = "Customer One",
+                            ObjectStatus = 0,
+                            Password = "123",
+                            PhoneNumber = "1234567890",
+                            Role = 2
+                        },
+                        new
+                        {
+                            AccountId = 2,
+                            CreatedDate = new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8364),
+                            Email = "customer2@example.com",
+                            FullName = "Customer Two",
+                            ObjectStatus = 0,
+                            Password = "123",
+                            PhoneNumber = "0987654321",
+                            Role = 2
+                        },
+                        new
+                        {
+                            AccountId = 3,
+                            CreatedDate = new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8366),
+                            Email = "customer3@example.com",
+                            FullName = "Customer Three",
+                            ObjectStatus = 0,
+                            Password = "123",
+                            PhoneNumber = "1122334455",
+                            Role = 2
+                        },
+                        new
+                        {
+                            AccountId = 4,
+                            CreatedDate = new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8367),
+                            Email = "customer4@example.com",
+                            FullName = "Customer Four",
+                            ObjectStatus = 0,
+                            Password = "123",
+                            PhoneNumber = "5566778899",
+                            Role = 2
+                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.Category", b =>
@@ -72,13 +118,51 @@ namespace DataAccessObjects.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"), 1L, 1);
 
                     b.Property<string>("CategoryName")
+                        .IsConcurrencyToken()
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("CategoryId");
 
                     b.ToTable("Category", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            CategoryName = "Jewelry Type"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            CategoryName = "Rings"
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            CategoryName = "Necklaces"
+                        },
+                        new
+                        {
+                            CategoryId = 4,
+                            CategoryName = "Earrings"
+                        },
+                        new
+                        {
+                            CategoryId = 5,
+                            CategoryName = "Bracelets"
+                        },
+                        new
+                        {
+                            CategoryId = 6,
+                            CategoryName = "Pendants"
+                        },
+                        new
+                        {
+                            CategoryId = 7,
+                            CategoryName = "Brooches"
+                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.Jewelry", b =>
@@ -101,6 +185,7 @@ namespace DataAccessObjects.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("JewelryName")
+                        .IsConcurrencyToken()
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -127,6 +212,56 @@ namespace DataAccessObjects.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Jewelry", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            JewelryId = 1,
+                            CategoryId = 2,
+                            Description = "Beautiful pendant necklace crafted in 14k gold with intricate design.",
+                            JewelryName = "Gold Pendant Necklace",
+                            LaborPrice = 4500000m,
+                            MarkupPercentage = 0.17999999999999999,
+                            Quantity = 1,
+                            StatusSale = 0,
+                            TotalWeight = 250m
+                        },
+                        new
+                        {
+                            JewelryId = 2,
+                            CategoryId = 3,
+                            Description = "Classic hoop earrings crafted in sterling silver for everyday elegance.",
+                            JewelryName = "Sterling Silver Hoop Earrings",
+                            LaborPrice = 2500000m,
+                            MarkupPercentage = 0.14999999999999999,
+                            Quantity = 2,
+                            StatusSale = 0,
+                            TotalWeight = 500m
+                        },
+                        new
+                        {
+                            JewelryId = 3,
+                            CategoryId = 4,
+                            Description = "Luxurious diamond tennis bracelet set in 18k white gold.",
+                            JewelryName = "Diamond Tennis Bracelet",
+                            LaborPrice = 1800000m,
+                            MarkupPercentage = 0.12,
+                            Quantity = 3,
+                            StatusSale = 0,
+                            TotalWeight = 100m
+                        },
+                        new
+                        {
+                            JewelryId = 4,
+                            CategoryId = 5,
+                            Description = "Elegant cultured pearl pendant with 18k rose gold setting.",
+                            JewelryName = "Cultured Pearl Pendant",
+                            LaborPrice = 3200000m,
+                            MarkupPercentage = 0.20000000000000001,
+                            Quantity = 1,
+                            StatusSale = 0,
+                            TotalWeight = 150m
+                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.JewelryMaterial", b =>
@@ -145,6 +280,38 @@ namespace DataAccessObjects.Migrations
                     b.HasIndex("MaterialId");
 
                     b.ToTable("JewelryMaterial", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            JewelryId = 1,
+                            MaterialId = 1,
+                            JewelryWeight = 200.0
+                        },
+                        new
+                        {
+                            JewelryId = 1,
+                            MaterialId = 2,
+                            JewelryWeight = 5.0
+                        },
+                        new
+                        {
+                            JewelryId = 2,
+                            MaterialId = 2,
+                            JewelryWeight = 500.0
+                        },
+                        new
+                        {
+                            JewelryId = 3,
+                            MaterialId = 5,
+                            JewelryWeight = 10.0
+                        },
+                        new
+                        {
+                            JewelryId = 4,
+                            MaterialId = 6,
+                            JewelryWeight = 50.0
+                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.Material", b =>
@@ -177,7 +344,6 @@ namespace DataAccessObjects.Migrations
                         .HasColumnType("float");
 
                     b.Property<byte[]>("MaterialImage")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("MaterialName")
@@ -197,6 +363,116 @@ namespace DataAccessObjects.Migrations
                     b.HasKey("MaterialId");
 
                     b.ToTable("Material", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            MaterialId = 1,
+                            BidPrice = 2000000m,
+                            Clarity = 10,
+                            Color = "Yellow",
+                            Description = "Pure gold with 99.99% purity",
+                            IsMetail = true,
+                            MaterialCost = 2000000.0,
+                            MaterialName = "Gold 24K",
+                            OfferPrice = 2500000m,
+                            Purity = 99.989997863769531
+                        },
+                        new
+                        {
+                            MaterialId = 2,
+                            BidPrice = 25000m,
+                            Clarity = 10,
+                            Color = "Silver",
+                            Description = "Sterling silver with 92.5% purity",
+                            IsMetail = true,
+                            MaterialCost = 25000.0,
+                            MaterialName = "Silver 925",
+                            OfferPrice = 35000m,
+                            Purity = 92.5
+                        },
+                        new
+                        {
+                            MaterialId = 3,
+                            BidPrice = 3000000m,
+                            Clarity = 10,
+                            Color = "White",
+                            Description = "High purity platinum",
+                            IsMetail = true,
+                            MaterialCost = 3000000.0,
+                            MaterialName = "Platinum",
+                            OfferPrice = 3500000m,
+                            Purity = 95.0
+                        },
+                        new
+                        {
+                            MaterialId = 4,
+                            BidPrice = 2200000m,
+                            Clarity = 10,
+                            Color = "Silver",
+                            Description = "High purity palladium",
+                            IsMetail = true,
+                            MaterialCost = 2200000.0,
+                            MaterialName = "Palladium",
+                            OfferPrice = 2700000m,
+                            Purity = 95.0
+                        },
+                        new
+                        {
+                            MaterialId = 5,
+                            BidPrice = 0m,
+                            Clarity = 1,
+                            Color = "Colorless",
+                            Description = "High quality diamond with excellent clarity",
+                            IsMetail = false,
+                            MaterialCost = 5000000.0,
+                            MaterialName = "Diamond",
+                            OfferPrice = 0m,
+                            Purity = 100.0,
+                            Sharp = "Round Brilliant"
+                        },
+                        new
+                        {
+                            MaterialId = 6,
+                            BidPrice = 0m,
+                            Clarity = 3,
+                            Color = "Red",
+                            Description = "High quality ruby with vivid red color",
+                            IsMetail = false,
+                            MaterialCost = 3000000.0,
+                            MaterialName = "Ruby",
+                            OfferPrice = 0m,
+                            Purity = 100.0,
+                            Sharp = "Oval"
+                        },
+                        new
+                        {
+                            MaterialId = 7,
+                            BidPrice = 0m,
+                            Clarity = 4,
+                            Color = "Blue",
+                            Description = "High quality sapphire with deep blue color",
+                            IsMetail = false,
+                            MaterialCost = 2500000.0,
+                            MaterialName = "Sapphire",
+                            OfferPrice = 0m,
+                            Purity = 100.0,
+                            Sharp = "Cushion"
+                        },
+                        new
+                        {
+                            MaterialId = 8,
+                            BidPrice = 0m,
+                            Clarity = 5,
+                            Color = "Green",
+                            Description = "High quality emerald with vivid green color",
+                            IsMetail = false,
+                            MaterialCost = 4000000.0,
+                            MaterialName = "Emerald",
+                            OfferPrice = 0m,
+                            Purity = 100.0,
+                            Sharp = "Emerald Cut"
+                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.Order", b =>
@@ -221,6 +497,36 @@ namespace DataAccessObjects.Migrations
                     b.HasIndex("CustomerId");
 
                     b.ToTable("Order", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            OrderId = 1,
+                            CustomerId = 1,
+                            OrderDate = new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8382),
+                            OrderType = 0
+                        },
+                        new
+                        {
+                            OrderId = 2,
+                            CustomerId = 2,
+                            OrderDate = new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8384),
+                            OrderType = 0
+                        },
+                        new
+                        {
+                            OrderId = 3,
+                            CustomerId = 3,
+                            OrderDate = new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8384),
+                            OrderType = 0
+                        },
+                        new
+                        {
+                            OrderId = 4,
+                            CustomerId = 4,
+                            OrderDate = new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8385),
+                            OrderType = 0
+                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.OrderDetail", b =>
@@ -260,6 +566,44 @@ namespace DataAccessObjects.Migrations
                         .HasFilter("[PromotionDetailId] IS NOT NULL");
 
                     b.ToTable("OrderDetail", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            OrderDetailId = 1,
+                            DiscountPercent = 10m,
+                            JewelryId = 1,
+                            OrderId = 1,
+                            Quantity = 2,
+                            UnitPrice = 150m
+                        },
+                        new
+                        {
+                            OrderDetailId = 2,
+                            DiscountPercent = 5m,
+                            JewelryId = 2,
+                            OrderId = 1,
+                            Quantity = 1,
+                            UnitPrice = 200m
+                        },
+                        new
+                        {
+                            OrderDetailId = 3,
+                            DiscountPercent = 15m,
+                            JewelryId = 1,
+                            OrderId = 2,
+                            Quantity = 3,
+                            UnitPrice = 120m
+                        },
+                        new
+                        {
+                            OrderDetailId = 4,
+                            DiscountPercent = 20m,
+                            JewelryId = 3,
+                            OrderId = 3,
+                            Quantity = 1,
+                            UnitPrice = 300m
+                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.Promotion", b =>
@@ -320,19 +664,30 @@ namespace DataAccessObjects.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WarrantyId"), 1L, 1);
 
+                    b.Property<DateTime>("ActiveDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("JewelryId")
                         .HasColumnType("int");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
+                    b.Property<int>("PeriodUnitmeasure")
+                        .HasColumnType("int");
+
                     b.Property<double>("WarrantyPeriod")
                         .HasColumnType("float");
 
+                    b.Property<int>("WarrantyStatus")
+                        .HasColumnType("int");
+
                     b.HasKey("WarrantyId");
 
-                    b.HasIndex("JewelryId")
-                        .IsUnique();
+                    b.HasIndex("JewelryId");
 
                     b.HasIndex("OrderId");
 
@@ -347,13 +702,40 @@ namespace DataAccessObjects.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WarrantyHistoryId"), 1L, 1);
 
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerPhone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateModified")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("ReceivedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("RequireDescription")
+                        .IsRequired()
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResultReport")
+                        .IsRequired()
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ReturnDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("WarrantyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("status")
                         .HasColumnType("int");
 
                     b.HasKey("WarrantyHistoryId");
@@ -452,9 +834,9 @@ namespace DataAccessObjects.Migrations
             modelBuilder.Entity("BusinessObjects.Warranty", b =>
                 {
                     b.HasOne("BusinessObjects.Jewelry", "Jewelry")
-                        .WithOne("Warranties")
-                        .HasForeignKey("BusinessObjects.Warranty", "JewelryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithMany("Warranties")
+                        .HasForeignKey("JewelryId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("BusinessObjects.Order", "Order")
@@ -497,8 +879,7 @@ namespace DataAccessObjects.Migrations
 
                     b.Navigation("PromotionDetails");
 
-                    b.Navigation("Warranties")
-                        .IsRequired();
+                    b.Navigation("Warranties");
                 });
 
             modelBuilder.Entity("BusinessObjects.Material", b =>
