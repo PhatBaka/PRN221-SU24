@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessObjects.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240626145528_Inidataset")]
-    partial class Inidataset
+    [Migration("20240715115500_HAUpdateJewelryWarrantyDBV1")]
+    partial class HAUpdateJewelryWarrantyDBV1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -61,6 +61,52 @@ namespace DataAccessObjects.Migrations
                     b.HasKey("AccountId");
 
                     b.ToTable("Account", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            AccountId = 1,
+                            CreatedDate = new DateTime(2024, 7, 15, 18, 55, 0, 461, DateTimeKind.Local).AddTicks(1260),
+                            Email = "customer1@example.com",
+                            FullName = "Customer One",
+                            ObjectStatus = 0,
+                            Password = "123",
+                            PhoneNumber = "1234567890",
+                            Role = 2
+                        },
+                        new
+                        {
+                            AccountId = 2,
+                            CreatedDate = new DateTime(2024, 7, 15, 18, 55, 0, 461, DateTimeKind.Local).AddTicks(1273),
+                            Email = "customer2@example.com",
+                            FullName = "Customer Two",
+                            ObjectStatus = 0,
+                            Password = "123",
+                            PhoneNumber = "0987654321",
+                            Role = 2
+                        },
+                        new
+                        {
+                            AccountId = 3,
+                            CreatedDate = new DateTime(2024, 7, 15, 18, 55, 0, 461, DateTimeKind.Local).AddTicks(1274),
+                            Email = "customer3@example.com",
+                            FullName = "Customer Three",
+                            ObjectStatus = 0,
+                            Password = "123",
+                            PhoneNumber = "1122334455",
+                            Role = 2
+                        },
+                        new
+                        {
+                            AccountId = 4,
+                            CreatedDate = new DateTime(2024, 7, 15, 18, 55, 0, 461, DateTimeKind.Local).AddTicks(1275),
+                            Email = "customer4@example.com",
+                            FullName = "Customer Four",
+                            ObjectStatus = 0,
+                            Password = "123",
+                            PhoneNumber = "5566778899",
+                            Role = 2
+                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.Category", b =>
@@ -72,9 +118,10 @@ namespace DataAccessObjects.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"), 1L, 1);
 
                     b.Property<string>("CategoryName")
+                        .IsConcurrencyToken()
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("CategoryId");
 
@@ -84,31 +131,36 @@ namespace DataAccessObjects.Migrations
                         new
                         {
                             CategoryId = 1,
-                            CategoryName = "Rings"
+                            CategoryName = "Jewelry Type"
                         },
                         new
                         {
                             CategoryId = 2,
-                            CategoryName = "Necklaces"
+                            CategoryName = "Rings"
                         },
                         new
                         {
                             CategoryId = 3,
-                            CategoryName = "Earrings"
+                            CategoryName = "Necklaces"
                         },
                         new
                         {
                             CategoryId = 4,
-                            CategoryName = "Bracelets"
+                            CategoryName = "Earrings"
                         },
                         new
                         {
                             CategoryId = 5,
-                            CategoryName = "Pendants"
+                            CategoryName = "Bracelets"
                         },
                         new
                         {
                             CategoryId = 6,
+                            CategoryName = "Pendants"
+                        },
+                        new
+                        {
+                            CategoryId = 7,
                             CategoryName = "Brooches"
                         });
                 });
@@ -133,6 +185,7 @@ namespace DataAccessObjects.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("JewelryName")
+                        .IsConcurrencyToken()
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -444,6 +497,36 @@ namespace DataAccessObjects.Migrations
                     b.HasIndex("CustomerId");
 
                     b.ToTable("Order", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            OrderId = 1,
+                            CustomerId = 1,
+                            OrderDate = new DateTime(2024, 7, 15, 18, 55, 0, 461, DateTimeKind.Local).AddTicks(1288),
+                            OrderType = 0
+                        },
+                        new
+                        {
+                            OrderId = 2,
+                            CustomerId = 2,
+                            OrderDate = new DateTime(2024, 7, 15, 18, 55, 0, 461, DateTimeKind.Local).AddTicks(1290),
+                            OrderType = 0
+                        },
+                        new
+                        {
+                            OrderId = 3,
+                            CustomerId = 3,
+                            OrderDate = new DateTime(2024, 7, 15, 18, 55, 0, 461, DateTimeKind.Local).AddTicks(1290),
+                            OrderType = 0
+                        },
+                        new
+                        {
+                            OrderId = 4,
+                            CustomerId = 4,
+                            OrderDate = new DateTime(2024, 7, 15, 18, 55, 0, 461, DateTimeKind.Local).AddTicks(1291),
+                            OrderType = 0
+                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.OrderDetail", b =>
@@ -483,6 +566,44 @@ namespace DataAccessObjects.Migrations
                         .HasFilter("[PromotionDetailId] IS NOT NULL");
 
                     b.ToTable("OrderDetail", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            OrderDetailId = 1,
+                            DiscountPercent = 10m,
+                            JewelryId = 1,
+                            OrderId = 1,
+                            Quantity = 2,
+                            UnitPrice = 150m
+                        },
+                        new
+                        {
+                            OrderDetailId = 2,
+                            DiscountPercent = 5m,
+                            JewelryId = 2,
+                            OrderId = 1,
+                            Quantity = 1,
+                            UnitPrice = 200m
+                        },
+                        new
+                        {
+                            OrderDetailId = 3,
+                            DiscountPercent = 15m,
+                            JewelryId = 1,
+                            OrderId = 2,
+                            Quantity = 3,
+                            UnitPrice = 120m
+                        },
+                        new
+                        {
+                            OrderDetailId = 4,
+                            DiscountPercent = 20m,
+                            JewelryId = 3,
+                            OrderId = 3,
+                            Quantity = 1,
+                            UnitPrice = 300m
+                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.Promotion", b =>
@@ -543,19 +664,30 @@ namespace DataAccessObjects.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WarrantyId"), 1L, 1);
 
+                    b.Property<DateTime>("ActiveDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("JewelryId")
                         .HasColumnType("int");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
+                    b.Property<int>("PeriodUnitmeasure")
+                        .HasColumnType("int");
+
                     b.Property<double>("WarrantyPeriod")
                         .HasColumnType("float");
 
+                    b.Property<int>("WarrantyStatus")
+                        .HasColumnType("int");
+
                     b.HasKey("WarrantyId");
 
-                    b.HasIndex("JewelryId")
-                        .IsUnique();
+                    b.HasIndex("JewelryId");
 
                     b.HasIndex("OrderId");
 
@@ -570,13 +702,40 @@ namespace DataAccessObjects.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WarrantyHistoryId"), 1L, 1);
 
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerPhone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateModified")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("ReceivedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("RequireDescription")
+                        .IsRequired()
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResultReport")
+                        .IsRequired()
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ReturnDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("WarrantyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("status")
                         .HasColumnType("int");
 
                     b.HasKey("WarrantyHistoryId");
@@ -675,9 +834,9 @@ namespace DataAccessObjects.Migrations
             modelBuilder.Entity("BusinessObjects.Warranty", b =>
                 {
                     b.HasOne("BusinessObjects.Jewelry", "Jewelry")
-                        .WithOne("Warranties")
-                        .HasForeignKey("BusinessObjects.Warranty", "JewelryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithMany("Warranties")
+                        .HasForeignKey("JewelryId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("BusinessObjects.Order", "Order")
@@ -720,8 +879,7 @@ namespace DataAccessObjects.Migrations
 
                     b.Navigation("PromotionDetails");
 
-                    b.Navigation("Warranties")
-                        .IsRequired();
+                    b.Navigation("Warranties");
                 });
 
             modelBuilder.Entity("BusinessObjects.Material", b =>

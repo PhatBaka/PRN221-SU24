@@ -209,7 +209,7 @@ namespace UI.Pages.Jewelries
 
 			try
             {
-               await jewerlryService.UpdateJewelry(jewelry);
+               await jewerlryService.UpdateJewelryAsync(jewelry);
             }
             catch (Exception e)
             {

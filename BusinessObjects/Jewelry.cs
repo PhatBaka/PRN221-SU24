@@ -18,7 +18,7 @@ namespace BusinessObjects
         public int JewelryId { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(300), ConcurrencyCheck]
         public string JewelryName { get; set; }
 
         [Required]
@@ -53,10 +53,10 @@ namespace BusinessObjects
 
         public virtual ICollection<PromotionDetail> PromotionDetails { get; set; }
 
-        public virtual Warranty Warranties { get; set; }
+        public virtual ICollection<Warranty> Warranties { get; set; }
         
         public virtual Category Category { get; set; }
 
-        //public virtual ICollection<Image> Images { get; set; }
+      
     }
 }
