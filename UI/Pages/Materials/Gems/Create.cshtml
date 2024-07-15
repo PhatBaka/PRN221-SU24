@@ -2,6 +2,7 @@
 @model UI.Pages.Materials.Gems.CreateModel
 
 @{
+    Layout = "_ManagerLayout";
     ViewData["Title"] = "Create";
 }
 
@@ -22,154 +23,85 @@
     }
 </style>
 
-<h1>New Material</h1>
-
-<hr />
-
-<form method="post" id="jewelryForm" enctype="multipart/form-data">
-    <div class="form-group">
-        @* Display any custom message *@
-        @if (!string.IsNullOrEmpty(Model.Message))
-        {
-
-            <div class="alert alert-danger d-flex align-items-center mt-3 mb-3" role="alert">
-                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
-                    <use xlink:href="#exclamation-triangle-fill" />
-                </svg>
-                <div>
-                    <div class="text-danger">@Model.Message</div>
-                </div>
-            </div>
-        }
-    </div>
-    <div class="form-group">
-        @* Display the model state errors here *@
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    </div>
-    <div class="row-md">
-        <div class="col-md">
-            <div asp-validation-summary="ModelOnly">
-                <div class="alert alert-danger d-flex align-items-center mt-3 mb-3" role="alert">
-                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
-                        <use xlink:href="#exclamation-triangle-fill" />
-                    </svg>
-                    <div>
-                        <div class="text-danger">@Model.Message</div>
+<section id="center" class="center_shop">
+    <div class="container">
+        <div class="row">
+            <div class="center_shop_t clearfix">
+                <div class="col-sm-6">
+                    <div class="center_shop_tl clearfix d-flex align-items-center">
+                        <h4 class="mgt">NEW GEM</h4>
                     </div>
                 </div>
-            </div>
-            <h3>Product Information</h3>
-            <div class="row">
-                <div class="form-group col-6">
-                    <label class="control-label">Gem Name </label>
-                    <input asp-for="Gem.MaterialName" class="form-control" type="text" />
-                    <span asp-validation-for="Gem.MaterialName" class="text-danger"></span>
-                </div>
-                <div class="form-group col-6">
-                    <label class="control-label">Gem Color </label>
-                    <input asp-for="Gem.Color" class="form-control" type="text" />
-                    <span asp-validation-for="Gem.Color" class="text-danger"></span>
-                </div>
-                <div class="form-group col-6">
-                    <label class="control-label">Gem Clarity </label>
-                    <select asp-for="Gem.Clarity" class="form-control" asp-items="Model.ClarityOptions"></select>
-                    <span asp-validation-for="Gem.Clarity" class="text-danger"></span>
-                </div>
-                <div class="form-group col-6">
-                    <label class="control-label">Gem Purity</label>
-                    <div class="input-group">
-                        <input asp-for="Gem.Purity" class="form-control" type="text" />
-                        <span asp-validation-for="Gem.Purity" class="text-danger"></span>
-                        <span class="input-group-text">%</span>
+                <div class="col-sm-6">
+                    <div class="center_shop_tr text-right clearfix">
+                        <h6 class="col_2">You are here: <a asp-asp-page="Gems/Index">Home</a> / Gem</h6>
                     </div>
                 </div>
-                <div class="form-group col-6">
-                    <label class="control-label">Gem Sharp </label>
-                    <input asp-for="Gem.Sharp" class="form-control" type="text" />
-                    <span asp-validation-for="Gem.Sharp" class="text-danger"></span>
-                </div>
-                <div class="form-group col-6">
-                    <label class="control-label">Gem Cost</label>
-                    <div class="input-group">
-                        <input asp-for="Gem.MaterialCost" class="form-control" type="text" />
-                        <span asp-validation-for="Gem.MaterialCost" class="text-danger"></span>
-                        <span class="input-group-text">$</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md">
-                <div class="form-group">
-                    <label class="control-label">Description (optional)</label>
-                </div>
-                <div id="editor" style="min-height: 200px;"></div>
-                <textarea asp-for="Gem.Description" id="jewelryDescription" style="display:none;"></textarea>
-                <span asp-validation-for="Gem.Description" class="text-danger"></span>
-            </div>
-            <h3>Product Images</h3>
-            <div class="row">
-                <!-- Left Side -->
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col">
-                            <label class="control-label">Upload Material Image</label>
-                            <div class="input-group">
-                                <input asp-for="Gem.MaterialImageData" type="file" class="form-control" id="materialImageInput" accept="image/*">
-                            </div>
-                            <div class="mt-4" id="materialImagePreviewContainer">
-                                <!-- Preview images will be shown here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Side -->
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col">
-                            <label class="control-label">Upload Gem Certificate Image</label>
-                            <div class="input-group">
-                                <input asp-for="Gem.GemCertificateData" type="file" class="form-control" id="gemCertificateInput" accept="image/*">
-                            </div>
-                            <div class="mt-4" id="gemCertificatePreviewContainer">
-                                <!-- Preview images will be shown here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <input style="width: 100px" type="submit" value="Create" class="btn btn-primary mt-4 mb-3" />
             </div>
         </div>
     </div>
+</section>
+<form method="post" enctype="multipart/form-data">
+    <section id="checkout" class="clearfix">
+        <div class="container">
+            <div class="row">
+                <div class="checkout_1 clearfix">
+                    <div class="col-sm-8">
+                        <div class="checkout_1l1 clearfix">
+                            <div class="col-sm-4 space_left">
+                                <h5>Material type <span class="col_1">*</span></h5>
+                                <select asp-for="@Model.Gem.MaterialName" class="form-control" asp-items="Model.GemOptions"></select>
+                            </div>
+                            <div class="col-sm-4 space_left">
+                                <h5>Sell price <span class="col_1">*</span></h5>
+                                <input asp-for="@Model.Gem.MaterialCost" class="form-control" type="number">
+                            </div>
+                            <div class="col-sm-4 space_left">
+                                <h5>Clarity <span class="col_1">*</span></h5>
+                                <select asp-for="@Model.Gem.Clarity" class="form-control" asp-items="Model.ClarityOptions"></select>
+                            </div>
+                        </div>
+                        <div class="checkout_1l1 clearfix">
+                            <div class="col-sm-4 space_left">
+                                <h5>Color <span class="col_1">*</span></h5>
+                                <select asp-for="@Model.Gem.Color" class="form-control" asp-items="Model.ColorOptions"></select>
+                            </div>
+                            <div class="col-sm-4 space_left">
+                                <h5>Purity <span class="col_1">*</span></h5>
+                                <input asp-for="@Model.Gem.Purity" class="form-control" type="text">
+                            </div>
+                            <div class="col-sm-4 space_left">
+                                <h5>Color <span class="col_1">*</span></h5>
+                                <select asp-for="@Model.Gem.Sharp" class="form-control" asp-items="Model.SharpOptions"></select>
+                            </div>
+                        </div>
+                        <div class="checkout_1l1 clearfix">
+                            <div class="col-sm-12 space_left">
+                                <h5>Description</h5>
+                                <textarea asp-for="@Model.Gem.Description" class="form-control" type="text" style="height:350px"></textarea>
+                                <h4 class="mgt"><input class="button" type="submit" value="CREATE" /></h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="checkout_1l1 clearfix">
+                            <h5>Gem image <span class="col_1">*</span></h5>
+                            <input asp-for="Gem.MaterialImageData" type="file" class="form-control" id="materialImageInput" accept="image/*">
+                            <div class="mt-6" id="materialImagePreviewContainer">
+                                <!-- Preview images will be shown here -->
+                            </div>
+                            <h5>Certificate image <span class="col_1">*</span></h5>
+                            <input asp-for="Gem.GemCertificateData" type="file" class="form-control" id="gemCertificateInput" accept="image/*">
+                            <div class="mt-6" id="gemCertificatePreviewContainer">
+                                <!-- Preview images will be shown here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </form>
-
-<div style="margin-top: 5px;">
-    <a asp-page="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-
-    }
-}
-<!-- Bootstrap JS and dependencies -->
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-
-<!-- Initialize Quill editor -->
-<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-<script>
-    var quill = new Quill('#editor', {
-        theme: 'snow'
-    });
-    document.getElementById('jewelryForm').addEventListener('submit', function (e) {
-        // Copy the HTML content from Quill editor to the hidden textarea
-        var description = document.getElementById('jewelryDescription');
-        description.value = quill.root.innerHTML;
-    });
-</script>
 
 <script>
     // Function to handle file input change and show preview

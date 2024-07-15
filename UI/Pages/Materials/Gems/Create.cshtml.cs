@@ -25,9 +25,29 @@ namespace UI.Pages.Materials.Gems
         {
             _materialService = materialService;
             _mapper = mapper;
-
             ClarityOptions = Enum.GetValues(typeof(ClarityEnum))
-                     .Cast<ClarityEnum>()
+                                 .Cast<ClarityEnum>()
+                                 .Select(e => new SelectListItem
+                                 {
+                                     Value = e.ToString(),
+                                     Text = e.ToString()
+                                 }).ToList();
+            GemOptions = Enum.GetValues(typeof(GemTypeEnum))
+                     .Cast<GemTypeEnum>()
+                     .Select(e => new SelectListItem
+                     {
+                         Value = e.ToString(),
+                         Text = e.ToString()
+                     }).ToList();
+            SharpOptions = Enum.GetValues(typeof(SharpEnum))
+                     .Cast<SharpEnum>()
+                     .Select(e => new SelectListItem
+                     {
+                         Value = e.ToString(),
+                         Text = e.ToString()
+                     }).ToList();
+            ColorOptions = Enum.GetValues(typeof(ColorEnum))
+                     .Cast<ColorEnum>()
                      .Select(e => new SelectListItem
                      {
                          Value = e.ToString(),
@@ -35,15 +55,18 @@ namespace UI.Pages.Materials.Gems
                      }).ToList();
         }
 
+        [BindProperty]
+        public CreateGemRequest? Gem { get; set; }
+        public List<SelectListItem>? ClarityOptions { get; set; }
+        public List<SelectListItem>? GemOptions { get; set; }
+        public List<SelectListItem>? SharpOptions { get; set; }
+        public List<SelectListItem>? ColorOptions { get; set; }
+        public string Message { get; set; }
+
         public IActionResult OnGet()
         {
             return Page();
         }
-
-        [BindProperty]
-        public CreateGemRequest Gem { get; set; } = default!;
-        public List<SelectListItem> ClarityOptions { get; set; }
-        public string Message { get; set; }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
