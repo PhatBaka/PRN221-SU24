@@ -33,6 +33,6 @@ namespace UI.Payload.MaterialPayload
 
         public byte[]? GemCertificate { get; set; }
 
-        public virtual ICollection<GetJewelryMaterialRequest> JewelryMaterials { get; set; }
+        //public virtual ICollection<GetJewelryMaterialRequest> JewelryMaterials { get; set; }
     }
 }

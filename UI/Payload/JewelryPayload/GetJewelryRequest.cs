@@ -2,6 +2,7 @@
 using BusinessObjects;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using UI.Payload.JewerlyMaterialPayload;
 
 namespace UI.Payload.JewelryPayload
 {
@@ -27,15 +28,15 @@ namespace UI.Payload.JewelryPayload
 
         public StatusSale StatusSale { get; set; }
 
-        public virtual ICollection<JewelryMaterial> JewelryMaterials { get; set; }
+        public virtual ICollection<GetJewelryMaterialRequest> JewelryMaterials { get; set; }
 
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        //public virtual ICollection<OrderDetail> OrderDetails { get; set; }
 
-        public virtual ICollection<PromotionDetail> PromotionDetails { get; set; }
+        //public virtual ICollection<PromotionDetail> PromotionDetails { get; set; }
 
-        public virtual Warranty Warranties { get; set; }
+        //public virtual Warranty Warranties { get; set; }
 
-        public virtual Category Category { get; set; }
+        //public virtual Category Category { get; set; }
 
     }
 }

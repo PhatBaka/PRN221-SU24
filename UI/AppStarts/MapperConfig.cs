@@ -7,6 +7,7 @@ using Services.RequestModels.Order;
 using Services.RequestModels.Promotion;
 using Services.ResponseModels;
 using UI.Payload.JewelryPayload;
+using UI.Payload.JewerlyMaterialPayload;
 using UI.Payload.MaterialPayload;
 using UI.Payload.MaterialPayload.GemPayload;
 using UI.Payload.MaterialPayload.MetalPayload;
@@ -53,6 +54,7 @@ namespace UI.AppStarts
             CreateMap<JewelryResponse, CreateJewelryRequest>().ReverseMap();
             CreateMap<JewelryResponse, UpdateJewelryRequest>().ReverseMap();
             CreateMap<JewelryResponse, JewelryFilter>().ReverseMap();
+            CreateMap<Jewelry, GetJewelryRequest>().ReverseMap();
             #endregion
 
             #region PROMOTION
@@ -71,7 +73,11 @@ namespace UI.AppStarts
             CreateMap<Material, GetGemRequest>().ReverseMap();
             #endregion
 
-			#region WARRANTY
+            #region
+            CreateMap<JewelryMaterial, GetJewelryMaterialRequest>();
+            #endregion
+
+            #region WARRANTY
             CreateMap<Warranty, WarrantyCreateRequest>().ReverseMap();
             CreateMap<WarrantyHistory, WarrantyFixRequest>().ReverseMap();
 			#endregion

@@ -12,7 +12,7 @@ namespace UI.Payload.JewerlyMaterialPayload
 
         public double JewelryWeight { get; set; }
 
-        public virtual GetJewelryRequest Jewelry { get; set; }
+        //public virtual GetJewelryRequest Jewelry { get; set; }
 
         public virtual GetMaterialRequest Material { get; set; }
     }
