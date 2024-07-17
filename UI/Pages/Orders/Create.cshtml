@@ -134,10 +134,13 @@
                                                     <img src="data:image/jpeg;base64,@Convert.ToBase64String(jewelry.Jewelry.JewelryImage)" style="max-width: 100px; max-height: 100px;" />
                                                 </td>
                                                 <td>
-                                                    <h6 class="mgt"><button href="#">DETAIL</button></h6>
+                                                    <a asp-page="/Jewelries/Details" asp-route-id="@jewelry.Jewelry.JewelryId">DETAIL</a>
                                                 </td>
                                                 <td>
-                                                    <h6 class="mgt"><button href="#">REMOVE</button></h6>
+                                                    <form method="post" asp-page-handler="RemoveFromCart">
+                                                        <input type="hidden" name="id" value="@jewelry.Jewelry.JewelryId" />
+                                                        <input style="width: 50px" type="submit" value="X" />
+                                                    </form>
                                                 </td>
                                             </tr>
                                         }

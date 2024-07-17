@@ -42,7 +42,6 @@ namespace UI.Pages.Orders
         public void OnGet(String currentFilter, string searchString, int? pageIndex)
         {
             LoadJewelries(currentFilter, searchString, pageIndex);
-            UpdatePrice();
         }
 
         [BindProperties]
@@ -103,8 +102,12 @@ namespace UI.Pages.Orders
                             }
                         }
                         // if jewelry don't have gem in the cart
+                        if (addedItem.Quantity >= jewelry.Quantity)
+                        {
+                            return Page();
+                        }
                         addedItem.Quantity += 1;
-                        AddToCart(CartItems);
+                        SaveCart(CartItems);
                         return Page();
                     }
                 }
@@ -119,32 +122,41 @@ namespace UI.Pages.Orders
 
             CartItems.Add(item);
 
-            AddToCart(CartItems);
+            SaveCart(CartItems);
 
             return Page();
         }
 
-        private void AddToCart(List<CartItem> cartItems) => HttpContext.Session.SetObjectAsJson("CART", cartItems);
+        private void SaveCart(List<CartItem> cartItems) => HttpContext.Session.SetObjectAsJson("CART", cartItems);
         private void LoadCart()
         {
             CartItems = HttpContext.Session.GetObjectFromJson<List<CartItem>>("CART");
             CartItems ??= new List<CartItem>();
         }
 
-        public IActionResult OnPostRemove(int id)
+        public IActionResult OnPostRemoveFromCart(int id)
         {
             LoadJewelries("", "", 0);
-            var cartJson = HttpContext.Session.GetString("Cart");
-            if (!string.IsNullOrEmpty(cartJson))
+            LoadCart();
+            //var cartJson = HttpContext.Session.GetString("Cart");
+            //if (!string.IsNullOrEmpty(cartJson))
+            //{
+            //    var cart = JsonConvert.DeserializeObject<Dictionary<int, int>>(cartJson);
+            //    if (cart != null && cart.ContainsKey(id))
+            //    {
+            //        cart.Remove(id);
+            //        HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(cart));
+            //    }
+            //}
+            foreach (var cartItem in CartItems)
             {
-                var cart = JsonConvert.DeserializeObject<Dictionary<int, int>>(cartJson);
-                if (cart != null && cart.ContainsKey(id))
+                if (cartItem.Jewelry.JewelryId == id)
                 {
-                    cart.Remove(id);
-                    HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(cart));
+                    CartItems.Remove(cartItem);
+                    SaveCart(CartItems);
+                    break;
                 }
             }
-
             return RedirectToPage();
         }
 
@@ -190,7 +202,15 @@ namespace UI.Pages.Orders
                     UnitPrice = (double)cartItem.Jewelry.LaborPrice,
                     DiscountPercent = 0
                 };
+
                 items.Add(orderDetail);
+            }
+
+            foreach (var item in items)
+            {
+                var jewelry = _jewelryService.GetJewelryById(item.JewelryId);
+                jewelry.Quantity -= item.Quantity;
+                await _jewelryService.UpdateJewelryAsync(jewelry);
             }
 
             // Save order and order details
@@ -213,7 +233,9 @@ namespace UI.Pages.Orders
                 searchString = currentFilter;
             CurrentFilter = searchString;
 
-            IQueryable<Jewelry> jewelries = _jewelryService.GetJewelries().AsQueryable();
+            IQueryable<Jewelry> jewelries = _jewelryService.GetJewelries().Where(j =>
+                                                !(j.JewelryMaterials.Any(m => !m.Material.IsMetail) && j.OrderDetails.Count > 0) &&
+                                                !(j.JewelryMaterials.All(m => m.Material.IsMetail) && j.Quantity == 0)).AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
                 jewelries = jewelries.Where(s => s.JewelryId.ToString() == searchString);
