@@ -6,6 +6,7 @@ using Services.RequestModels.Category;
 using Services.RequestModels.Order;
 using Services.RequestModels.Promotion;
 using Services.ResponseModels;
+using UI.Payload.AccountPayload;
 using UI.Payload.JewelryPayload;
 using UI.Payload.JewerlyMaterialPayload;
 using UI.Payload.MaterialPayload;
@@ -23,10 +24,11 @@ namespace UI.AppStarts
             CreateMap<Account, AccountResponse>().ReverseMap();
             CreateMap<Account, CreateAccountRequest>().ReverseMap();
             CreateMap<Account, UpdateAccountRequest>().ReverseMap();
-            CreateMap<Account, LoginRequest>().ReverseMap();
+            //CreateMap<Account, LoginRequest>().ReverseMap();
             CreateMap<AccountResponse, CreateAccountRequest>().ReverseMap();
             CreateMap<AccountResponse, UpdateAccountRequest>().ReverseMap();
             CreateMap<AccountResponse, AccountFilter>().ReverseMap();
+            CreateMap<Account, GetAccountRequest>().ReverseMap();
             #endregion
 
             #region CATEGORY

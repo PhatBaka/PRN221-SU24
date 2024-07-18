@@ -33,7 +33,15 @@
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav nav_m">
-						<li><a class="m_tag" asp-page="Orders/Create">Order</a></li>
+						<li class="dropdown">
+							<a class="m_tag active_tab" href="#" data-toggle="dropdown" role="button"
+							   aria-expanded="false">ORDER<span class="caret"></span></a>
+							<ul class="dropdown-menu drop_3" role="menu">
+								<li><a asp-page="Orders/Sell/Create">SELL</a></li>
+								<li><a asp-page="Orders/Buy/Create">BUY</a></li>
+								<li><a asp-page="Orders/Exchange/Create">EXCHANGE</a></li>
+							</ul>
+						</li>
 					</ul>
 				</div>
 				<!-- /.navbar-collapse -->

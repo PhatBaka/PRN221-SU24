@@ -1,0 +1,215 @@
+﻿@page
+@model CreateModel
+@{
+    Layout = "_StaffLayout"; var chunkSize = 4;
+    var jewelryChunks = Model.Jewelries
+                        .Select((j, index) => new { Jewelry = j, Index = index })
+                        .GroupBy(j => j.Index / chunkSize)
+                        .Select(g => g.Select(j => j.Jewelry).ToList())
+                        .ToList();
+}
+
+<section id="center" class="center_shop">
+    <div class="container">
+        <div class="row">
+            <div class="center_shop_t clearfix">
+                <div class="col-sm-6">
+                </div>
+                <div class="col-sm-6">
+                    <div class="center_shop_tr text-right clearfix">
+                        <h6 class="col_2">You are here: <a asp-asp-page="Gems/Index">Order</a></h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="contact_top">
+    <div class="container">
+        <div class="row">
+            <div class="">
+                <div class="col-sm-6">
+                    <div class="">
+                        <div class="collcet_1r clearfix">
+                            <form method="post" asp-page-handler="FindCustomer">
+                                <div class="center_shop_1li1 clearfix">
+
+                                    @if (Model.Message != null)
+                                    {
+                                        <h2 class="mgt" style="color: red">@Model.Message</h2>
+                                    }
+
+                                    <hr />
+                                    <h2 class="mgt">PHONE NUMBER</h2>
+                                    <hr />
+                                    <input name="phoneNumber" style="width: 200px" class="form-control" type="text">
+                                </div>
+                                <h5 class="mgt"><input class="button" type="submit" value="FIND CUSTOMER" /></h5>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="detail_14 clearfix">
+                        @if (Model.CurrentCustomer == null)
+                        {
+                            <h2 class="mgt">CUSTOMER INFO</h2>
+                            <input type="text" class="form-control" placeholder="Email" asp-for="CurrentCustomer.Email">
+                            <input type="text" class="form-control" placeholder="Full Name" asp-for="CurrentCustomer.FullName">
+                            <input type="text" class="form-control" placeholder="Phone Number" asp-for="CurrentCustomer.PhoneNumber">
+                            <h4><a class="button" href="#">CREATE NEW CUSTOMER</a></h4>
+                        }
+                        else
+                        {
+                            <h2 class="mgt">CUSTOMER INFO</h2>
+                            <input readonly type="text" class="form-control" placeholder="Email" asp-for="CurrentCustomer.Email">
+                            <input readonly type="text" class="form-control" placeholder="Full Name" asp-for="CurrentCustomer.FullName">
+                            <input readonly type="text" class="form-control" placeholder="Phone Number" asp-for="CurrentCustomer.PhoneNumber">
+                            <input readonly type="text" class="form-control" placeholder="Current rank*">
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="center" class="center_shop">
+    <div class="container">
+        <div class="row">
+            <div class="center_shop_1 clearfix">
+                <div class="col-sm-5">
+                    <div class="center_shop_1r clearfix">
+                        @foreach (var jewelryChunk in jewelryChunks)
+                        {
+                            <div class="row">
+                                @foreach (var jewelry in jewelryChunk)
+                                {
+                                    <div class="col-sm-3">
+                                        <div class="collcet_1r clearfix">
+                                            <div class="feature_2im clearfix">
+                                                <div class="feature_2im1 clearfix">
+                                                    <img style="width: 150px" src="data:image/jpeg;base64,@Convert.ToBase64String(jewelry.JewelryImage)" alt="@jewelry.JewelryName" width="180px" />
+                                                </div>
+                                                <div class="feature_2im4 clearfix">
+                                                    @*  <h6><a class="bg_3" href="detail.html">@jewelry..ToString("F2")</a></h6> *@
+                                                </div>
+                                                <div class="feature_2im4 clearfix">
+                                                    <div class="col-sm-6 space_left">
+                                                    </div>
+                                                    <div class="col-sm-6 feature_2im4r space_right">
+                                                        <ul>
+                                                            <li>
+                                                                <a asp-page="/Orders/Detail" asp-route-id="@jewelry.JewelryId"><i class="fa fa-rocket"></i></a>
+                                                            </li>
+                                                            <li>
+                                                                <form method="post" asp-page-handler="AddToCart">
+                                                                    <input type="hidden" name="JewelryId" value="@jewelry.JewelryId" />
+                                                                    <i><button type="submit" class="fa fa-shopping-cart" /></i>
+                                                                </form>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="item_last text-center clearfix">
+                                                <h4>@jewelry.JewelryName</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <form method="post" asp-page-handler="ClearCart">
+                        <h4 class="mgt"><input class="button" type="submit" value="CLEAR CART" /></h4>
+                    </form>
+                </div>
+                <!-- Show Cart -->
+                <div class="col-sm-7">
+                    <div class="center_shop_1l clearfix">
+                        <div class="center_shop_1li clearfix">
+                            <h5 class="mgt">CART</h5>
+                            <table class="table table-striped table-center">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Unit Price</th>
+                                        <th>Quantity</th>
+                                        <th>Total Price</th>
+                                        <th>Discount Price</th>
+                                        <th>Final Price</th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.CartItems != null && Model.Jewelries.Count() > 0)
+                                    {
+                                        @foreach (var jewelry in Model.CartItems)
+                                        {
+                                            <tr class="d-flex justify-content-center">
+                                                <td>@jewelry.Jewelry.JewelryName</td>
+                                                <td>@jewelry.UnitPrice.ToString("F2")</td>
+                                                <td>
+                                                    @foreach (var material in jewelry.Jewelry.JewelryMaterials)
+                                                    {
+                                                        @if (material.Material.IsMetail)
+                                                        {
+                                                            <div class="cart_3l1i2 clearfix">
+                                                                <div class="input-group number-spinner">
+                                                                    <span class="input-group-btn">
+                                                                        <button class="btn btn-default" data-dir="dwn">
+                                                                            <span class="glyphicon glyphicon-minus"></span>
+                                                                        </button>
+                                                                    </span>
+                                                                    <input type="text" asp-for="@jewelry.Quantity" class="form-control text-center">
+                                                                    <span class="input-group-btn">
+                                                                        <button class="btn btn-default" data-dir="up">
+                                                                            <span class="glyphicon glyphicon-plus"></span>
+                                                                        </button>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            break;
+                                                        }
+                                                    }
+                                                </td>
+                                                <td>@jewelry.GetTotalPrice().ToString("F2")</td>
+                                                <td>@jewelry.GetDiscountPrice().ToString("F2")</td>
+                                                <td>@jewelry.GetFinalPrice().ToString("F2")</td>
+                                                <td>
+                                                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(jewelry.Jewelry.JewelryImage)" style="max-width: 100px; max-height: 100px;" />
+                                                </td>
+                                                <td>
+                                                    <a asp-page="/Jewelries/Details" asp-route-id="@jewelry.Jewelry.JewelryId">DETAIL</a>
+                                                </td>
+                                                <td>
+                                                    <form method="post" asp-page-handler="RemoveFromCart">
+                                                        <input type="hidden" name="id" value="@jewelry.Jewelry.JewelryId" />
+                                                        <input style="width: 50px" type="submit" value="X" />
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                            <form method="post" asp-page-handler="SubmitOrder">
+                                <h4 class="mgt"><input class="button" type="submit" value="CREATE ORDER" /></h4>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .feature_2im1 img !important { 
+
+    }
+</style>
