@@ -1,4 +1,4 @@
-﻿@page
+﻿@* @page
 @model UI.Pages.Orders.CreateModel
 @{
     Layout = "_StaffLayout"; var chunkSize = 4;
@@ -44,7 +44,7 @@
                                                     <img style="width: 150px" src="data:image/jpeg;base64,@Convert.ToBase64String(jewelry.JewelryImage)" alt="@jewelry.JewelryName" width="180px" />
                                                 </div>
                                                 <div class="feature_2im4 clearfix">
-                                                    @*  <h6><a class="bg_3" href="detail.html">@jewelry..ToString("F2")</a></h6> *@
+                                                    @*  <h6><a class="bg_3" href="detail.html">@jewelry..ToString("F2")</a></h6> 
                                                 </div>
                                                 <div class="feature_2im4 clearfix">
                                                     <div class="col-sm-6 space_left">
@@ -168,4 +168,4 @@
     .feature_2im1 img !important { 
 
     }
-</style>
+</style> *@

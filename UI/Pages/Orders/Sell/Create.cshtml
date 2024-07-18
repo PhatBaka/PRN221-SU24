@@ -1,5 +1,5 @@
 ﻿@page
-@model CreateModel
+@model UI.Pages.Orders.Sell.CreateModel
 @{
     Layout = "_StaffLayout"; var chunkSize = 4;
     var jewelryChunks = Model.Jewelries
@@ -92,9 +92,6 @@
                                             <div class="feature_2im clearfix">
                                                 <div class="feature_2im1 clearfix">
                                                     <img style="width: 150px" src="data:image/jpeg;base64,@Convert.ToBase64String(jewelry.JewelryImage)" alt="@jewelry.JewelryName" width="180px" />
-                                                </div>
-                                                <div class="feature_2im4 clearfix">
-                                                    @*  <h6><a class="bg_3" href="detail.html">@jewelry..ToString("F2")</a></h6> *@
                                                 </div>
                                                 <div class="feature_2im4 clearfix">
                                                     <div class="col-sm-6 space_left">

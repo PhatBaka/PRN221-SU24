@@ -13,8 +13,9 @@ using System.Text.Json;
 using UI.Payload.MaterialPayload;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 using UI.Payload.JewelryPayload;
+using UI.Payload.AccountPayload;
 
-namespace UI.Pages.Orders.New
+namespace UI.Pages.Orders.Sell
 {
     public class CreateModel : PageModel
     {
@@ -33,12 +34,12 @@ namespace UI.Pages.Orders.New
             _mapper = mapper;
         }
 
-        public Account? CurrentCustomer { get; set; }
+        public GetAccountRequest? CurrentCustomer { get; set; }
         public List<CartItem> CartItems { get; set; } = new List<CartItem>();
         public PaginatedList<Jewelry>? Jewelries { get; set; }
         public string? CurrentFilter { get; set; }
         private IList<MetalPrice> Prices = new List<MetalPrice>();
-        private string? Message { get; set; }
+        public string? Message { get; set; }
 
         public void OnGet(string currentFilter, string searchString, int? pageIndex)
         {
@@ -59,9 +60,7 @@ namespace UI.Pages.Orders.New
 
         public IActionResult OnPostAddToCart(int JewelryId)
         {
-            LoadCart();
-            LoadJewelries("", "", 1);
-            UpdatePrice();
+            LoadData("", "", 1);
             Jewelry jewelry = _jewelryService.GetJewelryById(JewelryId);
             // total gem + total current price + labor price
             decimal unitPrice = 0;
@@ -137,8 +136,7 @@ namespace UI.Pages.Orders.New
 
         public IActionResult OnPostRemoveFromCart(int id)
         {
-            LoadJewelries("", "", 0);
-            LoadCart();
+            LoadData("", "", 1);
             //var cartJson = HttpContext.Session.GetString("Cart");
             //if (!string.IsNullOrEmpty(cartJson))
             //{
@@ -163,9 +161,7 @@ namespace UI.Pages.Orders.New
 
         public async Task<IActionResult> OnPostSubmitOrder(string phoneNumber)
         {
-            LoadJewelries("", "", 0);
-            LoadCart();
-            UpdatePrice();
+            LoadData("", "", 1);
 
             //// Retrieve account ID from session
             //int? accountID = HttpContext.Session.GetInt32("ID");
@@ -178,7 +174,14 @@ namespace UI.Pages.Orders.New
             // Check if cart is empty
             if (CartItems == null || CartItems.Count == 0)
             {
-                return RedirectToPage();
+                Message = "Cart is empty";
+                return Page();
+            }
+
+            if (CurrentCustomer == null)
+            {
+                Message = "Please enter customer";
+                return Page();
             }
 
             // Create new order
@@ -186,7 +189,7 @@ namespace UI.Pages.Orders.New
             {
                 OrderDate = DateTime.Now,
                 OrderType = OrderEnum.NEW,
-                CustomerId = _accountService.GetAccounts().FirstOrDefault(x => x.PhoneNumber == phoneNumber).AccountId
+                CustomerId = CurrentCustomer.AccountId
             };
 
             // Initialize list of order details
@@ -278,5 +281,31 @@ namespace UI.Pages.Orders.New
         }
 
 
+        public void LoadData(String searchString, String currentFilter, int pageIndex)
+        {
+            LoadJewelries(searchString, currentFilter, pageIndex);
+            LoadCart();
+            LoadCustomer();
+        }
+
+        public void LoadCustomer()
+        {
+            CurrentCustomer = HttpContext.Session.GetObjectFromJson<GetAccountRequest>("ACCOUNT");
+        }
+
+        public IActionResult OnPostFindCustomer(string phoneNumber)
+        {
+            LoadData("", "", 1);
+            CurrentCustomer = _mapper.Map<GetAccountRequest>(_accountService.GetAccounts().FirstOrDefault(x => x.PhoneNumber.Equals(phoneNumber)));
+            if (CurrentCustomer != null)
+            {
+                HttpContext.Session.SetObjectAsJson("ACCOUNT", CurrentCustomer);
+            }
+            else
+            {
+                Message = "Can find this account";
+            }
+            return Page();
+        }
     }
 }
