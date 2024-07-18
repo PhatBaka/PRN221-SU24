@@ -24,6 +24,7 @@ namespace UI.Pages.Orders.Buy
 
         public IList<MetalResponse>? Metals { get; set; }
 
+
         public void OnGet()
         {
             Metals = _metalService.GetPrices();

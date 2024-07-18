@@ -86,3 +86,73 @@
             </div>
         </div>
     </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <div class="cart_3 clearfix">
+            <!-- CART -->
+            <div class="col-sm-6">
+            </div>
+            <!-- JEWELRY -->
+            <div class="col-sm-6">
+                <section id="feature">
+                    <div class="container">
+                        <div class="row">
+                            <div class="feature_1 text-center clearfix">
+                                <div class="col-sm-12">
+                                    <h3 class="mgt">METAL</h3>
+                                    <hr>
+                                </div>
+                                <div class="feature_2 clearfix">
+                                    <div id="carousel-example" class="carousel slide" data-ride="carousel">
+                                        <div class="carousel-inner">
+                                            <div class="item active">
+                                                @foreach (var metal in Model.Metals)
+                                                {
+                                                    <form asp-page-handler="AddMetalToCart" method="post">
+                                                        <div class="col-sm-4">
+                                                            <div class="feature_2im clearfix">
+                                                                <div class="feature_2im1 clearfix">
+                                                                    @switch (metal.Metal)
+                                                                    {
+                                                                        case "gold":
+                                                                            <img src="~/img/gold.jpg" width="200px" height="200px" class="iw" alt="@metal.Metal">
+                                                                            break;
+                                                                        case "silver":
+                                                                            <img src="~/img/silver.jpg" width="200px" height="200px" class="iw" alt="@metal.Metal">
+                                                                            break;
+                                                                        case "palladium":
+                                                                            <img src="~/img/palladium.jpg" width="200px" height="200px" class="iw" alt="@metal.Metal">
+                                                                            break;
+                                                                    }
+                                                                  
+                                                                </div>
+                                                                <div class="feature_2im4 clearfix">
+                                                                    <div class="col-sm-6 space_left">
+                                                                        <h6><a class="bg_3" href="#">@metal.Rate.Bid</a></h6>
+                                                                    </div>
+                                                                    <div class="col-sm-6 feature_2im4r space_right">
+                                                                        <ul>
+                                                                            <li><button type="submit" name="Metal" value="gold" class="fa fa-shopping-cart" /></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+
