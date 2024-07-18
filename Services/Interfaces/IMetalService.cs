@@ -24,13 +24,13 @@ namespace Services.Interfaces
 
     public class Rate
     {
-        public decimal Price { get; set; }
-        public decimal Ask { get; set; }
-        public decimal Bid { get; set; }
-        public decimal High { get; set; }
-        public decimal Low { get; set; }
-        public decimal Change { get; set; }
+        public double Price { get; set; }
+        public double Ask { get; set; }
+        public double Bid { get; set; }
+        public double High { get; set; }
+        public double Low { get; set; }
+        public double Change { get; set; }
         [JsonPropertyName("change_percent")]
-        public decimal ChangePercent { get; set; }
+        public double ChangePercent { get; set; }
     }
 }

@@ -14,9 +14,9 @@ namespace UI.Payload.JewelryPayload
 
         public string Description { get; set; }
 
-        public decimal TotalWeight { get; set; }
+        public double TotalWeight { get; set; }
 
-        public decimal LaborPrice { get; set; }
+        public double LaborPrice { get; set; }
 
         public int Quantity { get; set; }
 
