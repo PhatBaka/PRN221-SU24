@@ -1,9 +1,11 @@
 using AutoMapper;
+using BusinessObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Services.Interfaces;
 using UI.Helper;
 using UI.Payload.JewelryPayload;
+using UI.Payload.MaterialPayload;
 
 namespace UI.Pages.Orders.Buy
 {
@@ -25,7 +27,8 @@ namespace UI.Pages.Orders.Buy
         }
 
         public IList<MetalResponse>? Metals { get; set; }
-        public IList<MetalCart> MetalCarts { get; set; }
+        public IList<MetalItem> MetalCart { get; set; }
+        public IList<CartItem> Cart { get; set; }
 
         public void OnGet()
         {
@@ -36,17 +39,14 @@ namespace UI.Pages.Orders.Buy
 		[BindProperties]
 		public class CartItem
 		{
+            public decimal SellPrice { get; set; }
 			public GetJewelryRequest Jewelry { get; set; }
 			public int Quantity { get; set; }
 			public decimal UnitPrice { get; set; }
-			public decimal DiscountValue { get; set; }
-			public decimal GetTotalPrice() => UnitPrice * Quantity;
-			public decimal GetDiscountPrice() => GetTotalPrice() * DiscountValue / 100;
-			public decimal GetFinalPrice() => GetTotalPrice() - GetDiscountPrice();
 		}
 
         [BindProperties]
-		public class MetalCart
+		public class MetalItem
 		{
 			public MetalResponse? Item { get; set; }
 			public decimal Weight { get; set; }
@@ -63,16 +63,17 @@ namespace UI.Pages.Orders.Buy
         {
             LoadMetalCart();
             LoadPrice();
+            LoadCart();
         }
 
         public IActionResult OnPostAddMetalToCart(string metal)
         {
             LoadData();
-            MetalCarts ??= new List<MetalCart>();
+            MetalCart ??= new List<MetalItem>();
 
-            if (MetalCarts != null && MetalCarts.Count > 0)
+            if (MetalCart != null && MetalCart.Count > 0)
             {
-                foreach (var item in MetalCarts)
+                foreach (var item in MetalCart)
                 {
                     // check metal already in cart
                     if (item.Item.Metal.Equals(metal))
@@ -82,18 +83,59 @@ namespace UI.Pages.Orders.Buy
                 }
             }
 
-            MetalCart metalCart = new()
+            MetalItem metalCart = new()
             {
                 Item = Metals.FirstOrDefault(x => x.Metal.Equals(metal))
             };
 
-            MetalCarts.Add(metalCart);
-            HttpContext.Session.SetObjectAsJson("METALCARTS", MetalCarts);
+            MetalCart.Add(metalCart);
+            HttpContext.Session.SetObjectAsJson("METALCART", MetalCart);
 
             return Page();
         }
 
-        private void LoadMetalCart() => MetalCarts = HttpContext.Session.GetObjectFromJson<IList<MetalCart>>("METALCARTS");
+        public IActionResult OnPostUpdateCart(decimal weight, string metal)
+        {
+            LoadData();
+
+            // check metal already in the cart
+            if (Cart != null && Cart.Count > 0)
+            {
+                var existedItem = Cart.FirstOrDefault(x => x.Jewelry.JewelryName.Equals(metal));
+                if (existedItem != null)
+                {
+                    existedItem.Jewelry.TotalWeight = weight;
+                    existedItem.UnitPrice = Metals.FirstOrDefault(x => x.Metal.Equals(metal)).Rate.Bid * weight;
+                }
+            }
+            else
+            {
+
+                GetJewelryRequest jewelry = new()
+                {
+                    JewelryName = metal,
+                    Description = "FROM CUSTOMER",
+                    TotalWeight = weight
+                };
+
+                CartItem cartItem = new CartItem()
+                {
+                    SellPrice = Metals.FirstOrDefault(x => x.Metal.Equals(metal)).Rate.Bid,
+                    Jewelry = jewelry,
+                    UnitPrice = Metals.FirstOrDefault(x => x.Metal.Equals(metal)).Rate.Bid * weight
+                };
+
+                Cart ??= new List<CartItem>();
+                Cart.Add(cartItem);
+            }
+
+            HttpContext.Session.SetObjectAsJson("CART", Cart);
+
+            return Page();
+        }
+
+        private void LoadMetalCart() => MetalCart = HttpContext.Session.GetObjectFromJson<IList<MetalItem>>("METALCART");
         private void LoadPrice() => Metals = _metalService.GetPrices();
+        private void LoadCart() => Cart = HttpContext.Session.GetObjectFromJson<IList<CartItem>>("CART");
     }
 }
