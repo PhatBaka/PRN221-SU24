@@ -32,6 +32,11 @@ namespace UI.Pages.Materials.Gems
                                         string searchString,
                                         int? pageIndex)
         {
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "ADMIN" || role != "MANAGER")
+            {
+                RedirectToPage("/AccessDenied");
+            }
             if (searchString != null)
                 pageIndex = 1;
             else

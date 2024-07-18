@@ -29,6 +29,15 @@
 //        {
 //            return Page();
 //        }
+        //public IActionResult OnGet()
+        //{
+        //    string role = HttpContext.Session.GetString("ROLE");
+        //    if (role != "ADMIN" || role != "MANAGER")
+        //    {
+        //        return RedirectToPage("/AccessDenied");
+        //    }
+        //    return Page();
+        //}
 
 //        [BindProperty]
 //        public CreateMetalRequest Metal { get; set; } = default!;
