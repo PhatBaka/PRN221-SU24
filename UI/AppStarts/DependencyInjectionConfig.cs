@@ -31,6 +31,8 @@ namespace UI.AppStarts
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IAccountDAO, AccountDAO>();
             services.AddScoped(typeof(IGenericDAO<>), typeof(GenericDAO<>));
+
+            services.AddScoped<IMetalService, MetalService>();
 		}
 	}
 }

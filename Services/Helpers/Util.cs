@@ -32,5 +32,17 @@ namespace Services.Helpers
             return char.ToUpper(sentence[0]) + sentence.Substring(1);
         }
 
+        public static string ReadJsonFile(string fileName)
+        {
+            string jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), fileName);
+
+            if (!File.Exists(jsonFilePath))
+            {
+                throw new FileNotFoundException($"The file '{fileName}' was not found in the current directory.");
+            }
+
+            string jsonString = File.ReadAllText(jsonFilePath);
+            return jsonString;
+        }
     }
 }
