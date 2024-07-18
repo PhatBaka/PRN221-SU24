@@ -63,6 +63,10 @@ namespace UI.Pages
                         HttpContext.Session.SetInt32("ID", existedAccount.AccountId);
                         HttpContext.Session.SetString("ROLE", "MANAGER");
                         return RedirectToPage("./Manager");
+                    case AccountRole.ADMIN:
+                        HttpContext.Session.SetInt32("ID", existedAccount.AccountId);
+                        HttpContext.Session.SetString("ROLE", "ADMIN");
+                        return RedirectToPage("./Accounts");
                 }
             }
             else

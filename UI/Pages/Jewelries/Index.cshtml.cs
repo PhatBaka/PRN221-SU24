@@ -34,7 +34,12 @@ namespace UI.Pages.Jewelries
 
         public void OnGetAsync()
         {
-           List<Jewelry> jewelryList = jewelryService.GetJewelries();
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "ADMIN" || role != "MANAGER")
+            {
+                RedirectToPage("/AccessDenied");
+            }
+            List<Jewelry> jewelryList = jewelryService.GetJewelries();
             if(!string.IsNullOrEmpty(search))
             {
                 

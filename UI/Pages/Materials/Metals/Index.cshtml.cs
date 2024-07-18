@@ -29,6 +29,11 @@ namespace UI.Pages.Materials.Metals
 
         public async Task OnGetAsync()
         {
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "ADMIN" || role != "MANAGER")
+            {
+                RedirectToPage("/AccessDenied");
+            }
             LoadData();
         }
 

@@ -62,6 +62,11 @@ namespace UI.Pages.Materials.Gems
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "ADMIN" || role != "MANAGER")
+            {
+                return RedirectToPage("/AccessDenied");
+            }
             if (id == null)
             {
                 return NotFound();
