@@ -38,17 +38,11 @@ namespace UI.Payload.JewelryPayload
 		[Required(ErrorMessage = "The field is required")]
 		public int Quantity { get; set; }
 
-<<<<<<< HEAD
-        [DefaultValue(0)]
-		[Required(ErrorMessage = "The field is required")]
-		[Range(0, 100, ErrorMessage = "Markup percentage must be greater or equal 0")]
-        public double MarkupPercentage { get; set; }
-=======
+
         //[DefaultValue(0)]
 		//[Required(ErrorMessage = "The field is required")]
 		//[Range(0, (double)decimal.MaxValue, ErrorMessage = "Markup percentage must be greater or equal 0")]
         //public double MarkupPercentage { get; set; }
->>>>>>> 709a22b2b18fdbb5efe549df774946f559f88e07
 
         //[Required(ErrorMessage = "The field is required")]
         //public string CategoryName { get; set; }
@@ -61,11 +55,8 @@ namespace UI.Payload.JewelryPayload
         //public List<IFormFile>? ImageDataFile { get; set; }
         public IFormFile? ImageDataFile { get; set; }
 
-<<<<<<< HEAD
-=======
         //TODO  public virtual Warranty Warranties { get; set; }
 
         public int CategoryId { get; set; }
->>>>>>> 709a22b2b18fdbb5efe549df774946f559f88e07
     }
 }
