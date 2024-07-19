@@ -21,6 +21,7 @@ namespace UI.Pages.Jewelries
 
         [BindProperty]
       public Jewelry Jewelry { get; set; } = default!;
+        public string message { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -51,18 +52,27 @@ namespace UI.Pages.Jewelries
         {
             if (id == null || _context.Jewelries == null)
             {
-                return NotFound();
+                message = $"Jewelry iD {id} not found!";
+                return Page();
             }
             var jewelry = await _context.Jewelries.FindAsync(id);
+            try {
+				if (jewelry != null)
+				{
+					Jewelry = jewelry;
+					_context.Jewelries.Remove(Jewelry);
+					await _context.SaveChangesAsync();
+				}
 
-            if (jewelry != null)
+			}catch(Exception ex)
             {
-                Jewelry = jewelry;
-                _context.Jewelries.Remove(Jewelry);
-                await _context.SaveChangesAsync();
+                message = "Cannot delete this jewelry id " + id + " because of in using constraint";
+                Console.WriteLine(ex.Message);
+                return Page();
             }
 
-            return RedirectToPage("./Index");
+
+			return RedirectToPage("./Index");
         }
     }
 }

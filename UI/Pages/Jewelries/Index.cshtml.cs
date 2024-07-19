@@ -31,40 +31,47 @@ namespace UI.Pages.Jewelries
 
         [BindProperty(SupportsGet = true)]
         public String search { get; set; } = default!;
+        public String messageErrorWhenDelete { get; set; } = default!;
 
-        public void OnGetAsync()
+        public IActionResult OnGetAsync()
         {
             string role = HttpContext.Session.GetString("ROLE");
             if (role != "ADMIN" || role != "MANAGER")
             {
                 RedirectToPage("/AccessDenied");
             }
-            List<Jewelry> jewelryList = jewelryService.GetJewelries();
-            if(!string.IsNullOrEmpty(search))
-            {
-                
-                JewelryFilter searchFilter = new JewelryFilter
-                {
-                    SearchKeyword = search
-                };
-			
-			jewelryList = jewelryService.SearchFilterJewelries(searchFilter);
-		}
-
-            if (jewelryList == null)
-            {
-                throw new Exception("Cannot get jewelry list");
-            }
-            Jewelry = jewelryList;
-            foreach (var item in Jewelry)
-            {
-                //ViewData[$"ItemStatusSale_{item.JewelryId}"] = StatusSaleExtension.GetDisplayName(item.StatusSale);
-                ViewData[$"ItemBasePrice_{item.JewelryId}"] = (decimal) jewelryService.GetJewelrySalePrice(item);
-                ViewData[$"ItemImage_{item.JewelryId}"] = formatImage(item);
-            }
+           Setup();
+            return Page();
 
         }
 
+        private void Setup()
+        {
+			List<Jewelry> jewelryList = jewelryService.GetJewelries();
+			if (!string.IsNullOrEmpty(search))
+			{
+
+				JewelryFilter searchFilter = new JewelryFilter
+				{
+					SearchKeyword = search
+				};
+
+				jewelryList = jewelryService.SearchFilterJewelries(searchFilter);
+			}
+
+			if (jewelryList == null)
+			{
+				throw new Exception("Cannot get jewelry list");
+			}
+			Jewelry = jewelryList;
+			foreach (var item in Jewelry)
+			{
+				//ViewData[$"ItemStatusSale_{item.JewelryId}"] = StatusSaleExtension.GetDisplayName(item.StatusSale);
+				ViewData[$"ItemBasePrice_{item.JewelryId}"] = (decimal)jewelryService.GetJewelrySalePrice(item);
+				ViewData[$"ItemImage_{item.JewelryId}"] = formatImage(item);
+			}
+		}
+        
         public IActionResult OnPostBuy(int id)
         {
             var jewelry = jewelryService.GetJewelryById(id);
@@ -97,7 +104,8 @@ namespace UI.Pages.Jewelries
             return RedirectToPage();
         }
 
-        private string formatImage(Jewelry jewelry )
+		
+		private string formatImage(Jewelry jewelry )
         {
 			String imageDataBase64String = StringConstants.IMAGE_DATABASE64_DEFAULT;
 			if (jewelry.JewelryImage != null && jewelry.JewelryImage.Length > 0)
@@ -106,5 +114,7 @@ namespace UI.Pages.Jewelries
 			}
             return imageDataBase64String;
 		}
+
+
     }
 }
