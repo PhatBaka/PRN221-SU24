@@ -8,26 +8,30 @@ namespace BusinessObjects.Enums
 {
     public enum StatusSale
     {
-        IN_STOCK, 
-        OUT_OF_STOCK, 
-        DISCONTINUED 
+        //IN_STOCK,
+        //OUT_OF_STOCK,
+        //DISCONTINUED
+
+        OLD,
+        NEW,
+        RENEW
     }
 
-    public static class StatusSaleExtension
-    {
-        public static string GetDisplayName(this StatusSale statusSale)
-        {
-            switch (statusSale)
-            {
-                case StatusSale.IN_STOCK:
-                    return "In stock";
-                case StatusSale.OUT_OF_STOCK:
-                    return "Out of stock";
-                case StatusSale.DISCONTINUED:
-                    return "Discontinued";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(statusSale), statusSale, null);
-            }
-        }
-    }
+    //public static class StatusSaleExtension
+    //{
+    //    public static string GetDisplayName(this StatusSale statusSale)
+    //    {
+    //        switch (statusSale)
+    //        {
+    //            case StatusSale.IN_STOCK:
+    //                return "In stock";
+    //            case StatusSale.OUT_OF_STOCK:
+    //                return "Out of stock";
+    //            case StatusSale.DISCONTINUED:
+    //                return "Discontinued";
+    //            default:
+    //                throw new ArgumentOutOfRangeException(nameof(statusSale), statusSale, null);
+    //        }
+    //    }
+    //}
 }

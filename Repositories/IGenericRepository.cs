@@ -40,6 +40,7 @@ namespace Repositories
         public Task<bool> GetMinAsync(Func<TEntity, bool> predicate);
         public Task<bool> GetMaxAsync(Func<TEntity, bool> predicate);
 		public void Detach(TEntity entity);
-
+        public Task<TEntity> InsertEntityAsync(TEntity entity);
+        public Task UpdateEntityAsync(TEntity entity);
 	}
 }

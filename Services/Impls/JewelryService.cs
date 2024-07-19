@@ -370,10 +370,10 @@ namespace Services.Impls
 			}
 
 			List<Material> jewelryMaterialWithDuplicate = jewelryMaterials
-			.GroupBy(jm => jm.Material.MaterialId) // Nhóm theo MaterialId
-			.Where(mtKey => mtKey.Count() > 1) // Chỉ giữ lại các nhóm có số lượng lớn hơn 1
-			.SelectMany(group => group.Select(jm => jm.Material).Distinct()) // Lấy ra tất cả các vật liệu trong các nhóm này
-			.ToList(); // Chuyển kết quả thành danh sách
+			.GroupBy(jm => jm.Material.MaterialId) 
+			.Where(mtKey => mtKey.Count() > 1) 
+			.SelectMany(group => group.Select(jm => jm.Material).Distinct()) 
+			.ToList(); 
 
 			if (jewelryMaterialWithDuplicate.Count > 0)
 			{

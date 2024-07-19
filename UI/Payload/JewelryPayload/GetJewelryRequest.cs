@@ -20,13 +20,15 @@ namespace UI.Payload.JewelryPayload
 
         public int Quantity { get; set; }
 
-        public double MarkupPercentage { get; set; }
+        //public double MarkupPercentage { get; set; }
 
         public int CategoryId { get; set; }
 
         public byte[]? JewelryImage { get; set; }
 
         public StatusSale StatusSale { get; set; }
+
+        public double SellPrice { get; set; }
 
         public virtual ICollection<GetJewelryMaterialRequest> JewelryMaterials { get; set; }
 

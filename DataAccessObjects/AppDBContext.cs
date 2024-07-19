@@ -246,7 +246,7 @@ namespace DataAccessObjects
             });
 
             base.OnModelCreating(modelBuilder);
-            modelBuilder.SeedData();
+            //modelBuilder.SeedData();
         }
     }
 }

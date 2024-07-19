@@ -12,9 +12,9 @@ namespace UI.Payload.JewelryPayload
 {
     public class CreateJewelryRequest
     {
-        [AllowNull]
-        [HiddenInput(DisplayValue = false)]
-        public int? JewelryId { get; set; }
+        //[AllowNull]
+        //[HiddenInput(DisplayValue = false)]
+        //public int? JewelryId { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "The field is required")]
         [MaxLength(50, ErrorMessage = "The max length of jewelry name is {0} characters")]
@@ -26,9 +26,9 @@ namespace UI.Payload.JewelryPayload
         [Required(ErrorMessage = "The field is required")]
         public string? Description { get; set; }
 
-        [Required(ErrorMessage = "The field is required")]
-        [Range(0.01, (double)decimal.MaxValue, ErrorMessage = "Total weight must be greater than 0")]
-        public decimal TotalWeight { get; set; }
+        //[Required(ErrorMessage = "The field is required")]
+        //[Range(0.01, (double)decimal.MaxValue, ErrorMessage = "Total weight must be greater than 0")]
+        //public decimal TotalWeight { get; set; }
 
         [DefaultValue(0)]
 		[Required(ErrorMessage = "The field is required")]
@@ -38,23 +38,34 @@ namespace UI.Payload.JewelryPayload
 		[Required(ErrorMessage = "The field is required")]
 		public int Quantity { get; set; }
 
+<<<<<<< HEAD
         [DefaultValue(0)]
 		[Required(ErrorMessage = "The field is required")]
 		[Range(0, 100, ErrorMessage = "Markup percentage must be greater or equal 0")]
         public double MarkupPercentage { get; set; }
+=======
+        //[DefaultValue(0)]
+		//[Required(ErrorMessage = "The field is required")]
+		//[Range(0, (double)decimal.MaxValue, ErrorMessage = "Markup percentage must be greater or equal 0")]
+        //public double MarkupPercentage { get; set; }
+>>>>>>> 709a22b2b18fdbb5efe549df774946f559f88e07
 
-        [Required(ErrorMessage = "The field is required")]
-        public string CategoryName { get; set; }
+        //[Required(ErrorMessage = "The field is required")]
+        //public string CategoryName { get; set; }
 
-        [RequireEnum(typeof(StatusSale), ErrorMessage = "The value for StatusSale must be one of the following: {0}")]
-        [AllowNull]
-        public StatusSale StatusSale { get; set; }
+        //[RequireEnum(typeof(StatusSale), ErrorMessage = "The value for StatusSale must be one of the following: {0}")]
+        //[AllowNull]
+        //public StatusSale StatusSale { get; set; }
 
-        [AllowNull]
-        public List<IFormFile>? ImageDataFile { get; set; }
+        //[AllowNull]
+        //public List<IFormFile>? ImageDataFile { get; set; }
+        public IFormFile? ImageDataFile { get; set; }
 
+<<<<<<< HEAD
+=======
+        //TODO  public virtual Warranty Warranties { get; set; }
+
+        public int CategoryId { get; set; }
+>>>>>>> 709a22b2b18fdbb5efe549df774946f559f88e07
     }
-
-
-    
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -43,6 +44,20 @@ namespace Services.Helpers
 
             string jsonString = File.ReadAllText(jsonFilePath);
             return jsonString;
+        }
+
+        public static async Task<byte[]> ToByteArrayAsync(IFormFile formFile)
+        {
+            if (formFile == null)
+            {
+                return null;
+            }
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await formFile.CopyToAsync(memoryStream);
+                return memoryStream.ToArray();
+            }
         }
     }
 }

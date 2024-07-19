@@ -13,14 +13,17 @@ namespace Services.Impls
 {
     public class MaterialService : IMaterialService
     {
+        private readonly IGenericRepository<JewelryMaterial> _jewelryMaterialRepository;
         private readonly IGenericRepository<Material> _materialRepository;
         private readonly IMapper _mapper;
 
         public MaterialService(IGenericRepository<Material> materialRepository,
+                                IGenericRepository<JewelryMaterial> jewelryMaterialRepository,
                                 IMapper mapper)
         {
             _mapper = mapper;
             _materialRepository = materialRepository;
+            _jewelryMaterialRepository = jewelryMaterialRepository;
         }
 
         public Material AddMaterial(Material material)
@@ -43,6 +46,20 @@ namespace Services.Impls
         public void DeleteMaterial(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public List<Material> GetGemsNotInJewelry()
+        {
+            var gem = _materialRepository.GetAllAsync().Result.Where(x => !x.IsMetail).ToList();
+            var jewelryMaterials = _jewelryMaterialRepository.GetAllAsync().Result;
+
+            // Create a set of gem IDs already in jewelry materials
+            var jewelryMaterialGemIds = new HashSet<int>(jewelryMaterials.Select(jm => jm.MaterialId));
+
+            // Exclude gems that are already in jewelry materials
+            var filteredGem = gem.Where(g => !jewelryMaterialGemIds.Contains(g.MaterialId)).ToList();
+
+            return filteredGem;
         }
 
         public Material GetMaterialById(int id)

@@ -13,11 +13,13 @@ using AutoMapper;
 using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.StaticFiles.Infrastructure;
+using UI.Payload.JewelryPayload;
 
 namespace UI.Pages.Materials.Gems
 {
     public class DetailsModel : PageModel
     {
+        private readonly IJewelryService _jewelryService;
         private readonly IMaterialService _materialService;
         private readonly IMapper _mapper;
 
@@ -59,14 +61,15 @@ namespace UI.Pages.Materials.Gems
         public List<SelectListItem>? SharpOptions { get; set; }
         public List<SelectListItem>? ColorOptions { get; set; }
         public GetGemRequest Gem { get; set; } = default!;
+        public GetJewelryRequest Jewelry { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            string role = HttpContext.Session.GetString("ROLE");
-            if (role != "ADMIN" || role != "MANAGER")
-            {
-                return RedirectToPage("/AccessDenied");
-            }
+            //string role = HttpContext.Session.GetString("ROLE");
+            //if (role != "ADMIN" || role != "MANAGER")
+            //{
+            //    return RedirectToPage("/AccessDenied");
+            //}
             if (id == null)
             {
                 return NotFound();
@@ -80,6 +83,11 @@ namespace UI.Pages.Materials.Gems
             else
             {
                 Gem = _mapper.Map<GetGemRequest>(material);
+                double sellPrice = 0;
+                foreach (var jewelryMaterial in Gem.JewelryMaterials)
+                {
+                    Jewelry = _mapper.Map<GetJewelryRequest>(_jewelryService.GetJewelryById(jewelryMaterial.JewelryId));
+                }
             }
             return Page();
         }

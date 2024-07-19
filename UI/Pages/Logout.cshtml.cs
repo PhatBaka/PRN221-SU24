@@ -10,5 +10,11 @@ namespace UI.Pages
             HttpContext.Session.Clear();
 			Response.Redirect("/Login");
         }
+
+        public IActionResult OnPost()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToPage("Login");
+        }
     }
 }

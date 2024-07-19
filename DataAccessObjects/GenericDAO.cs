@@ -18,6 +18,20 @@ namespace DataAccessObjects
             _dbSet = _context.Set<TEntity>();
         }
 
+        public async Task<TEntity> InsertEntityAsync(TEntity entity)
+        {
+            try
+            {
+                await Task.Run(() => _dbSet.AddAsync(entity));
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return entity;
+        }
+
         public async Task<TEntity> FindAsync(Func<TEntity, bool> predicate)
         {
             return await Task.Run(() => _dbSet.SingleOrDefault(predicate));
@@ -207,5 +221,11 @@ namespace DataAccessObjects
 				return await _context.SaveChangesAsync() > 0;
 			});
 		}
+
+        public async Task UpdateEntityAsync(TEntity entity)
+        {
+            _context.Update(entity);
+            await _context.SaveChangesAsync();
+        }
 	}
 }

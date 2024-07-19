@@ -79,6 +79,55 @@
 <section id="center" class="center_shop">
     <div class="container">
         <div class="row">
+            <div class="center_shop_t clearfix">
+                <div class="center_shop_tl clearfix">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Metal</th>
+                                <th>Price</th>
+                                <th>Ask</th>
+                                <th>Bid</th>
+                                <th>High</th>
+                                <th>Low</th>
+                                <th>Change</th>
+                                <th>Change %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var metal in Model.Metals)
+                            {
+                                var change = metal.Rate?.Change ?? 0;
+                                var changeClass = change > 0 ? "up-rectangle" : "down-rectangle";
+                                <tr>
+                                    <td>@metal.Metal</td>
+                                    <td>@metal.Rate?.Price.ToString("0.00")</td>
+                                    <td>@metal.Rate?.Ask.ToString("0.00")</td>
+                                    <td>@metal.Rate?.Bid.ToString("0.00")</td>
+                                    <td>@metal.Rate?.High.ToString("0.00")</td>
+                                    <td>@metal.Rate?.Low.ToString("0.00")</td>
+                                    <td>
+                                        @metal.Rate?.Change.ToString("0.00")%
+                                        <span class="@changeClass"></span>
+                                    </td>
+                                    <td>
+                                        @metal.Rate?.ChangePercent.ToString()%
+                                        <span class="@changeClass"></span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="center" class="center_shop">
+    <div class="container">
+        <div class="row">
             <div class="center_shop_1 clearfix">
                 <div class="col-sm-5">
                     <div class="center_shop_1r clearfix">
@@ -158,15 +207,21 @@
                                                             <div class="cart_3l1i2 clearfix">
                                                                 <div class="input-group number-spinner">
                                                                     <span class="input-group-btn">
-                                                                        <button class="btn btn-default" data-dir="dwn">
-                                                                            <span class="glyphicon glyphicon-minus"></span>
-                                                                        </button>
+                                                                        <form asp-page-handler="DecreaseQuantity" method="post">
+                                                                            <input type="hidden" name="id" value="@jewelry.Jewelry.JewelryId" />
+                                                                            <button type="submit" class="btn btn-default" data-dir="dwn">
+                                                                                <span class="glyphicon glyphicon-minus"></span>
+                                                                            </button>
+                                                                        </form>
                                                                     </span>
                                                                     <input type="text" asp-for="@jewelry.Quantity" class="form-control text-center">
                                                                     <span class="input-group-btn">
-                                                                        <button class="btn btn-default" data-dir="up">
-                                                                            <span class="glyphicon glyphicon-plus"></span>
-                                                                        </button>
+                                                                        <form asp-page-handler="IncreaseQuantity" method="post">
+                                                                            <input type="hidden" name="id" value="@jewelry.Jewelry.JewelryId" />
+                                                                            <button class="btn btn-default" data-dir="up">
+                                                                                <span class="glyphicon glyphicon-plus"></span>
+                                                                            </button>
+                                                                        </form>
                                                                     </span>
                                                                 </div>
                                                             </div>

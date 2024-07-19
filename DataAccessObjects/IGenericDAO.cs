@@ -10,6 +10,7 @@ namespace DataAccessObjects
 {
     public interface IGenericDAO<TEntity> where TEntity : class
     {
+        public Task<TEntity> InsertEntityAsync(TEntity entity);
         public Task<TEntity> FindAsync(Func<TEntity, bool> predicate);
         public Task<IQueryable<TEntity>> FindAll(Func<TEntity, bool> predicate);
         public Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate);
@@ -40,6 +41,6 @@ namespace DataAccessObjects
         public Task<bool> GetMinAsync(Func<TEntity, bool> predicate);
         public Task<bool> GetMaxAsync(Func<TEntity, bool> predicate);
         public void Detach(TEntity entity);
-        
+        public Task UpdateEntityAsync(TEntity entity);
 	}
 }
