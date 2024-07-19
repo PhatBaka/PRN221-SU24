@@ -151,7 +151,6 @@
 //                category = new Category { CategoryName = Jewelry.CategoryName };
 //            }
 //            jewelry.Category = category;
-			
 //			List<JewelryMaterial> jewelryMaterials = new List<JewelryMaterial>();
 //			if (Gemstones.IsNullOrEmpty() && Metals.IsNullOrEmpty())
 //			{

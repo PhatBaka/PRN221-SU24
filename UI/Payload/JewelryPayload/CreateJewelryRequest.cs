@@ -38,7 +38,6 @@ namespace UI.Payload.JewelryPayload
 		[Required(ErrorMessage = "The field is required")]
 		public int Quantity { get; set; }
 
-
         //[DefaultValue(0)]
 		//[Required(ErrorMessage = "The field is required")]
 		//[Range(0, (double)decimal.MaxValue, ErrorMessage = "Markup percentage must be greater or equal 0")]
