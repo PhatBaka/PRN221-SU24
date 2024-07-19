@@ -7,6 +7,8 @@ namespace UI.Pages
     {
         public void OnGet()
         {
+            HttpContext.Session.Clear();
+			Response.Redirect("/Login");
         }
 
         public IActionResult OnPost()
