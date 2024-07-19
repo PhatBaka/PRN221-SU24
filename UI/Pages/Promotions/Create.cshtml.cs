@@ -4,43 +4,61 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using BusinessObjects;
-using DataAccessObjects;
+using Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using System.Diagnostics;
 
 namespace UI.Pages.Promotions
 {
     public class CreateModel : PageModel
     {
-        private readonly DataAccessObjects.AppDBContext _context;
+        private readonly IPromotionService _promotionService;
 
-        public CreateModel(DataAccessObjects.AppDBContext context)
+        public CreateModel(IPromotionService promotionService)
         {
-            _context = context;
+            _promotionService = promotionService;
         }
 
         public IActionResult OnGet()
         {
+            var role = HttpContext.Session.GetString("ROLE");
+            if (role != "ADMIN")
+            {
+                return RedirectToPage("/AccessDenied");
+            }
             return Page();
         }
 
         [BindProperty]
         public Promotion Promotion { get; set; } = default!;
-        
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (_context.Promotions == null || Promotion == null)
+            if (!ModelState.IsValid || Promotion == null || DateTime.Compare(Promotion.StartDate, Promotion.EndDate) == -1)
             {
+                if (Promotion != null && Promotion.StartDate > Promotion.EndDate)
+                {
+                    ModelState.AddModelError(nameof(Promotion.EndDate), "End Date must be later than Start Date.");
+                }
                 return Page();
             }
 
-            _context.Promotions.Add(Promotion);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _promotionService.AddPromotionAsync(Promotion);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (e.g., using ILogger)
+                Debug.WriteLine(ex.Message);
+                ModelState.AddModelError(string.Empty, "An error occurred while creating the promotion.");
+                return Page();
+            }
 
             return RedirectToPage("./Index");
         }
+
     }
 }

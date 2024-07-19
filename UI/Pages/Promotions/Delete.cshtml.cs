@@ -4,57 +4,70 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using BusinessObjects;
-using DataAccessObjects;
+using Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace UI.Pages.Promotions
 {
     public class DeleteModel : PageModel
     {
-        private readonly DataAccessObjects.AppDBContext _context;
+        private readonly IPromotionService _promotionService;
 
-        public DeleteModel(DataAccessObjects.AppDBContext context)
+        public DeleteModel(IPromotionService promotionService)
         {
-            _context = context;
+            _promotionService = promotionService;
         }
 
         [BindProperty]
-      public Promotion Promotion { get; set; } = default!;
+        public Promotion Promotion { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Promotions == null)
+            var role = HttpContext.Session.GetString("ROLE");
+            if (role != "ADMIN")
+            {
+                return RedirectToPage("/AccessDenied");
+            }
+
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var promotion = await _context.Promotions.FirstOrDefaultAsync(m => m.PromotionId == id);
+            var promotion = await _promotionService.GetPromotionByIdAsync(id.Value);
 
             if (promotion == null)
             {
                 return NotFound();
             }
-            else 
-            {
-                Promotion = promotion;
-            }
+
+            Promotion = promotion;
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || _context.Promotions == null)
+            var role = HttpContext.Session.GetString("ROLE");
+            if (role != "ADMIN")
+            {
+                return RedirectToPage("/AccessDenied");
+            }
+
+            if (id == null)
             {
                 return NotFound();
             }
-            var promotion = await _context.Promotions.FindAsync(id);
 
-            if (promotion != null)
+            try
             {
-                Promotion = promotion;
-                _context.Promotions.Remove(Promotion);
-                await _context.SaveChangesAsync();
+                await _promotionService.DeletePromotionAsync(id.Value);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (e.g., using ILogger)
+                ModelState.AddModelError(string.Empty, "An error occurred while deleting the promotion.");
+                return Page();
             }
 
             return RedirectToPage("./Index");

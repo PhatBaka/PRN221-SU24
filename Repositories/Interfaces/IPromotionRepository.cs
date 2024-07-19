@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BusinessObjects;
 
-namespace Services.Interfaces
+namespace Repositories.Interfaces
 {
-    public interface IPromotionService
+    public interface IPromotionRepository
     {
         Task<IList<Promotion>> GetAllPromotionsAsync();
         Task<Promotion> GetPromotionByIdAsync(int id);

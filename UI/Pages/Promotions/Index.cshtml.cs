@@ -4,29 +4,33 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using BusinessObjects;
-using DataAccessObjects;
+using Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace UI.Pages.Promotions
 {
     public class IndexModel : PageModel
     {
-        private readonly DataAccessObjects.AppDBContext _context;
+        private readonly IPromotionService _promotionService;
 
-        public IndexModel(DataAccessObjects.AppDBContext context)
+        public IndexModel(IPromotionService promotionService)
         {
-            _context = context;
+            _promotionService = promotionService;
         }
 
-        public IList<Promotion> Promotion { get;set; } = default!;
+        public IList<Promotion> Promotion { get; set; } = default!;
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            if (_context.Promotions != null)
+            var role = HttpContext.Session.GetString("ROLE");
+            if (role != "ADMIN")
             {
-                Promotion = await _context.Promotions.ToListAsync();
+                return RedirectToPage("/AccessDenied");
             }
+
+            Promotion = await _promotionService.GetAllPromotionsAsync();
+            return Page();
         }
     }
 }

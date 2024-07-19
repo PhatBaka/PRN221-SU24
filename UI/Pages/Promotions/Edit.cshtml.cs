@@ -4,20 +4,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using BusinessObjects;
-using DataAccessObjects;
+using Services.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace UI.Pages.Promotions
 {
     public class EditModel : PageModel
     {
-        private readonly DataAccessObjects.AppDBContext _context;
+        private readonly IPromotionService _promotionService;
 
-        public EditModel(DataAccessObjects.AppDBContext context)
+        public EditModel(IPromotionService promotionService)
         {
-            _context = context;
+            _promotionService = promotionService;
         }
 
         [BindProperty]
@@ -25,16 +25,23 @@ namespace UI.Pages.Promotions
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Promotions == null)
+            var role = HttpContext.Session.GetString("ROLE");
+            if (role != "ADMIN")
+            {
+                return RedirectToPage("/AccessDenied");
+            }
+
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var promotion =  await _context.Promotions.FirstOrDefaultAsync(m => m.PromotionId == id);
+            var promotion = await _promotionService.GetPromotionByIdAsync(id.Value);
             if (promotion == null)
             {
                 return NotFound();
             }
+
             Promotion = promotion;
             return Page();
         }
@@ -43,15 +50,16 @@ namespace UI.Pages.Promotions
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
 
-            _context.Entry(Promotion).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            await _promotionService.UpdatePromotionAsync(Promotion);
+           
+
             return RedirectToPage("./Index");
         }
 
-        private bool PromotionExists(int id)
-        {
-          return (_context.Promotions?.Any(e => e.PromotionId == id)).GetValueOrDefault();
-        }
     }
 }
