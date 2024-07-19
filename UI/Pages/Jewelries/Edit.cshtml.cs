@@ -151,49 +151,6 @@
 //                category = new Category { CategoryName = Jewelry.CategoryName };
 //            }
 //            jewelry.Category = category;
-			
-<<<<<<< HEAD
-			List<JewelryMaterial> jewelryMaterials = new List<JewelryMaterial>();
-			if (Gemstones.IsNullOrEmpty() && Metals.IsNullOrEmpty())
-			{
-				setupReturnPage(message: "Gemstone or Metal is required");
-				return Page();
-			}
-			foreach (var gemstone in Gemstones)
-			{
-				Material material = materialService.GetMaterialById(gemstone.MaterialId);
-				if (material == null || material.IsMetail)
-				{
-					setupReturnPage(message: $"Gemstone {material.MaterialName} is not found");
-					return Page();
-				}
-				if (gemstone.MaterialQuantWeight <= 0)
-				{
-					setupReturnPage(message: $"Gemstone {material.MaterialName} must have the quantity of stone greater than 0");
-					return Page();
-				}
-
-				jewelryMaterials.Add(new JewelryMaterial { Material = material, JewelryWeight = gemstone.MaterialQuantWeight, Jewelry = jewelry, MaterialId = material.MaterialId });
-
-			}
-			foreach (var metal in Metals)
-			{
-				Material material = materialService.GetMaterialById(metal.MaterialId);
-				if (material == null || !material.IsMetail)
-				{
-					setupReturnPage(message: $"Metal {material.MaterialName} is not found");
-					return Page();
-				}
-				if (metal.MaterialQuantWeight <= 0)
-				{
-					setupReturnPage(message: $"Metal {material.MaterialName} must have the weight of metal greater than 0");
-					return Page();
-				}
-
-				jewelryMaterials.Add(new JewelryMaterial { Material = material, JewelryWeight = metal.MaterialQuantWeight, Jewelry = jewelry, MaterialId = material.MaterialId });
-
-			}
-=======
 //			List<JewelryMaterial> jewelryMaterials = new List<JewelryMaterial>();
 //			if (Gemstones.IsNullOrEmpty() && Metals.IsNullOrEmpty())
 //			{
@@ -251,7 +208,6 @@
 //				setupReturnPage(message: "The quantity of product in stock is greater than zero, the sale status mus be instock");
 //				return Page();
 //			}
->>>>>>> 709a22b2b18fdbb5efe549df774946f559f88e07
 			
 //			jewelry.JewelryMaterials = jewelryMaterials;
 

@@ -44,32 +44,32 @@ namespace Services.Impls
 
 
 			//check category name is valid
-			Category category = _categoryRepo.FistOrDefault(c => c.CategoryName.Equals(jewelry.Category.CategoryName)).Result;
-			if (category == null)
-			{
-				if (String.IsNullOrEmpty(jewelry.Category.CategoryName))
-				{
-					throw new Exception("Category is required");
-				}
-				jewelry.Category.CategoryName = Util.CapitalizeFirstLetterOfSentence(Regex.Replace(jewelry.Category.CategoryName.Trim(), @"\s+", " "));
-				Category savedCategory = _categoryService.AddCategory(jewelry.Category);
-				if (savedCategory != null)
-				{
-					category = savedCategory;
-				}
-			}
-			jewelry.CategoryId = category.CategoryId;
-			jewelry.Category = category;
+			//Category category = _categoryRepo.FistOrDefault(c => c.CategoryName.Equals(jewelry.Category.CategoryName)).Result;
+			//if (category == null)
+			//{
+			//	if (String.IsNullOrEmpty(jewelry.Category.CategoryName))
+			//	{
+			//		throw new Exception("Category is required");
+			//	}
+			//	jewelry.Category.CategoryName = Util.CapitalizeFirstLetterOfSentence(Regex.Replace(jewelry.Category.CategoryName.Trim(), @"\s+", " "));
+			//	Category savedCategory = _categoryService.AddCategory(jewelry.Category);
+			//	if (savedCategory != null)
+			//	{
+			//		category = savedCategory;
+			//	}
+			//}
+			//jewelry.CategoryId = category.CategoryId;
+			//jewelry.Category = category;
 
 			//check quantity to set sale status
-			if (jewelry.Quantity == 0 && jewelry.StatusSale != StatusSale.OUT_OF_STOCK)
-			{
-				throw new Exception("Jewelry with quantity 0 must have StatusSale is " + StatusSale.OUT_OF_STOCK);
-			}
-			if(jewelry.Quantity > 0 && jewelry.StatusSale != StatusSale.IN_STOCK)
-			{
-				throw new Exception("Jewelry with quantity greater than 0 must have StatusSale is " + StatusSale.IN_STOCK);
-			}
+			//if (jewelry.Quantity == 0 && jewelry.StatusSale != StatusSale.OUT_OF_STOCK)
+			//{
+			//	throw new Exception("Jewelry with quantity 0 must have StatusSale is " + StatusSale.OUT_OF_STOCK);
+			//}
+			//if(jewelry.Quantity > 0 && jewelry.StatusSale != StatusSale.IN_STOCK)
+			//{
+			//	throw new Exception("Jewelry with quantity greater than 0 must have StatusSale is " + StatusSale.IN_STOCK);
+			//}
 
 			//TODO: check promotion id is valid
 			//TODO: check material id is valid
@@ -187,22 +187,22 @@ namespace Services.Impls
 					jewelry.Category = category;
 
 					//check quantity to set sale status
-					if (jewelry.Quantity == 0 && jewelry.StatusSale != StatusSale.OUT_OF_STOCK)
-					{
-						throw new Exception("Jewelry with quantity 0 must have StatusSale is " + StatusSale.OUT_OF_STOCK);
-					}
-					if (jewelry.Quantity > 0 && jewelry.StatusSale != StatusSale.IN_STOCK)
-					{
-						throw new Exception("Jewelry with quantity greater than 0 must have StatusSale is " + StatusSale.IN_STOCK);
-					}
+					//if (jewelry.Quantity == 0 && jewelry.StatusSale != StatusSale.OUT_OF_STOCK)
+					//{
+					//	throw new Exception("Jewelry with quantity 0 must have StatusSale is " + StatusSale.OUT_OF_STOCK);
+					//}
+					//if (jewelry.Quantity > 0 && jewelry.StatusSale != StatusSale.IN_STOCK)
+					//{
+					//	throw new Exception("Jewelry with quantity greater than 0 must have StatusSale is " + StatusSale.IN_STOCK);
+					//}
 
 					//TODO: check promotion id is valid
 					//TODO: check material id is valid
-					ValidateMaterialBeforUpdate(jewelryToUpdate, jewelry, out bool successValidate, out string messageError);
-					if (!successValidate)
-					{
-						throw new Exception(messageError);
-					}
+					//ValidateMaterialBeforUpdate(jewelryToUpdate, jewelry, out bool successValidate, out string messageError);
+					//if (!successValidate)
+					//{
+					//	throw new Exception(messageError);
+					//}
 
 					// Update jewelry materials
 					foreach (var material in jewelry.JewelryMaterials)

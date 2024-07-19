@@ -165,7 +165,7 @@ namespace UI.Pages.Orders.Buy
                         JewelryName = item.Jewelry.JewelryName,
                         Description = "From customer",
                         JewelryMaterials = jewelryMaterials,
-                        CategoryId = 1
+                        CategoryId = 8
                     };
 
                     _jewelryService.AddJewelry(jewelry);
