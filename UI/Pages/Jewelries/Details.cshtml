@@ -177,7 +177,7 @@
                                     </div>
                                     <div class="details-item">
                                         <dt>Jewelry's Metal Price (Ask price * weight)</dt>
-                                        <dd>@metalPrice $</dd>
+                                        <dd>@metalPrice.ToString("F2") $</dd>
                                     </div>
                                     @{
                                         jewelryPrice += metalPrice;
@@ -220,7 +220,7 @@
                                     </div>
                                     <div class="details-item">
                                         <dt>Gemstone Price:</dt>
-                                        <dd>@item.Material.MaterialCost $</dd>
+                                        <dd>@item.Material.MaterialCost.ToString("F2") $</dd>
                                     </div>
                                 </div>
                             }
@@ -233,7 +233,7 @@
                     @{
                         double finalPrce = (double) jewelryPrice + (double) Model.Jewelry.LaborPrice;
                     }
-                        <dt><h4><strong>@finalPrce</strong></h4></dt>
+                        <dt><h4><strong>@finalPrce.ToString("F2")</strong></h4></dt>
                     </div>
                 </dl>
             </div>
