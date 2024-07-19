@@ -118,13 +118,32 @@
                             <dd>@jewelry.LaborPrice USD</dd>
                         </div>
 
-@*                          <div class="details-item">
-                             <dt>Quantity in stock:</dt>
-                             <dd>@jewelry.Quantity</dd>
-                             <dt>Status:</dt>
-                             <dd>@ViewData["StatusSaleDisplay"]</dd>
+                        @{
+                            var haveGem = false;
+                            foreach (var material in Model.Jewelry.JewelryMaterials)
+                            {
+                                if (!material.Material.IsMetail)
+                                {
+                                    haveGem = true;
+                                    break;
+                                }
+                            }
+                        }
 
-                         </div> *@
+                        @if (!haveGem)
+                        {
+                            <div class="details-item">
+                                <dt>Quantity in stock:</dt>
+                                <dd>@jewelry.Quantity</dd>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="details-item">
+                                <dt>Quantity in stock:</dt>
+                                <dd>1</dd>
+                            </div>
+                        }
 
                         <div class="details-item">
                             <dt>Category:</dt>
@@ -198,10 +217,6 @@
                                     <div class="details-item">
                                         <dt>Color:</dt>
                                         <dd>@item.Material.Sharp</dd>
-                                    </div>
-                                    <div class="details-item">
-                                        <dt>Weight:</dt>
-                                        <dd>@item.JewelryWeight karat</dd>
                                     </div>
                                     <div class="details-item">
                                         <dt>Gemstone Price:</dt>

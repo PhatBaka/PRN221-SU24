@@ -219,7 +219,7 @@ namespace UI.Pages.Orders.Sell
                 {
                     JewelryId = cartItem.Jewelry.JewelryId,
                     Quantity = cartItem.Quantity,
-                    UnitPrice = (double)cartItem.Jewelry.LaborPrice,
+                    UnitPrice = (double) cartItem.GetFinalPrice(),
                     DiscountPercent = 0
                 };
 
@@ -234,13 +234,17 @@ namespace UI.Pages.Orders.Sell
             }
 
             // Save order and order details
-            await _orderService.CreateOrderAsync(newOrder, items);
+            Order order = await _orderService.CreateOrderAsync(newOrder, items);
 
+            if (order != null)
+            {
+                HttpContext.Session.Remove("CART");
+                return RedirectToPage("./Detail", new { id = newOrder.OrderId });
+            }
             // Clear cart
-            HttpContext.Session.Remove("Cart");
 
             // Redirect to order confirmation page
-            return RedirectToPage("OrderConfirmation", new { orderId = newOrder.OrderId });
+            return Page();
         }
 
         private void LoadJewelries(string currentFilter,

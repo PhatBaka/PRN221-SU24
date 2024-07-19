@@ -1,7 +1,7 @@
 ﻿@page
 @model UI.Pages.Jewelries.CreateJewelryModel
 @{
-    Layout = "_ManagerLayout";
+
 }
 
 <style>
@@ -20,18 +20,18 @@
     }
 </style>
 
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <h3 style="color: red">@Model.Message</h3>
+}
+
 <section id="center" class="center_shop">
     <div class="container">
         <div class="row">
             <div class="center_shop_t clearfix">
                 <div class="col-sm-6">
                     <div class="center_shop_tl clearfix d-flex align-items-center">
-                        <h4 class="mgt">NEW GEM</h4>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="center_shop_tr text-right clearfix">
-                        <h6 class="col_2">You are here: <a asp-asp-page="Gems/Index">Home</a> / Gem</h6>
+                        <h4 class="mgt">NEW JEWELRY</h4>
                     </div>
                 </div>
             </div>

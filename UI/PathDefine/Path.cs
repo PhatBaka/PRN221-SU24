@@ -26,8 +26,9 @@ namespace UI.PathDefine
 		
         public readonly static string PROMOTION_INDEX_PATH = "/Promotions/Index";
         
-        public readonly static string TRANSACTION_INDEX_PATH = "/Orders/Index";
-		public readonly static string TRANSACTION_BUY_PATH = "/Orders/Buy/Create";
+        public readonly static string TRANSACTION_INDEX_SELL_PATH = "/Orders/Sell/Index";
+        public readonly static string TRANSACTION_INDEX_BUY_PATH = "/Orders/Buy/Index";
+        public readonly static string TRANSACTION_BUY_PATH = "/Orders/Buy/Create";
 		public readonly static string TRANSACTION_SELL_PATH = "/Orders/Sell/Create";
 	}
 }
