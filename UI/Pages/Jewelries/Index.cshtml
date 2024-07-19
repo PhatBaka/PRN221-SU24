@@ -137,8 +137,11 @@
 							<span>
 								<a class="btn btn-success" asp-page="./Details" asp-route-id="@item.JewelryId">Details</a>
 							</span>
+
 							<span>
-								<a class="btn btn-danger" asp-page="./Delete" asp-route-id="@item.JewelryId">Delete</a>
+								<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" data-iddelete="@item.JewelryId" data-jwname="@item.JewelryName">
+									Delete
+								</button>
 							</span>
 
 							<form method="post" asp-page-handler="Buy" asp-route-id="@item.JewelryId" style="display:inline;">
@@ -152,7 +155,56 @@
 
 
 	</div>
+
 </div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Are you sure you want to delete?</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form id="deleteForm" method="post" asp-page="./Delete">
+					<div class="form-group">
+						<label for="jwName" class="col-form-label">Jewelry Name:</label>
+						<input type="text" class="form-control jwName" id="jwName" readonly>
+						<input type="hidden" name="id" class="form-control recipient" id="recipient">
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+	$('#exampleModal').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget); // Button that triggered the modal
+		var recipient = button.data('iddelete'); // Extract info from data-* attributes
+		var jwName = button.data('jwname'); // Jewelry name
+
+		// Update the modal's content.
+		var modal = $(this);
+		modal.find('.modal-body .jwName').val(jwName);
+		modal.find('.modal-body .recipient').val(recipient);
+	});
+
+	$('#confirmDelete').click(function () {
+		$('#deleteForm').submit();
+	});
+</script>
+
+
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
