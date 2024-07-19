@@ -29,6 +29,5 @@
   <ItemGroup>
     <Folder Include="Pages\Customers\Orders\Buy\" />
     <Folder Include="Pages\Customers\Orders\Exchange\" />
-    <Folder Include="Pages\Orders\Exchange\" />
   </ItemGroup>
 </Project>

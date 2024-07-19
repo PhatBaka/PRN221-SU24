@@ -51,6 +51,10 @@
 							</div>
 							<h4><input class="button" type="submit" value="Login" />
 						</form>
+						@if (Model.Message != null)
+						{
+							<p>@Model.Message</p>
+						}
 					</div>
 				</div>
 			</div>

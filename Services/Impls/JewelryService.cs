@@ -73,23 +73,23 @@ namespace Services.Impls
 
 			//TODO: check promotion id is valid
 			//TODO: check material id is valid
-			ValidateMaterialBeforCreate(jewelry, out bool successValidate, out string messageError);
-			if (!successValidate)
-			{
-				throw new Exception(messageError);
-			}
+			// ValidateMaterialBeforCreate(jewelry, out bool successValidate, out string messageError);
+			//if (!successValidate)
+			//{
+			//	throw new Exception(messageError);
+			//}
 			//Add jewelry
 			try
 			{
-				bool success = _jewelryRepo.InsertAsync(jewelry).Result;
+				return _jewelryRepo.InsertEntityAsync(jewelry).Result;
 			}
 			catch (Exception ex)
 			{
 				throw new Exception("Error when adding jewelry. Error Message: " + ex.Message , ex);
 			}
-			Jewelry jewelrySaved = _jewelryRepo.FistOrDefault(jew => jew.JewelryName.Equals(jewelry.JewelryName)).Result;
-			List<JewelryMaterial> listJewelryMaterial = jewelry.JewelryMaterials.ToList();
-			return jewelrySaved;
+			//Jewelry jewelrySaved = _jewelryRepo.FistOrDefault(jew => jew.JewelryName.Equals(jewelry.JewelryName)).Result;
+			//List<JewelryMaterial> listJewelryMaterial = jewelry.JewelryMaterials.ToList();
+			return null; 
 		}
 
 		public async Task DeleteJewelryAsync(int id)

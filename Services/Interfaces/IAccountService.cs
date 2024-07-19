@@ -11,5 +11,6 @@ namespace Services.Interfaces
     {
         public Account GetAccount(string email, string password);
         public List<Account> GetAccounts();
+        public Account CreateAccount(Account acocunt);
     }
 }

@@ -19,16 +19,18 @@ namespace UI.Pages.Jewelries
     {
         private readonly IJewelryService jewerlryService;
         private readonly ICategoryService categoryService;
+        private readonly IMetalService _metalService;
         public string Message { get; set; }
 
-        public DetailsModel(IServiceProvider service)
+        public DetailsModel(IServiceProvider service, IMetalService metalService)
         {
+            _metalService = metalService;
             jewerlryService = service.GetRequiredService<IJewelryService>();
             categoryService = service.GetRequiredService<ICategoryService>();
         }
         public Jewelry Jewelry { get; set; } = default!;
         public string ImageDataBase64String { get; set; }
-
+        public IList<MetalResponse> Metals { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -39,7 +41,7 @@ namespace UI.Pages.Jewelries
             }
 
             Jewelry jewelry = jewerlryService.GetJewelryById(id.Value);
-
+            Metals = _metalService.GetPrices();
             ImageDataBase64String = StringConstants.IMAGE_DATABASE64_DEFAULT;
             if (jewelry.JewelryImage != null && jewelry.JewelryImage.Length > 0)
             {
