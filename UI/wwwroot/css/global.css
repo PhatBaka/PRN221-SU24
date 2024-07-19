@@ -522,7 +522,7 @@ background:#191919;
 border:1px solid #dfb8584d;
  }
 .feature_2im1 img{
-min-height:260px; 
+min-height:150px; 
  }
 .feature_2_last .btn-success{
 background:#333;
@@ -635,8 +635,8 @@ width:10%;
 }
 
 .center_shop{
-padding-top:40px;
-padding-bottom:40px; 
+padding-top:10px;
+padding-bottom:10px; 
  }
 .center_shop_t{
  box-shadow: 0 0 10px #dfb858b3;

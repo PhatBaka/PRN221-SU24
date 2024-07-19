@@ -10,6 +10,7 @@ namespace BusinessObjects.Enums
     {
         STAFF,
         MANAGER,
-        CUSTOMER
+        CUSTOMER,
+        ADMIN
     }
 }

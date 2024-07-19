@@ -1,0 +1,345 @@
+﻿@page
+@model UI.Pages.Orders.Buy.CreateModel
+@{
+}
+
+<style>
+    .up-rectangle {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background-color: green; /* Color for up */
+        margin-left: 5px; /* Space between text and rectangle */
+    }
+
+    .down-rectangle {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background-color: red; /* Color for down */
+        margin-left: 5px; /* Space between text and rectangle */
+    }
+</style>
+
+<section id="center" class="center_shop">
+    <div class="container">
+        <div class="row">
+            <div class="center_shop_t clearfix">
+                <div class="col-sm-6">
+                    <div class="center_shop_tl clearfix">
+                        <h4 class="mgt">PRICE TODAY</h4>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="center_shop_tr text-right clearfix">
+                        <h6 class="col_2">Updated in: @Model.Metals[0].Timestamp</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contact_top">
+    <div class="container">
+        <div class="row">
+            <div class="">
+                <div class="col-sm-6">
+                    <div class="">
+                        <div class="collcet_1r clearfix">
+                            <form method="post" asp-page-handler="FindCustomer">
+                                <div class="center_shop_1li1 clearfix">
+
+                                    @if (Model.Message != null)
+                                    {
+                                        <h2 class="mgt" style="color: red">@Model.Message</h2>
+                                    }
+
+                                    <hr />
+                                    <h2 class="mgt">PHONE NUMBER</h2>
+                                    <hr />
+                                    <input name="phoneNumber" style="width: 200px" class="form-control" type="text">
+                                </div>
+                                <h5 class="mgt"><input class="button" type="submit" value="FIND CUSTOMER" /></h5>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="detail_14 clearfix">
+                        @if (Model.CurrentCustomer == null)
+                        {
+                            <h2 class="mgt">CUSTOMER INFO</h2>
+                            <input type="text" class="form-control" placeholder="Email" asp-for="CurrentCustomer.Email">
+                            <input type="text" class="form-control" placeholder="Full Name" asp-for="CurrentCustomer.FullName">
+                            <input type="text" class="form-control" placeholder="Phone Number" asp-for="CurrentCustomer.PhoneNumber">
+                            <h4><a class="button" href="#">CREATE NEW CUSTOMER</a></h4>
+                        }
+                        else
+                        {
+                            <h2 class="mgt">CUSTOMER INFO</h2>
+                            <input readonly type="text" class="form-control" placeholder="Email" asp-for="CurrentCustomer.Email">
+                            <input readonly type="text" class="form-control" placeholder="Full Name" asp-for="CurrentCustomer.FullName">
+                            <input readonly type="text" class="form-control" placeholder="Phone Number" asp-for="CurrentCustomer.PhoneNumber">
+                            <input readonly type="text" class="form-control" placeholder="Current rank*">
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="center" class="center_shop">
+    <div class="container">
+        <div class="row">
+            <div class="center_shop_t clearfix">
+                <div class="center_shop_tl clearfix">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Metal</th>
+                                <th>Price</th>
+                                <th>Ask</th>
+                                <th>Bid</th>
+                                <th>High</th>
+                                <th>Low</th>
+                                <th>Change</th>
+                                <th>Change %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var metal in Model.Metals)
+                            {
+                                var change = metal.Rate?.Change ?? 0;
+                                var changeClass = change > 0 ? "up-rectangle" : "down-rectangle";
+                                <tr>
+                                    <td>@metal.Metal</td>
+                                    <td>@metal.Rate?.Price.ToString("0.00")</td>
+                                    <td>@metal.Rate?.Ask.ToString("0.00")</td>
+                                    <td>@metal.Rate?.Bid.ToString("0.00")</td>
+                                    <td>@metal.Rate?.High.ToString("0.00")</td>
+                                    <td>@metal.Rate?.Low.ToString("0.00")</td>
+                                    <td>
+                                        @metal.Rate?.Change.ToString("0.00")%
+                                        <span class="@changeClass"></span>
+                                    </td>
+                                    <td>
+                                        @metal.Rate?.ChangePercent.ToString()%
+                                        <span class="@changeClass"></span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <div class="cart_3 clearfix">
+            <!-- CART -->
+            <div class="col-sm-6">
+				<section id="cart_page" class="clearfix cart">
+					<div class="container">
+						<div class="row">
+							<div class="cart_2 clearfix">
+								<div class="col-sm-6">
+									<h3 class="bold col_1 mgt">METAL</h3>
+								</div>
+							</div>
+							<div class="cart_3 clearfix">
+								<div class="col-sm-8">
+                                    
+									<div class="cart_3l1 clearfix">
+                                        @{
+                                            var metalCarts = Model.MetalCart;
+                                        }
+                                        @if (metalCarts != null && metalCarts.Count > 0)
+                                        {
+                                            @foreach (var metal in metalCarts)
+                                            {
+                                                <div class="col-sm-3 space_left">
+                                                    <div class="cart_3l1i clearfix">
+                                                        @switch (metal.Item.Metal)
+                                                        {
+                                                            case "gold":
+                                                                <a href="#"><img src="~/img/gold.jpg" alt="abc" class="iw"></a>
+                                                                break;
+                                                            case "silver":
+                                                                <a href="#"><img src="~/img/silver.jpg" alt="abc" class="iw"></a>
+                                                                break;
+                                                            case "palladium":
+                                                                <a href="#"><img src="~/img/palladium.jpg" alt="abc" class="iw"></a>
+                                                                break;
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <div class="cart_3l1i1 clearfix">
+                                                        <h5 class="mgt">
+                                                            <a href="#">
+                                                                @metal.Item.Metal.ToUpper()
+                                                            </a>
+                                                        </h5>
+                                                        <h5>Weight</h5>
+                                                    </div>
+                                                    <div class="cart_3l1i2 clearfix">
+                                                        <form method="post" asp-page-handler="UpdateCart">
+                                                            <div class="input-group number-spinner">
+                                                                <span class="input-group-btn">
+                                                                    <button class="btn btn-default" data-dir="dwn">
+                                                                        <span class="glyphicon glyphicon-minus"></span>
+                                                                    </button>
+                                                                </span>
+                                                                <input type="text" class="form-control text-center" value="1" name="weight">
+                                                                <span class="input-group-btn">
+                                                                    <button class="btn btn-default" data-dir="up">
+                                                                        <span class="glyphicon glyphicon-plus"></span>
+                                                                    </button>
+                                                                </span>
+                                                            </div>
+                                                            <input type="hidden" name="metal" value="@metal.Item.Metal" />
+                                                            <h6 class="mgt"><input type="submit" class="button mgt" value="UPDATE CART"></h6>
+                                                        </form>
+                                                        <form method="post" asp-page-handler="RemoveMetalFromCart">
+                                                            <input type="hidden" name="metal" value="" />
+                                                            <h6 class="mgt"><input type="submit" class="button_1 mgt" value="REMOVE" /></h6>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+            </div>
+            <!-- CART -->
+            <div class="col-sm-6">
+                <section id="feature">
+                    <div class="container">
+                        <div class="row">
+                            <!-- METAL CART -->
+                            <div class="feature_1 text-center clearfix">
+                                <div class="col-sm-12">
+                                    <h3 class="mgt">METAL</h3>
+                                    <hr>
+                                </div>
+                                <div class="feature_2 clearfix">
+                                    <div id="carousel-example" class="carousel slide" data-ride="carousel">
+                                        <div class="carousel-inner">
+                                            <div class="item active">
+                                                @foreach (var metal in Model.Metals)
+                                                {
+                                                    <form asp-page-handler="AddMetalToCart" method="post">
+                                                        <div class="col-sm-4">
+                                                            <div class="feature_2im clearfix">
+                                                                <div class="feature_2im1 clearfix">
+                                                                    @switch (metal.Metal)
+                                                                    {
+                                                                        case "gold":
+                                                                            <img src="~/img/gold.jpg" width="200px" height="200px" class="iw" alt="@metal.Metal">
+                                                                            break;
+                                                                        case "silver":
+                                                                            <img src="~/img/silver.jpg" width="200px" height="200px" class="iw" alt="@metal.Metal">
+                                                                            break;
+                                                                        case "palladium":
+                                                                            <img src="~/img/palladium.jpg" width="200px" height="200px" class="iw" alt="@metal.Metal">
+                                                                            break;
+                                                                    }
+                                 
+                                                                </div>
+                                                                <div class="feature_2im4 clearfix">
+                                                                    <div class="col-sm-6 space_left">
+                                                                        <h6><a class="bg_3" href="#">@metal.Rate.Bid</a></h6>
+                                                                    </div>
+                                                                    <div class="col-sm-6 feature_2im4r space_right">
+                                                                        <ul>
+                                                                            <li><button type="submit" name="metal" value="@metal.Metal" class="fa fa-shopping-cart" /></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- JEWELRY CART -->
+                            <div class="feature_1 text-center clearfix">
+                                <div class="col-sm-12">
+                                    <h3 class="mgt">JEWELRY</h3>
+                                    <hr>
+                                </div>
+                                <section id="cart_page" class="clearfix cart">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="cart_3 clearfix">
+                                                <div class="col-sm-8">
+
+                                                    <div class="cart_3l1 clearfix">
+                                                        @{
+                                                            var cart = Model.Cart;
+                                                        }
+                                                        @if (cart != null && cart.Count > 0)
+                                                        {
+                                                            @foreach (var jewelry in cart)
+                                                            {
+                                                                <div class="col-sm-3 space_left">
+                                                                    <div class="cart_3l1i clearfix">
+                                                                        @switch (jewelry.Jewelry.JewelryName)
+                                                                        {
+                                                                            case "gold":
+                                                                                <a href="#"><img src="~/img/gold.jpg" alt="abc" class="iw"></a>
+                                                                                break;
+                                                                            case "silver":
+                                                                                <a href="#"><img src="~/img/silver.jpg" alt="abc" class="iw"></a>
+                                                                                break;
+                                                                            case "palladium":
+                                                                                <a href="#"><img src="~/img/palladium.jpg" alt="abc" class="iw"></a>
+                                                                                break;
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-9">
+                                                                    <div class="cart_3l1i1 clearfix">
+                                                                        <h5 class="mgt">
+                                                                            <a href="#">
+                                                                                @jewelry.Jewelry.JewelryName.ToUpper()
+                                                                            </a>
+                                                                        </h5>
+                                                                        <h5>@jewelry.SellPrice.ToString("F2")</h5>
+                                                                        <h5>@jewelry.Jewelry.TotalWeight</h5>
+                                                                        <h5>@jewelry.UnitPrice.ToString("F2")</h5>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                        }
+                                                        <form method="post" asp-page-handler="CreateOrder">
+                                                            <input type="submit" class="button_1 mgt" value="CREATE ORDER" /></h6>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+

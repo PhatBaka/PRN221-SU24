@@ -1,4 +1,4 @@
-﻿@page
+﻿@* @page
 @model UI.Pages.Orders.OrderConfirmationModel
 @{
     ViewData["Title"] = "Order Confirmation";
@@ -26,7 +26,7 @@
             <dd class="col-sm-9">@Model.Order.OrderDetails.Count</dd>
 
             @* <dt class="col-sm-3">Total Price:</dt>
-            <dd class="col-sm-9">@Model.Order.TotalPrice.ToString("C")</dd> *@
+            <dd class="col-sm-9">@Model.Order.TotalPrice.ToString("C")</dd> 
         </dl>
     </div>
 </div>
@@ -34,3 +34,4 @@
 <div class="mt-4">
     <a asp-page="./Index" class="btn btn-primary">Back to Home</a>
 </div>
+ *@

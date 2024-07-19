@@ -8,22 +8,65 @@ using Microsoft.EntityFrameworkCore;
 using BusinessObjects;
 using DataAccessObjects;
 using Services.Interfaces;
+using UI.Payload.MaterialPayload.GemPayload;
+using AutoMapper;
+using BusinessObjects.Enums;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.StaticFiles.Infrastructure;
 
 namespace UI.Pages.Materials.Gems
 {
     public class DetailsModel : PageModel
     {
         private readonly IMaterialService _materialService;
+        private readonly IMapper _mapper;
 
-        public DetailsModel(IMaterialService materialService)
+        public DetailsModel(IMaterialService materialService, IMapper mapper)
         {
             _materialService = materialService;
+            _mapper = mapper;
+            ClarityOptions = Enum.GetValues(typeof(ClarityEnum))
+                     .Cast<ClarityEnum>()
+                     .Select(e => new SelectListItem
+                     {
+                         Value = e.ToString(),
+                         Text = e.ToString()
+                     }).ToList();
+            GemOptions = Enum.GetValues(typeof(GemTypeEnum))
+                     .Cast<GemTypeEnum>()
+                     .Select(e => new SelectListItem
+                     {
+                         Value = e.ToString(),
+                         Text = e.ToString()
+                     }).ToList();
+            SharpOptions = Enum.GetValues(typeof(SharpEnum))
+                     .Cast<SharpEnum>()
+                     .Select(e => new SelectListItem
+                     {
+                         Value = e.ToString(),
+                         Text = e.ToString()
+                     }).ToList();
+            ColorOptions = Enum.GetValues(typeof(ColorEnum))
+                     .Cast<ColorEnum>()
+                     .Select(e => new SelectListItem
+                     {
+                         Value = e.ToString(),
+                         Text = e.ToString()
+                     }).ToList();
         }
-
-        public Material Material { get; set; } = default!;
+        public List<SelectListItem>? ClarityOptions { get; set; }
+        public List<SelectListItem>? GemOptions { get; set; }
+        public List<SelectListItem>? SharpOptions { get; set; }
+        public List<SelectListItem>? ColorOptions { get; set; }
+        public GetGemRequest Gem { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "ADMIN" || role != "MANAGER")
+            {
+                return RedirectToPage("/AccessDenied");
+            }
             if (id == null)
             {
                 return NotFound();
@@ -36,7 +79,7 @@ namespace UI.Pages.Materials.Gems
             }
             else
             {
-                Material = material;
+                Gem = _mapper.Map<GetGemRequest>(material);
             }
             return Page();
         }

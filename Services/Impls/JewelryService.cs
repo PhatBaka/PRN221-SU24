@@ -41,25 +41,33 @@ namespace Services.Impls
 			//check duplicate name
 			jewelry.JewelryName = Util.CapitalizeFirstLetterOfSentence(Regex.Replace(jewelry.JewelryName, @"\s+", " ")).Trim();
 			jewelry.Description = Util.CapitalizeFirstLetterOfSentence(Regex.Replace(jewelry.Description, @"\s+", " ")).Trim();
+<<<<<<< HEAD
 
+=======
+			//Jewelry jewelryHasDuplicatedName = _jewelryRepo.FistOrDefault(jew => jew.JewelryName.ToLower().Equals(jewelry.JewelryName.ToLower())).Result;
+			//if (jewelryHasDuplicatedName != null)
+			//{
+			//	throw new Exception("Jewelry name is duplicated");
+			//}
+>>>>>>> 26f9baf9743a9841e269981ddc94f6be9e512ecd
 
 			//check category name is valid
-			Category category = _categoryRepo.FistOrDefault(c => c.CategoryName.Equals(jewelry.Category.CategoryName)).Result;
-			if (category == null)
-			{
-				if (String.IsNullOrEmpty(jewelry.Category.CategoryName))
-				{
-					throw new Exception("Category is required");
-				}
-				jewelry.Category.CategoryName = Util.CapitalizeFirstLetterOfSentence(Regex.Replace(jewelry.Category.CategoryName.Trim(), @"\s+", " "));
-				Category savedCategory = _categoryService.AddCategory(jewelry.Category);
-				if (savedCategory != null)
-				{
-					category = savedCategory;
-				}
-			}
-			jewelry.CategoryId = category.CategoryId;
-			jewelry.Category = category;
+			//Category category = _categoryRepo.FistOrDefault(c => c.CategoryName.Equals(jewelry.Category.CategoryName)).Result;
+			//if (category == null)
+			//{
+			//	if (String.IsNullOrEmpty(jewelry.Category.CategoryName))
+			//	{
+			//		throw new Exception("Category is required");
+			//	}
+			//	jewelry.Category.CategoryName = Util.CapitalizeFirstLetterOfSentence(Regex.Replace(jewelry.Category.CategoryName.Trim(), @"\s+", " "));
+			//	Category savedCategory = _categoryService.AddCategory(jewelry.Category);
+			//	if (savedCategory != null)
+			//	{
+			//		category = savedCategory;
+			//	}
+			//}
+			//jewelry.CategoryId = category.CategoryId;
+			//jewelry.Category = category;
 
 			//check quantity to set sale status
 			if (jewelry.Quantity == 0 && jewelry.StatusSale != StatusSale.OUT_OF_STOCK)

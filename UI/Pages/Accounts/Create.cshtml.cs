@@ -6,32 +6,55 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BusinessObjects;
+using BusinessObjects.Enums;
 using DataAccessObjects;
 
 namespace UI.Pages.Accounts
 {
     public class CreateModel : PageModel
     {
-        private readonly DataAccessObjects.AppDBContext _context;
+        private readonly AppDBContext _context;
 
-        public CreateModel(DataAccessObjects.AppDBContext context)
+        public CreateModel(AppDBContext context)
         {
             _context = context;
         }
 
-        public IActionResult OnGet()
-        {
-            return Page();
-        }
-
         [BindProperty]
         public Account Account { get; set; } = default!;
-        
+
+        public List<SelectListItem> RoleOptions { get; set; }
+
+        public IActionResult OnGet()
+        {
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "ADMIN")
+            {
+                return RedirectToPage("/AccessDenied");
+            }
+
+            RoleOptions = Enum.GetValues(typeof(AccountRole))
+                .Cast<AccountRole>()
+                .Select(r => new SelectListItem
+                {
+                    Value = r.ToString(),
+                    Text = r.ToString()
+                })
+                .ToList();
+
+            return Page();
+        }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Accounts == null || Account == null)
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "ADMIN")
+            {
+                return RedirectToPage("/AccessDenied");
+            }
+
+            if (!ModelState.IsValid || _context.Accounts == null || Account == null)
             {
                 return Page();
             }

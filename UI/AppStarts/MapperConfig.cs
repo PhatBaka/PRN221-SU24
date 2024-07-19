@@ -6,7 +6,10 @@ using Services.RequestModels.Category;
 using Services.RequestModels.Order;
 using Services.RequestModels.Promotion;
 using Services.ResponseModels;
+using UI.Payload.AccountPayload;
 using UI.Payload.JewelryPayload;
+using UI.Payload.JewerlyMaterialPayload;
+using UI.Payload.MaterialPayload;
 using UI.Payload.MaterialPayload.GemPayload;
 using UI.Payload.MaterialPayload.MetalPayload;
 using UI.Payload.WarrantyPayload;
@@ -21,10 +24,11 @@ namespace UI.AppStarts
             CreateMap<Account, AccountResponse>().ReverseMap();
             CreateMap<Account, CreateAccountRequest>().ReverseMap();
             CreateMap<Account, UpdateAccountRequest>().ReverseMap();
-            CreateMap<Account, LoginRequest>().ReverseMap();
+            //CreateMap<Account, LoginRequest>().ReverseMap();
             CreateMap<AccountResponse, CreateAccountRequest>().ReverseMap();
             CreateMap<AccountResponse, UpdateAccountRequest>().ReverseMap();
             CreateMap<AccountResponse, AccountFilter>().ReverseMap();
+            CreateMap<Account, GetAccountRequest>().ReverseMap();
             #endregion
 
             #region CATEGORY
@@ -50,6 +54,7 @@ namespace UI.AppStarts
             CreateMap<Jewelry, CreateJewelryRequest>().ReverseMap();
             CreateMap<JewelryResponse, CreateJewelryRequest>().ReverseMap();
             CreateMap<JewelryResponse, JewelryFilter>().ReverseMap();
+            CreateMap<Jewelry, GetJewelryRequest>().ReverseMap();
             #endregion
 
             #region PROMOTION
@@ -64,10 +69,15 @@ namespace UI.AppStarts
             #region MATERIAL
             CreateMap<Material, CreateGemRequest>().ReverseMap();
             CreateMap<Material, CreateMetalRequest>().ReverseMap();
-        
-			#endregion
+            CreateMap<Material, GetMaterialRequest>().ReverseMap();
+            CreateMap<Material, GetGemRequest>().ReverseMap();
+            #endregion
 
-			#region WARRANTY
+            #region
+            CreateMap<JewelryMaterial, GetJewelryMaterialRequest>();
+            #endregion
+
+            #region WARRANTY
             CreateMap<Warranty, WarrantyCreateRequest>().ReverseMap();
             CreateMap<WarrantyHistory, WarrantyFixRequest>().ReverseMap();
 			#endregion

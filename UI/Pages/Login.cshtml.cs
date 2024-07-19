@@ -12,6 +12,9 @@ using Services.Interfaces;
 using UI.Payload.AccountPayload;
 using BusinessObjects.Enums;
 using BusinessObjects.Commons;
+using System.Text.Json;
+using UI.Helper;
+using UI.Payload.MaterialPayload;
 
 namespace UI.Pages
 {
@@ -58,11 +61,15 @@ namespace UI.Pages
                     case AccountRole.STAFF:
                         HttpContext.Session.SetInt32("ID", existedAccount.AccountId);
                         HttpContext.Session.SetString("ROLE", "STAFF");
-                        return RedirectToPage("./Jewelries/Index");
+                        return RedirectToPage("./Staff");
                     case AccountRole.MANAGER:
                         HttpContext.Session.SetInt32("ID", existedAccount.AccountId);
                         HttpContext.Session.SetString("ROLE", "MANAGER");
-                        return RedirectToPage("./Accounts/Index");
+                        return RedirectToPage("./Manager");
+                    case AccountRole.ADMIN:
+                        HttpContext.Session.SetInt32("ID", existedAccount.AccountId);
+                        HttpContext.Session.SetString("ROLE", "ADMIN");
+                        return RedirectToPage("./Accounts");
                 }
             }
             else

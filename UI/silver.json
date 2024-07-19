@@ -1,0 +1,16 @@
+{
+  "status": "success",
+  "timestamp": "2024-06-24T05:42:01.158Z",
+  "currency": "USD",
+  "unit": "toz",
+  "metal": "silver",
+  "rate": {
+    "price": 29.6025,
+    "ask": 29.612,
+    "bid": 29.592,
+    "high": 29.692,
+    "low": 29.346,
+    "change": 0.053,
+    "change_percent": 0.18
+  }
+}

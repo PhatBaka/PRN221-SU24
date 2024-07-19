@@ -10,5 +10,6 @@ namespace Services.Interfaces
     public interface IAccountService
     {
         public Account GetAccount(string email, string password);
+        public List<Account> GetAccounts();
     }
 }

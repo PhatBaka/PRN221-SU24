@@ -53,7 +53,7 @@ namespace Services.Impls
 
         public Material GetMaterialByName(string name)
         {
-            throw new NotImplementedException();
+            return _materialRepository.GetAllAsync().Result.ToList().FirstOrDefault(x => x.MaterialName.Equals(name));
         }
 
         public List<Material> GetMaterials()

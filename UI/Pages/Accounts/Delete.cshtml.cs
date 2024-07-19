@@ -24,6 +24,11 @@ namespace UI.Pages.Accounts
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "ADMIN")
+            {
+                return RedirectToPage("/AccessDenied");
+            }
             if (id == null || _context.Accounts == null)
             {
                 return NotFound();

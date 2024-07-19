@@ -33,5 +33,17 @@ namespace Services.Impls
                 throw new Exception(ex.Message);
             }
         }
+
+        public List<Account> GetAccounts()
+        {
+            try
+            {
+                return _accountRepository.GetAllAsync().Result.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

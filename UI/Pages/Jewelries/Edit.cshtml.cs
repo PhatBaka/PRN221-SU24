@@ -71,6 +71,11 @@ namespace UI.Pages.Jewelries
 
 		public IActionResult OnGet(int? id)
         {
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "ADMIN" || role != "MANAGER")
+            {
+                return RedirectToPage("/AccessDenied");
+            }
             if (id == null)
             {
                 return NotFound();
