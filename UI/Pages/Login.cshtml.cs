@@ -50,34 +50,47 @@ namespace UI.Pages
             if (Account.Email == adminEmail && Account.Password == adminPassword)
             {
                 HttpContext.Session.SetString("ROLE", "ADMIN");
-            }
+				HttpContext.Session.SetString("EMAIL", adminEmail);
+				HttpContext.Session.SetString("FULLNAME", adminEmail);
+				HttpContext.Session.SetString("ISAUTHENTICATED", "True");
+				return RedirectToPage("./IndexHome");
+
+			}
 
             var existedAccount = _accountService.GetAccount(Account.Email, Account.Password);
             
             if (existedAccount != null)
             {
-                switch (existedAccount.Role)
+				HttpContext.Session.SetString("ISAUTHENTICATED", "True");
+				switch (existedAccount.Role)
                 {
                     case AccountRole.STAFF:
                         HttpContext.Session.SetInt32("ID", existedAccount.AccountId);
-                        HttpContext.Session.SetString("ROLE", "STAFF");
-                        return RedirectToPage("./Staff");
+						HttpContext.Session.SetString("FULLNAME", existedAccount.FullName);
+						HttpContext.Session.SetString("EMAIL", existedAccount.Email);
+						HttpContext.Session.SetString("ROLE", "STAFF");
+                        return RedirectToPage("./IndexHome");
                     case AccountRole.MANAGER:
                         HttpContext.Session.SetInt32("ID", existedAccount.AccountId);
-                        HttpContext.Session.SetString("ROLE", "MANAGER");
-                        return RedirectToPage("./Manager");
+						HttpContext.Session.SetString("FULLNAME", existedAccount.FullName);
+						HttpContext.Session.SetString("EMAIL", existedAccount.Email);
+						HttpContext.Session.SetString("ROLE", "MANAGER");
+                        return RedirectToPage("./IndexHome");
                     case AccountRole.ADMIN:
                         HttpContext.Session.SetInt32("ID", existedAccount.AccountId);
-                        HttpContext.Session.SetString("ROLE", "ADMIN");
-                        return RedirectToPage("./Accounts");
+						HttpContext.Session.SetString("FULLNAME", existedAccount.FullName);
+						HttpContext.Session.SetString("EMAIL", existedAccount.Email);
+						HttpContext.Session.SetString("ROLE", "ADMIN");
+                        return RedirectToPage("./IndexHome");
                 }
             }
             else
             {
-                Message = "Can't find account";
+				HttpContext.Session.SetString("ISAUTHENTICATED", "False");
+				Message = "Can't find account";
             }
 
-            return RedirectToPage("./Index");
+            return Page();
         }
     }
 }

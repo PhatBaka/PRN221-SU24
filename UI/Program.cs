@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.ConfigDI();
 builder.Services.AddSession();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddMvc();
 
 var app = builder.Build();

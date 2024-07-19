@@ -1,4 +1,14 @@
-﻿<!DOCTYPE html>
+﻿@using static UI.PathDefine.Path;
+@{
+	var role = Context.Session.GetString("ROLE");
+	var userId = Context.Session.GetInt32("ID");
+	var fullname = Context.Session.GetString("FULLNAME");
+	var email = Context.Session.GetString("EMAIL");
+	var isAuthenticated = Context.Session.GetString("ISAUTHENTICATED");
+
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">

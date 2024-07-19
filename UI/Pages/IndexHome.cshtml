@@ -1,0 +1,126 @@
+﻿@page
+@model UI.Pages.IndexModel
+@{
+	Layout = "_Layout";
+}
+@using BusinessObjects.Enums;
+
+@using static UI.PathDefine.Path;
+
+
+<style>
+	.menu-home {
+		background-color: white;
+		justify-content: center;
+		align-content: center;
+		align-items: center;
+	}
+
+	#list {
+		background-color: white;
+		margin-top: 80px;
+	}
+
+	.row{
+		margin-top: 20px;
+	}
+
+
+</style>
+
+<div class="container-lg menu-home">
+	@if (Model.role != null && Model.role.Equals(AccountRole.MANAGER.ToString()))
+	{
+		<section id="list">
+			<div class="container">
+				<div class="feature_1 text-center clearfix">
+					<div class="col-sm-12">
+						<h3 class="mgt">JEWELRIES</h3><hr>
+					</div>
+				</div>
+				<div class="row">
+					<div class="list_1 clearfix">
+						<div class="col-sm-4 space_all">
+							<div class="list_1i text-center clearfix">
+								<h4><a asp-page=@JEWELRY_INDEX_PATH>Jewelry Catalog</a></h4>
+							</div>
+						</div>
+						<div class="col-sm-4 space_all">
+							<div class="list_1i text-center clearfix">
+								<h4><a asp-page=@MATERIAL_METAL_INDEX_PATH>Material Metal</a></h4>
+							</div>
+						</div>
+						<div class="col-sm-4 space_all">
+							<div class="list_1i text-center clearfix">
+								<h4><a asp-page=@MATERIAL_GEM_INDEX_PATH>Material Gemstone</a></h4>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</section>
+	}
+	@if (Model.role.Equals(AccountRole.MANAGER.ToString()) || Model.role.Equals(AccountRole.STAFF.ToString()))
+	{
+		<section id="list">
+			<div class="container">
+				<div class="feature_1 text-center clearfix">
+					<div class="col-sm-12">
+						<h3 class="mgt">TRANSACTIONS</h3>
+						<hr>
+					</div>
+				</div>
+				<div class="row">
+					<div class="list_1 clearfix">
+						<div class="col-sm-4 space_all">
+							<div class="list_1i text-center clearfix">
+								<h4><a asp-page=@TRANSACTION_INDEX_PATH>Transaction List</a></h4>
+							</div>
+						</div>
+						<div class="col-sm-4 space_all">
+							<div class="list_1i text-center clearfix">
+								<h4><a href=@TRANSACTION_SELL_PATH>Sell</a></h4>
+							</div>
+						</div>
+						<div class="col-sm-4 space_all">
+							<div class="list_1i text-center clearfix">
+								<h4><a href=@TRANSACTION_BUY_PATH>Buy Back</a></h4>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section id="list">
+			<div class="container">
+				<div class="feature_1 text-center clearfix">
+					<div class="col-sm-12">
+						<h3 class="mgt">WARRANTIES</h3>
+						<hr>
+					</div>
+				</div>
+				<div class="row">
+					<div class="list_1 clearfix">
+						<div class="col-sm-4 space_all">
+							<div class="list_1i text-center clearfix">
+								<h4><a asp-page=@WARRANTY_INDEX_PATH>Warranty List</a></h4>
+							</div>
+						</div>
+						<div class="col-sm-4 space_all">
+							<div class="list_1i text-center clearfix">
+								<h4><a asp-page=@WARRANTY_ACTIVATE_PATH>Activate Warranty</a></h4>
+							</div>
+						</div>
+						<div class="col-sm-4 space_all">
+							<div class="list_1i text-center clearfix">
+								<h4><a asp-page=@WARRANTY_FIX_REQUEST_INDEX_PATH>Warranty Fix Request</a></h4>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	}
+</div>
+
