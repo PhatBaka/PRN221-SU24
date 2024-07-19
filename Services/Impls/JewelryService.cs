@@ -41,11 +41,7 @@ namespace Services.Impls
 			//check duplicate name
 			jewelry.JewelryName = Util.CapitalizeFirstLetterOfSentence(Regex.Replace(jewelry.JewelryName, @"\s+", " ")).Trim();
 			jewelry.Description = Util.CapitalizeFirstLetterOfSentence(Regex.Replace(jewelry.Description, @"\s+", " ")).Trim();
-			Jewelry jewelryHasDuplicatedName = _jewelryRepo.FistOrDefault(jew => jew.JewelryName.ToLower().Equals(jewelry.JewelryName.ToLower())).Result;
-			if (jewelryHasDuplicatedName != null)
-			{
-				throw new Exception("Jewelry name is duplicated");
-			}
+
 
 			//check category name is valid
 			Category category = _categoryRepo.FistOrDefault(c => c.CategoryName.Equals(jewelry.Category.CategoryName)).Result;
@@ -66,19 +62,22 @@ namespace Services.Impls
 			jewelry.Category = category;
 
 			//check quantity to set sale status
-			if (jewelry.Quantity <= 0)
+			if (jewelry.Quantity == 0 && jewelry.StatusSale != StatusSale.OUT_OF_STOCK)
 			{
-				jewelry.StatusSale = StatusSale.OUT_OF_STOCK;
+				throw new Exception("Jewelry with quantity 0 must have StatusSale is " + StatusSale.OUT_OF_STOCK);
 			}
-			else
+			if(jewelry.Quantity > 0 && jewelry.StatusSale != StatusSale.IN_STOCK)
 			{
-				jewelry.StatusSale = StatusSale.IN_STOCK;
+				throw new Exception("Jewelry with quantity greater than 0 must have StatusSale is " + StatusSale.IN_STOCK);
 			}
-
 
 			//TODO: check promotion id is valid
 			//TODO: check material id is valid
-
+			ValidateMaterialBeforCreate(jewelry, out bool successValidate, out string messageError);
+			if (!successValidate)
+			{
+				throw new Exception(messageError);
+			}
 			//Add jewelry
 			try
 			{
@@ -86,7 +85,7 @@ namespace Services.Impls
 			}
 			catch (Exception ex)
 			{
-				throw new Exception("Error when adding jewelry", ex);
+				throw new Exception("Error when adding jewelry. Error Message: " + ex.Message , ex);
 			}
 			Jewelry jewelrySaved = _jewelryRepo.FistOrDefault(jew => jew.JewelryName.Equals(jewelry.JewelryName)).Result;
 			List<JewelryMaterial> listJewelryMaterial = jewelry.JewelryMaterials.ToList();
@@ -156,10 +155,7 @@ namespace Services.Impls
 
 		public async Task<Jewelry> UpdateJewelryAsync(Jewelry jewelry)
 		{
-			using (var scope = new TransactionScope(TransactionScopeOption.Required, TransactionScopeAsyncFlowOption.Enabled))
-			{
-				try
-				{
+			
 					// Check if id is valid
 					Jewelry jewelryToUpdate = await _jewelryRepo.GetByIdAsync(jewelry.JewelryId);
 					if (jewelryToUpdate == null)
@@ -171,12 +167,6 @@ namespace Services.Impls
 					jewelry.JewelryName = Util.CapitalizeFirstLetterOfSentence(Regex.Replace(jewelry.JewelryName, @"\s+", " ")).Trim();
 					jewelry.Description = Util.CapitalizeFirstLetterOfSentence(Regex.Replace(jewelry.Description, @"\s+", " ")).Trim();
 
-					// Check duplicate name
-					Jewelry jewelryHasDuplicatedName = await _jewelryRepo.FirstOrDefaultAsync(j => j.JewelryName.ToLower() == jewelry.JewelryName.ToLower() && j.JewelryId != jewelry.JewelryId);
-					if (jewelryHasDuplicatedName != null)
-					{
-						throw new Exception("Jewelry name is duplicated");
-					}
 
 					// Validate category
 					Category category = await _categoryRepo.FirstOrDefaultAsync(c => c.CategoryName.Equals(jewelry.Category.CategoryName));
@@ -196,8 +186,23 @@ namespace Services.Impls
 					jewelry.CategoryId = category.CategoryId;
 					jewelry.Category = category;
 
-					// Set sale status based on quantity
-					jewelry.StatusSale = jewelry.Quantity <= 0 ? StatusSale.OUT_OF_STOCK : StatusSale.IN_STOCK;
+					//check quantity to set sale status
+					if (jewelry.Quantity == 0 && jewelry.StatusSale != StatusSale.OUT_OF_STOCK)
+					{
+						throw new Exception("Jewelry with quantity 0 must have StatusSale is " + StatusSale.OUT_OF_STOCK);
+					}
+					if (jewelry.Quantity > 0 && jewelry.StatusSale != StatusSale.IN_STOCK)
+					{
+						throw new Exception("Jewelry with quantity greater than 0 must have StatusSale is " + StatusSale.IN_STOCK);
+					}
+
+					//TODO: check promotion id is valid
+					//TODO: check material id is valid
+					ValidateMaterialBeforUpdate(jewelryToUpdate, jewelry, out bool successValidate, out string messageError);
+					if (!successValidate)
+					{
+						throw new Exception(messageError);
+					}
 
 					// Update jewelry materials
 					foreach (var material in jewelry.JewelryMaterials)
@@ -205,7 +210,10 @@ namespace Services.Impls
 						material.JewelryId = jewelry.JewelryId;
 						material.MaterialId = material.Material.MaterialId;
 					}
-
+					using (var scope = new TransactionScope(TransactionScopeOption.Required, TransactionScopeAsyncFlowOption.Enabled))
+					{
+						try
+						{
 					// Update jewelry
 					bool success = await _jewelryRepo.UpdateByIdAsync(jewelry, jewelry.JewelryId);
 					if (!success)
@@ -253,7 +261,7 @@ namespace Services.Impls
 				catch (Exception ex)
 				{
 					Console.WriteLine(ex.Message);
-					throw new Exception("Error when updating jewelry", ex);
+					throw new Exception("Error when updating jewelry. Error Message: " + ex.Message, ex);
 				}
 			}
 
@@ -284,5 +292,127 @@ namespace Services.Impls
 			return totalCost;
 
 		}
+		
+		private void ValidateMaterialBeforCreate(Jewelry jewelry, out bool success, out string messageError)
+		{
+			success = true;
+			messageError = "";
+			//validate exist at least one type of material
+			List<JewelryMaterial> jewelryMaterials = jewelry.JewelryMaterials.ToList();
+			List<JewelryMaterial> metalMaterials = jewelryMaterials.Where(jm => jm.Material.IsMetail).ToList();	
+			List<JewelryMaterial> stoneMaterials = jewelryMaterials.Where(jm => !jm.Material.IsMetail).ToList();
+			if (metalMaterials.IsNullOrEmpty() && stoneMaterials.IsNullOrEmpty())
+			{
+				success = false;
+				messageError = ("Jewelry must have at least one type of material");
+				return;
+			}
+
+			//validate duplicate material
+			List<Material> jewelryMaterialWithDuplicate = jewelryMaterials
+				.GroupBy(jm => jm.Material.MaterialId) // Nhóm theo MaterialId
+				.Where(mtKey => mtKey.Count() > 1) // Chỉ giữ lại các nhóm có số lượng lớn hơn 1
+				.SelectMany(group => group.Select(jm => jm.Material).Distinct()) // Lấy ra tất cả các vật liệu trong các nhóm này
+				.ToList(); // Chuyển kết quả thành danh sách
+
+			if (jewelryMaterialWithDuplicate.Count > 0)
+			{
+				success = false;
+				foreach (var jewelryMaterial in jewelryMaterialWithDuplicate)
+				{
+					messageError = messageError + "Material " + jewelryMaterial.MaterialName + " is duplicated. \n";
+				}
+				return;
+			}
+
+			//validate unique stoneMaterial
+			if (stoneMaterials.Count > 0)
+			{
+				List<JewelryMaterial> stoneMaterialsHasBeenAssigned = _jewelryRepo.GetAllAsync().Result.SelectMany(j => j.JewelryMaterials).Where(jm => !jm.Material.IsMetail).ToList();
+				List<JewelryMaterial> stoneMaterialsAreNotAllowToBeAssigned = stoneMaterials.SelectMany(jm => stoneMaterialsHasBeenAssigned.Where(jm2 => jm2.MaterialId == jm.Material.MaterialId)).ToList();
+				if(stoneMaterialsAreNotAllowToBeAssigned.Count > 0)
+				{
+					success = false;
+					foreach(var stoneMaterial in stoneMaterialsAreNotAllowToBeAssigned)
+					{
+						messageError = messageError + "Stone material " + stoneMaterial.Material.MaterialName + " has been assigned to another jewelry\n";
+					}
+					return;
+				}
+							
+			}
+
+			//validate quantity of product based on if it contain gemstone
+			if(stoneMaterials.Count > 0)
+			{
+				if(jewelry.Quantity > 1)
+				{
+					success = false;
+					messageError = "Jewelry with gemstone must have quantity equal 1";
+					return;
+				}
+			}
+		}
+
+		private void ValidateMaterialBeforUpdate(Jewelry originalJewelry, Jewelry jewelry, out bool success, out string messageError)
+		{
+			success = true;
+			messageError = "";
+			//validate exist at least one type of material
+			List<JewelryMaterial> jewelryMaterials = jewelry.JewelryMaterials.ToList();
+			List<JewelryMaterial> metalMaterials = jewelryMaterials.Where(jm => jm.Material.IsMetail).ToList();
+			List<JewelryMaterial> stoneMaterials = jewelryMaterials.Where(jm => !jm.Material.IsMetail).ToList();
+			if (metalMaterials.IsNullOrEmpty() && stoneMaterials.IsNullOrEmpty())
+			{
+				success = false;
+				messageError = ("Jewelry must have at least one type of material");
+				return;
+			}
+
+			List<Material> jewelryMaterialWithDuplicate = jewelryMaterials
+			.GroupBy(jm => jm.Material.MaterialId) // Nhóm theo MaterialId
+			.Where(mtKey => mtKey.Count() > 1) // Chỉ giữ lại các nhóm có số lượng lớn hơn 1
+			.SelectMany(group => group.Select(jm => jm.Material).Distinct()) // Lấy ra tất cả các vật liệu trong các nhóm này
+			.ToList(); // Chuyển kết quả thành danh sách
+
+			if (jewelryMaterialWithDuplicate.Count > 0)
+			{
+				success = false;
+				foreach (var jewelryMaterial in jewelryMaterialWithDuplicate)
+				{
+					messageError = messageError + "Material " + jewelryMaterial.MaterialName + " is duplicated. \n";
+				}
+				return;
+			}
+
+			//validate unique stoneMaterial
+			if (stoneMaterials.Count > 0)
+			{
+				List<JewelryMaterial> stoneMaterialsHasBeenAssigned = _jewelryRepo.GetAllAsync().Result.SelectMany(j => j.JewelryMaterials).Where(jm => !jm.Material.IsMetail).ToList();
+				List<JewelryMaterial> stoneMaterialsAreNotAllowToBeAssigned = stoneMaterials.SelectMany(jm => stoneMaterialsHasBeenAssigned.Where(jm2 => jm2.MaterialId == jm.Material.MaterialId && jm2.JewelryId != originalJewelry.JewelryId)).ToList();
+				if (stoneMaterialsAreNotAllowToBeAssigned.Count > 0)
+				{
+					success = false;
+					foreach (var stoneMaterial in stoneMaterialsAreNotAllowToBeAssigned)
+					{
+						messageError = messageError + "Stone material " + stoneMaterial.Material.MaterialName + " has been assigned to another jewelry\n";
+					}
+					return;
+				}
+				
+			}
+			//validate quantity of product based on if it contain gemstone
+			if (stoneMaterials.Count > 0)
+			{
+				if (jewelry.Quantity > 1)
+				{
+					success = false;
+					messageError = "Jewelry with gemstone must have quantity equal 1";
+					return;
+				}
+				
+			}
+		}
+
 	}
 }

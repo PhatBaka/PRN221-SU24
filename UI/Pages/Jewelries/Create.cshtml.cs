@@ -127,19 +127,13 @@ namespace UI.Pages.Jewelries
 					setupReturnPageWhenError(message: $"Gemstone {material.MaterialName} is not found");
 					return Page();
 				}
-				var list = Gemstones.Where(x => x.MaterialId == gemstone.MaterialId).ToList();
-				if (list.Count > 1)
-				{
-					setupReturnPageWhenError(message: $"Gemstone {material.MaterialName} is duplicated");
-					return Page();
-				}
 				if (gemstone.MaterialQuantWeight <= 0)
 				{
-					setupReturnPageWhenError(message: $"Gemstone {material.MaterialName} must has the quantity of stone greater than 0");
+					setupReturnPageWhenError(message: $"Gemstone {material.MaterialName} must have the quantity of stone greater than 0");
 					return Page();
 				}
 
-				jewelryMaterials.Add(new JewelryMaterial { Material = material, JewelryWeight = gemstone.MaterialQuantWeight, Jewelry = jewelry});
+				jewelryMaterials.Add(new JewelryMaterial { Material = material, JewelryWeight = gemstone.MaterialQuantWeight, Jewelry = jewelry, MaterialId = material.MaterialId });
 				
 			}
 			foreach (var metal in Metals)
@@ -150,29 +144,18 @@ namespace UI.Pages.Jewelries
 					setupReturnPageWhenError(message: $"Metal {material.MaterialName} is not found");
 					return Page();
 				}
-				var list = Metals.Where(x => x.MaterialId == metal.MaterialId).ToList();
-				if (list.Count > 1)
-				{
-					setupReturnPageWhenError(message: $"Metal {material.MaterialName} is duplicated");
-					return Page();
-				}
 				if (metal.MaterialQuantWeight <= 0)
 				{
-					setupReturnPageWhenError(message: $"Metal {material.MaterialName} must has the weight of metal greater than 0");
+					setupReturnPageWhenError(message: $"Metal {material.MaterialName} must have the weight of metal greater than 0");
 					return Page();
 				}
 	
-				jewelryMaterials.Add(new JewelryMaterial { Material = material, JewelryWeight = metal.MaterialQuantWeight, Jewelry = jewelry });
+				jewelryMaterials.Add(new JewelryMaterial { Material = material, JewelryWeight = metal.MaterialQuantWeight, Jewelry = jewelry, MaterialId = material.MaterialId });
 				
 			}
 
 			jewelry.JewelryMaterials = jewelryMaterials;
 
-			if (jewelry.Quantity > 0 && jewelry.StatusSale.Equals(StatusSale.OUT_OF_STOCK))
-			{
-				setupReturnPageWhenError(message: "The quantity of product in stock is greater than zero, the sale status mus be instock");
-				return Page();
-			}
 			try
 			{
 				jewerlryService.AddJewelry(jewelry);

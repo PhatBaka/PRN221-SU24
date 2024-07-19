@@ -96,8 +96,9 @@
 								</select>	
 							</div>
 							<div class="form-group col-md-3">
-								<label class="control-label" >Material Weight (Gam)</label>
-							<input type="number" class="form-control metal-weight" placeholder="0" min="0" step="0.01" />
+								<label class="control-label">Material Weight (Gam)</label>
+								<input type="number" class="form-control metal-weight" placeholder="0.01" min="0.01" step="0.01" value="0.01" required />
+								<p class="not-invalid-metal-weight" style="font-size: small; font-weight: 100; color: grey;">A metal weight must greater than 0</p>
 							</div>
 							<div class="form-group col-md-3">
 								<label class="control-label">Bid Price (VNĐ/Gam)</label>
@@ -142,7 +143,7 @@
 							</div>
 							<div class="form-group col-md-3">
 							<label class="control-label">Quantity (Stone)</label>
-							<input type="number" class="form-control gemstone-weight" placeholder="0" min="0" step="1" value="1" readonly/>
+							<input type="number" class="form-control gemstone-weight" placeholder="0" min="1" step="1" value="1" readonly/>
 							</div>
 							<div class="form-group col-md-3">
 								<label class="control-label">Gemstone Price (VNĐ/Stone)</label>
@@ -181,39 +182,40 @@
 				</div>
 			</div>
 		</div>
-	<div class="container section">
+		<div class="container section">
 		<h3 id="product-info-title">Product Price</h3>
 		<div class="row">
-				<div class="form-group col-md-3">
-					<label class="control-label">Total Metal Price (VNĐ)</label>
-					<input class="form-control price-input" id="total-metal-cost" readonly placeholder="0"/>
-				</div>
-				<div class="form-group col-md-3">
-					<label class="control-label">Total Stone Cost (VNĐ)</label>
-					<input class="form-control price-input" id="total-gemstone-cost" readonly placeholder="0" />
-				</div>
-				<div class="form-group col-md-3">
-					<label class="control-label">Labor Price (VNĐ)</label>
-					<input id="labor-cost" asp-for="Jewelry.LaborPrice" class="form-control price-input" placeholder="0" />
-					<span asp-validation-for="Jewelry.LaborPrice" class="text-danger"></span>
-				</div>
-				<div class="form-group col-md-3">
-					<label class="control-label">Markup Percentage (%)</label>
-					<input asp-for="Jewelry.MarkupPercentage" class="form-control" type="number" id="markup-percent" min=0 placeholder="0"/>
-					<span asp-validation-for="Jewelry.MarkupPercentage" class="text-danger"></span>
-				</div>
-				<div>
-					<hr style="margin-top: 40px" />
-				</div>
-				<div class="row">
-					<div class="col">
-						<div>
-							<label class="control-label">Sale Price</label>
-						</div>
-						<input class="form-control-lg price-input" id="sale-price" type="text"  disabled>
+			<div class="form-group col-md-3">
+				<label class="control-label">Total Metal Price (VNĐ)</label>
+				<input class="form-control price-input" id="total-metal-cost" readonly placeholder="0" />
+			</div>
+			<div class="form-group col-md-3">
+				<label class="control-label">Total Stone Cost (VNĐ)</label>
+				<input class="form-control price-input" id="total-gemstone-cost" readonly placeholder="0" />
+			</div>
+			<div class="form-group col-md-3">
+				<label class="control-label">Labor Price (VNĐ)</label>
+				<input id="labor-cost" asp-for="Jewelry.LaborPrice" class="form-control price-input" placeholder="0" />
+				<span asp-validation-for="Jewelry.LaborPrice" class="text-danger"></span>
+			</div>
+			<div class="form-group col-md-3">
+				<label class="control-label">Markup Percentage (%)</label>
+				<input asp-for="Jewelry.MarkupPercentage" class="form-control" type="number" id="markup-percent" min=0 placeholder="0" />
+				<span asp-validation-for="Jewelry.MarkupPercentage" class="text-danger"></span>
+			</div>
+			<div>
+				<hr style="margin-top: 40px" />
+			</div>
+			<div class="row">
+				<div class="col">
+					<div>
+						<label class="control-label">Sale Price</label>
 					</div>
+					<input class="form-control-lg price-input" id="sale-price" type="text" disabled>
 				</div>
+			</div>
 		</div>
+	</div>
 	</div>
 	<div>
 			<input type="hidden" id="metalsJson" asp-for="MetalsJson" />
@@ -244,3 +246,4 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+

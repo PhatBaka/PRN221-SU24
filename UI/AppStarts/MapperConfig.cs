@@ -48,9 +48,7 @@ namespace UI.AppStarts
             #region JEWELRY
             CreateMap<Jewelry, JewelryResponse>().ReverseMap();
             CreateMap<Jewelry, CreateJewelryRequest>().ReverseMap();
-            CreateMap<Jewelry, UpdateJewelryRequest>().ReverseMap();
             CreateMap<JewelryResponse, CreateJewelryRequest>().ReverseMap();
-            CreateMap<JewelryResponse, UpdateJewelryRequest>().ReverseMap();
             CreateMap<JewelryResponse, JewelryFilter>().ReverseMap();
             #endregion
 

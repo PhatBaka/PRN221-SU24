@@ -40,7 +40,7 @@ namespace UI.Payload.JewelryPayload
 
         [DefaultValue(0)]
 		[Required(ErrorMessage = "The field is required")]
-		[Range(0, (double)decimal.MaxValue, ErrorMessage = "Markup percentage must be greater or equal 0")]
+		[Range(0, 100, ErrorMessage = "Markup percentage must be greater or equal 0")]
         public double MarkupPercentage { get; set; }
 
         [Required(ErrorMessage = "The field is required")]
@@ -53,7 +53,6 @@ namespace UI.Payload.JewelryPayload
         [AllowNull]
         public List<IFormFile>? ImageDataFile { get; set; }
 
-        //TODO  public virtual Warranty Warranties { get; set; }
     }
 
 

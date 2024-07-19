@@ -1,17 +1,9 @@
-﻿var quill = new Quill('#editor', {
-    theme: 'snow'
-});
-document.getElementById('jewelryForm').addEventListener('submit', function (e) {
-    // Copy the HTML content from Quill editor to the hidden textarea
-    var description = document.getElementById('jewelryDescription');
-    description.value = quill.root.innerHTML;
-});
-
-$(document).ready(function () {
+﻿$(document).ready(function () {
     // Load old data when errors return
     loadMetalsFromMetalsJson();
     loadGemstoneFromGemstonesJsons();
 
+  
     // Add new material row
     $('#add-material').on('click', function () {
         addMetalTemplate();
@@ -24,7 +16,7 @@ $(document).ready(function () {
     });
 
     // Update total metal price on weight change
-    $(document).on('change', '.metal-weight', function () {
+    $(document).on('input', '.metal-weight', function () {
         calculateTotalMetalPrice();
     });
 
@@ -64,7 +56,7 @@ $(document).ready(function () {
     });
 
     // Update total gemstone price on weight change
-    $(document).on('change', '.gemstone-weight', function () {
+    $(document).on('input', '.gemstone-weight', function () {
         calculateTotalGemstonePrice();
     });
 
@@ -126,7 +118,7 @@ $(document).ready(function () {
 
     function addMetalTemplate() {
         var materialTemplate = $('#material-template').html();
-        $('#material-container').append(materialTemplate);
+        $('#material-container').append($newMaterial);
         calculateTotalMetalPrice();
     }
 
@@ -211,7 +203,7 @@ $(document).ready(function () {
                 $('#material-container').append($row);
                 calculateTotalMetalPrice();
             });
-        };
+        }
     }
 
     function loadGemstoneFromGemstonesJsons() {
@@ -246,65 +238,6 @@ $(document).ready(function () {
                 $('#gemstone-container').append($row);
                 calculateTotalGemstonePrice();
             });
-        };
-    }
-});
-
-
-
-
-function displaySelectedImage(event, elementId) {
-    const selectedImage = document.getElementById(elementId);
-    const fileInput = event.target;
-    const removeButtonContainer = document.getElementById('removeButtonContainer');
-
-    if (fileInput.files && fileInput.files[0]) {
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-            selectedImage.src = e.target.result;
-            removeButtonContainer.style.display = 'block'; // Show the remove button
-        };
-
-        reader.readAsDataURL(fileInput.files[0]);
-    }
-}
-
-function removeSelectedImage(imageId, fileInputId) {
-    const selectedImage = document.getElementById(imageId);
-    const fileInput = document.getElementById(fileInputId);
-    const removeButtonContainer = document.getElementById('removeButtonContainer');
-
-    // Reset the file input
-    fileInput.value = '';
-
-    // Reset the image to the placeholder
-    selectedImage.src = 'https://mdbootstrap.com/img/Photos/Others/placeholder.jpg';
-
-    // Hide the remove button
-    removeButtonContainer.style.display = 'none';
-}
-
-document.querySelectorAll('.price-input').forEach(function (input) {
-    input.addEventListener('input', function (e) {
-        var value = e.target.value.replace(/,/g, ''); // Remove existing commas
-        if (value === "") {
-            e.target.value = "";
-            return;
         }
-
-        var formattedValue = new Intl.NumberFormat('en-US').format(value);
-        e.target.value = formattedValue;
-    });
-
-    input.addEventListener('blur', function (e) {
-        var value = e.target.value.replace(/,/g, ''); // Remove existing commas
-        if (value === "") {
-            e.target.value = "0";
-            return;
-        }
-
-        var formattedValue = new Intl.NumberFormat('en-US').format(value);
-        e.target.value = formattedValue;
-    });
+    }
 });
