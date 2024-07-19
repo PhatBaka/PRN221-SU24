@@ -40,6 +40,11 @@ namespace UI.Pages.Warranties
 
 		public IActionResult OnGet()
         {
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "STAFF" && role != "MANAGER")
+            {
+                RedirectToPage("/AccessDenied");
+            }
             try
             {
                 Console.WriteLine("ORDER ID" + OrderId);
@@ -84,7 +89,12 @@ namespace UI.Pages.Warranties
 
         public IActionResult OnGetJewelryBeWarrantyActive()
         {
-			SetUpPreData();
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "STAFF" && role != "MANAGER")
+            {
+                RedirectToPage("/AccessDenied");
+            }
+            SetUpPreData();
 			return Page();
 		}
 
@@ -98,7 +108,12 @@ namespace UI.Pages.Warranties
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid)
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "STAFF" && role != "MANAGER")
+            {
+                RedirectToPage("/AccessDenied");
+            }
+            if (!ModelState.IsValid)
             {
                 return OnGet();
             }

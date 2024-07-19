@@ -21,6 +21,11 @@
 
 //        public async Task<IActionResult> OnGetAsync()
 //        {
+            //string role = HttpContext.Session.GetString("ROLE");
+            //if (role != "STAFF" && role != "MANAGER")
+            //{
+            //    RedirectToPage("/AccessDenied");
+            //}
 //            int? accountID = HttpContext.Session.GetInt32("ID");
 //            if (accountID == null)
 //            {

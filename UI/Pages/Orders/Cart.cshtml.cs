@@ -30,6 +30,11 @@
 
 //        public void OnGet()
 //        {
+//                string role = HttpContext.Session.GetString("ROLE");
+//               if (role != "STAFF" && role != "MANAGER")
+//               {
+//                  RedirectToPage("/AccessDenied");
+//              }
 //            var cartJson = HttpContext.Session.GetString("Cart");
 //            if (!string.IsNullOrEmpty(cartJson))
 //            {
@@ -60,6 +65,11 @@
 
 //        public IActionResult OnPostRemove(int id)
 //        {
+//                string role = HttpContext.Session.GetString("ROLE");
+//               if (role != "STAFF" && role != "MANAGER")
+//               {
+//                    RedirectToPage("/AccessDenied");
+//               }
 //            var cartJson = HttpContext.Session.GetString("Cart");
 //            if (!string.IsNullOrEmpty(cartJson))
 //            {
@@ -76,6 +86,11 @@
 
 //        public async Task<IActionResult> OnPostSubmitOrder()
 //        {
+//                string role = HttpContext.Session.GetString("ROLE");
+//                if (role != "STAFF" && role != "MANAGER")
+//                {
+//                    RedirectToPage("/AccessDenied");
+ //               }
 //            // Retrieve account ID from session
 //            int? accountID = HttpContext.Session.GetInt32("ID");
 //            if (accountID == null)

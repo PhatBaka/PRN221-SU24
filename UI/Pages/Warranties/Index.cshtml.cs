@@ -44,7 +44,12 @@ namespace UI.Pages.Warranties
 
 		public async Task OnGetAsync()
 		{
-			var warranties = warrantyService.GetAllWarrantys().AsQueryable();
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "STAFF" && role != "MANAGER")
+            {
+                RedirectToPage("/AccessDenied");
+            }
+            var warranties = warrantyService.GetAllWarrantys().AsQueryable();
 
 			if (!string.IsNullOrEmpty(Keyword))
 			{

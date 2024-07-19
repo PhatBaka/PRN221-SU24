@@ -32,15 +32,11 @@ namespace UI.Pages.Jewelries
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            //string role = HttpContext.Session.GetString("ROLE");
-            //if (role != "ADMIN" || role != "MANAGER")
-            //{
-            //    return RedirectToPage("/AccessDenied");
-            //}
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "MANAGER")
+            {
+                RedirectToPage("/AccessDenied");
+            }
 
             Jewelry jewelry = jewerlryService.GetJewelryById(id.Value);
 

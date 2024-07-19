@@ -23,6 +23,11 @@ namespace UI.Pages.Promotions
 
         public async Task OnGetAsync()
         {
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "MANAGER")
+            {
+                RedirectToPage("/AccessDenied");
+            }
             if (_context.Promotions != null)
             {
                 Promotion = await _context.Promotions.ToListAsync();

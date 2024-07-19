@@ -35,7 +35,7 @@ namespace UI.Pages.Jewelries
         public void OnGetAsync()
         {
             string role = HttpContext.Session.GetString("ROLE");
-            if (role != "ADMIN" || role != "MANAGER")
+            if (role != "MANAGER")
             {
                 RedirectToPage("/AccessDenied");
             }
@@ -67,6 +67,11 @@ namespace UI.Pages.Jewelries
 
         public IActionResult OnPostBuy(int id)
         {
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "MANAGER")
+            {
+                RedirectToPage("/AccessDenied");
+            }
             var jewelry = jewelryService.GetJewelryById(id);
             if (jewelry != null)
             {

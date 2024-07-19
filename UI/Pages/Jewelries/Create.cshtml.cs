@@ -61,6 +61,11 @@ namespace UI.Pages.Jewelries
 
         public async void OnGet()
         {
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "MANAGER")
+            {
+                RedirectToPage("/AccessDenied");
+            }
             IList<GetMaterialRequest> metals = _mapper.Map<IList<GetMaterialRequest>>(_materialService.GetMaterials().Where(x => x.IsMetail == true));
             MetalCart ??= new List<MetalItem>();
             foreach (var metal in metals)

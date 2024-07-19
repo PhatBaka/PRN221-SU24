@@ -19,6 +19,11 @@
 
 //        public async Task<IActionResult> OnGetAsync(int orderId)
 //        {
+ //               string role = HttpContext.Session.GetString("ROLE");
+//                if (role != "STAFF" && role != "MANAGER")
+ //               {
+  //                  RedirectToPage("/AccessDenied");
+ //               }
 //            Order = await _orderService.GetOrderByIdAsync(orderId);
 
 //            if (Order == null)

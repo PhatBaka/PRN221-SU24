@@ -36,7 +36,12 @@ namespace UI.Pages.Warranties
 
 		public async Task<IActionResult> OnGetAsync(int? id)
 		{
-			try
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "STAFF" && role != "MANAGER")
+            {
+                RedirectToPage("/AccessDenied");
+            }
+            try
 			{
 				if (id == null)
 				{

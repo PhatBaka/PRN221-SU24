@@ -45,6 +45,11 @@ namespace UI.Pages.Orders.Sell
 
         public void OnGet(string currentFilter, string searchString, int? pageIndex)
         {
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "STAFF" && role != "MANAGER")
+            {
+                RedirectToPage("/AccessDenied");
+            }
             LoadJewelries(currentFilter, searchString, pageIndex);
             Metals = _metalService.GetPrices();
             HttpContext.Session.SetObjectAsJson("PRICE", Metals);
