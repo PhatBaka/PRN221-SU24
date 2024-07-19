@@ -22,6 +22,19 @@ namespace Services.Impls
             _accountRepository = accountRepository;
         }
 
+        public Account CreateAccount(Account acocunt)
+        {
+            try
+            {
+                return _accountRepository.InsertEntityAsync(acocunt).Result;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return null;
+        }
+
         public Account GetAccount(string email, string password)
         {
             try

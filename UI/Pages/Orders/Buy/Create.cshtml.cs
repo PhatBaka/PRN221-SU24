@@ -39,6 +39,11 @@ namespace UI.Pages.Orders.Buy
 
         public void OnGet()
         {
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "STAFF" && role != "MANAGER")
+            {
+                RedirectToPage("/AccessDenied");
+            }
             LoadData();
            
         }

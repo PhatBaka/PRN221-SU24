@@ -23,6 +23,11 @@ namespace UI.Pages.Categories
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "MANAGER")
+            {
+                return RedirectToPage("/AccessDenied");
+            }
             if (id == null || _context.Categories == null)
             {
                 return NotFound();

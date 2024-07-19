@@ -65,17 +65,22 @@ namespace UI.Pages.Materials.Gems
 
         public IActionResult OnGet()
         {
-            //string role = HttpContext.Session.GetString("ROLE");
-            //if (role != "ADMIN" || role != "MANAGER")
-            //{
-            //    return RedirectToPage("/AccessDenied");
-            //}
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "MANAGER")
+            {
+                RedirectToPage("/AccessDenied");
+            }
             return Page();
         }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "MANAGER")
+            {
+                RedirectToPage("/AccessDenied");
+            }
             if (!ModelState.IsValid)
             {
                 return Page();

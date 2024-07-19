@@ -31,7 +31,12 @@ namespace UI.Pages.Categories
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Categories == null || Category == null)
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "MANAGER")
+            {
+                return RedirectToPage("/AccessDenied");
+            }
+            if (!ModelState.IsValid || _context.Categories == null || Category == null)
             {
                 return Page();
             }

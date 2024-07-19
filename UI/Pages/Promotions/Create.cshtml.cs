@@ -22,6 +22,11 @@ namespace UI.Pages.Promotions
 
         public IActionResult OnGet()
         {
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "MANAGER")
+            {
+                RedirectToPage("/AccessDenied");
+            }
             return Page();
         }
 

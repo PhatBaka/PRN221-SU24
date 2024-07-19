@@ -32,7 +32,12 @@ namespace UI.Pages.Warranties
 
 		public async Task<IActionResult> OnGetAsync(int? id)
         {
-			if (id == null)
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "STAFF" && role != "MANAGER")
+            {
+                RedirectToPage("/AccessDenied");
+            }
+            if (id == null)
 			{
 				Message = $"Warranty History ID {id} not found to update";
 				return Page();
@@ -49,7 +54,12 @@ namespace UI.Pages.Warranties
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-			try
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "STAFF" && role != "MANAGER")
+            {
+                RedirectToPage("/AccessDenied");
+            }
+            try
 			{
 				var warranty = warrantySerivce.GetWarrantyById(id.Value);
 				if (warranty == null)

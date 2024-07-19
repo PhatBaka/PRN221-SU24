@@ -48,6 +48,11 @@ namespace UI.Pages.Accounts
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "ADMIN")
+            {
+                return RedirectToPage("/AccessDenied");
+            }
             if (!ModelState.IsValid)
             {
                 return Page();

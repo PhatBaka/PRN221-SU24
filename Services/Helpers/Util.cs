@@ -59,5 +59,6 @@ namespace Services.Helpers
                 return memoryStream.ToArray();
             }
         }
+
     }
 }

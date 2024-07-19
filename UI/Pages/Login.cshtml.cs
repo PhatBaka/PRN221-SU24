@@ -29,6 +29,20 @@ namespace UI.Pages
 
         public IActionResult OnGet()
         {
+            var role = HttpContext.Session.GetString("ROLE");
+
+            if (role != null)
+            {
+                switch (role)
+                {
+                    case "ADMIN":
+                        return RedirectToPage("./IndexHome");
+                    case "MANAGER":
+                        return RedirectToPage("./IndexHome");
+                    case "STAFF":
+                        return RedirectToPage("./IndexHome");
+                }
+            }
             return Page();
         }
 

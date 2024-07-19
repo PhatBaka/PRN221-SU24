@@ -32,7 +32,7 @@
         //public IActionResult OnGet()
         //{
         //    string role = HttpContext.Session.GetString("ROLE");
-        //    if (role != "ADMIN" || role != "MANAGER")
+        //    if (role != "MANAGER")
         //    {
         //        return RedirectToPage("/AccessDenied");
         //    }

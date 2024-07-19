@@ -14,6 +14,8 @@ using UI.Payload.MaterialPayload;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 using UI.Payload.JewelryPayload;
 using UI.Payload.AccountPayload;
+using System.Text.RegularExpressions;
+using Services.Impls;
 
 namespace UI.Pages.Orders.Sell
 {
@@ -42,9 +44,16 @@ namespace UI.Pages.Orders.Sell
         public string? CurrentFilter { get; set; }
         public IList<MetalResponse> Metals = new List<MetalResponse>();
         public string? Message { get; set; }
+        [BindProperty]
+        public Account Account { get; set; }
 
         public void OnGet(string currentFilter, string searchString, int? pageIndex)
         {
+            string role = HttpContext.Session.GetString("ROLE");
+            if (role != "STAFF" && role != "MANAGER")
+            {
+                RedirectToPage("/AccessDenied");
+            }
             LoadJewelries(currentFilter, searchString, pageIndex);
             Metals = _metalService.GetPrices();
             HttpContext.Session.SetObjectAsJson("PRICE", Metals);
@@ -163,7 +172,7 @@ namespace UI.Pages.Orders.Sell
                     break;
                 }
             }
-            return RedirectToPage();
+            return Page();
         }
 
         public async Task<IActionResult> OnPostSubmitOrder(string phoneNumber)
@@ -278,8 +287,8 @@ namespace UI.Pages.Orders.Sell
                 {
                     if (price.Metal.Equals(metal.MaterialName))
                     {
-                        metal.BidPrice = (decimal) price.Rate.Bid;
-                        metal.OfferPrice = (decimal) price.Rate.Ask;
+                        metal.BidPrice = (decimal)price.Rate.Bid;
+                        metal.OfferPrice = (decimal)price.Rate.Ask;
                         _materialService.UpdateMaterial(metal);
                         break;
                     }
@@ -287,6 +296,12 @@ namespace UI.Pages.Orders.Sell
             }
         }
 
+        public IActionResult OnPostClearCart()
+        {
+            HttpContext.Session.Remove("CART");
+            LoadData("", "", 1);
+            return Page();
+        }
 
         public void LoadData(String searchString, String currentFilter, int pageIndex)
         {
@@ -303,9 +318,22 @@ namespace UI.Pages.Orders.Sell
             CurrentCustomer = HttpContext.Session.GetObjectFromJson<GetAccountRequest>("ACCOUNT");
         }
 
+
         public IActionResult OnPostFindCustomer(string phoneNumber)
         {
             LoadData("", "", 1);
+
+            // Define regex pattern for phone number validation
+            string phonePattern = @"^09\d{8}$"; // Phone number starting with 09 followed by 8 digits
+
+            // Validate phone number
+            if (!Regex.IsMatch(phoneNumber, phonePattern))
+            {
+                Message = "Invalid phone number format";
+                return Page();
+            }
+
+            // Find the customer by phone number
             CurrentCustomer = _mapper.Map<GetAccountRequest>(_accountService.GetAccounts().FirstOrDefault(x => x.PhoneNumber.Equals(phoneNumber)));
             if (CurrentCustomer != null)
             {
@@ -313,10 +341,12 @@ namespace UI.Pages.Orders.Sell
             }
             else
             {
-                Message = "Can find this account";
+                Message = "Cannot find this account";
             }
+
             return Page();
         }
+
 
         public IActionResult OnPostDecreaseQuantity(int id)
         {
@@ -361,6 +391,62 @@ namespace UI.Pages.Orders.Sell
             }
 
             SaveCart(CartItems);
+            return Page();
+        }
+
+        public IActionResult OnPostCreateAccount()
+        {
+            LoadData("", "", 1);
+
+            // Define regex patterns
+            string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$"; // Basic email validation pattern
+            string phonePattern = @"^09\d{8}$"; // Phone number starting with 09 followed by 8 digits
+
+            // Validate email
+            if (!Regex.IsMatch(Account.Email, emailPattern))
+            {
+                Message = "Invalid email format";
+                return Page();
+            }
+
+            // Validate phone number
+            if (!Regex.IsMatch(Account.PhoneNumber, phonePattern))
+            {
+                Message = "Invalid phone number format";
+                return Page();
+            }
+
+            // Check if email already exists
+            if (_accountService.GetAccounts().FirstOrDefault(x => x.Email.Equals(Account.Email)) != null)
+            {
+                Message = "This email already exists";
+                return Page();
+            }
+
+            // Check if phone number already exists
+            else if (_accountService.GetAccounts().FirstOrDefault(x => x.PhoneNumber.Equals(Account.PhoneNumber)) != null)
+            {
+                Message = "This phone number already exists";
+                return Page();
+            }
+
+            // Create new account
+            Account account = new()
+            {
+                CreatedDate = DateTime.Now,
+                Email = Account.Email,
+                FullName = Account.FullName,
+                ObjectStatus = ObjectStatus.ACTIVE,
+                PhoneNumber = Account.PhoneNumber,
+                Role = AccountRole.CUSTOMER
+            };
+
+            if (account != null)
+            {
+                CurrentCustomer = _mapper.Map<GetAccountRequest>(account);
+                HttpContext.Session.SetObjectAsJson("ACCOUNT", CurrentCustomer);
+            }
+
             return Page();
         }
     }
