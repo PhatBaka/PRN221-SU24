@@ -66,31 +66,31 @@ namespace Services.Impls
 			//jewelry.Category = category;
 
 			//check quantity to set sale status
-			if (jewelry.Quantity <= 0)
-			{
-				jewelry.StatusSale = StatusSale.OUT_OF_STOCK;
-			}
-			else
-			{
-				jewelry.StatusSale = StatusSale.IN_STOCK;
-			}
+			//if (jewelry.Quantity <= 0)
+			//{
+			//	jewelry.StatusSale = StatusSale.OUT_OF_STOCK;
+			//}
+			//else
+			//{
+			//	jewelry.StatusSale = StatusSale.IN_STOCK;
+			//}
 
 
 			//TODO: check promotion id is valid
 			//TODO: check material id is valid
 
 			//Add jewelry
-			try
-			{
-				bool success = _jewelryRepo.InsertAsync(jewelry).Result;
-			}
-			catch (Exception ex)
-			{
-				throw new Exception("Error when adding jewelry", ex);
-			}
-			Jewelry jewelrySaved = _jewelryRepo.FistOrDefault(jew => jew.JewelryName.Equals(jewelry.JewelryName)).Result;
-			List<JewelryMaterial> listJewelryMaterial = jewelry.JewelryMaterials.ToList();
-			return jewelrySaved;
+			//try
+			//{
+			//	bool success = _jewelryRepo.InsertAsync(jewelry).Result;
+			//}
+			//catch (Exception ex)
+			//{
+			//	throw new Exception("Error when adding jewelry", ex);
+			//}
+			//Jewelry jewelrySaved = _jewelryRepo.FistOrDefault(jew => jew.JewelryName.Equals(jewelry.JewelryName)).Result;
+			//List<JewelryMaterial> listJewelryMaterial = jewelry.JewelryMaterials.ToList();
+			return _jewelryRepo.InsertEntityAsync(jewelry).Result;
 		}
 
 		public async Task DeleteJewelryAsync(int id)
@@ -197,7 +197,7 @@ namespace Services.Impls
 					jewelry.Category = category;
 
 					// Set sale status based on quantity
-					jewelry.StatusSale = jewelry.Quantity <= 0 ? StatusSale.OUT_OF_STOCK : StatusSale.IN_STOCK;
+					//jewelry.StatusSale = jewelry.Quantity <= 0 ? StatusSale.OUT_OF_STOCK : StatusSale.IN_STOCK;
 
 					// Update jewelry materials
 					foreach (var material in jewelry.JewelryMaterials)

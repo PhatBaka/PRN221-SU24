@@ -18,6 +18,11 @@ namespace Repositories
             this.dao = dao;
         }
 
+        public async Task<TEntity> InsertEntityAsync(TEntity entity)
+        {
+            return await dao.InsertEntityAsync(entity);
+        }
+
         public async Task<TEntity> AnyAsync(Func<TEntity, bool> predicate)
         {
             return await dao.AnyAsync(predicate);
@@ -166,6 +171,11 @@ namespace Repositories
         public async Task<bool> UpdateRangeAsync(IQueryable<TEntity> entities)
         {
             return await dao.UpdateRangeAsync(entities);
+        }
+
+        public async Task UpdateEntityAsync(TEntity entity)
+        {
+            await dao.UpdateEntityAsync(entity);
         }
     }
 }

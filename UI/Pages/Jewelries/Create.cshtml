@@ -1,4 +1,4 @@
-﻿@page "{handler?}"
+﻿@* @page "{handler?}"
 @model UI.Pages.Jewelries.CreateModel
 
 @{
@@ -17,7 +17,7 @@
 
 <form method="post" id="jewelryForm" enctype="multipart/form-data">
 	<div class="form-group">
-		@* Display any custom message *@
+		@* Display any custom message 
 		@if (!string.IsNullOrEmpty(Model.Message))
 		{
 
@@ -243,4 +243,4 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script> *@

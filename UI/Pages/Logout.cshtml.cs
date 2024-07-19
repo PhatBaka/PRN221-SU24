@@ -8,5 +8,11 @@ namespace UI.Pages
         public void OnGet()
         {
         }
+
+        public IActionResult OnPost()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToPage("Login");
+        }
     }
 }

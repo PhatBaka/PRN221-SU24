@@ -100,6 +100,36 @@
     </section>
 </form>
 
+@{
+    var jewelry = Model.Jewelry;
+}
+@if (jewelry != null)
+{
+    <section id="blog_h">
+        <div class="container">
+            <div class="row">
+                <div class="blog_h_1 clearfix">
+                    <div class="col-sm-6">
+                        <div class="blog_h_1l clearfix">
+                            <img src="data:image/*;base64,@ViewData[$"ItemImage_{jewelry.JewelryImage}"]" alt="Jewelry Image">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="blog_h_1r clearfix">
+                            <h4 class="mgt">@jewelry.JewelryName</h4><br>
+                            <div class="blog_h_1ri clearfix">
+                                <p>
+                                    @jewelry.Description
+                                </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+}
+
 <script>
     // Function to handle file input change and show preview
     function handleFileSelect(inputId, previewContainerId) {

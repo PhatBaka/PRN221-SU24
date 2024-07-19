@@ -15,5 +15,6 @@ namespace Services.Interfaces
         Material AddMaterial(Material material);
         void UpdateMaterial(Material material);
         void DeleteMaterial(int id);
+        List<Material> GetGemsNotInJewelry();
     }
 }

@@ -19,15 +19,17 @@ namespace UI.Pages.Orders.Sell
 {
     public class CreateModel : PageModel
     {
+        private readonly IMetalService _metalService;
         private readonly IAccountService _accountService;
         private readonly IMaterialService _materialService;
         private readonly IJewelryService _jewelryService;
         private readonly IOrderService _orderService;
         private readonly IMapper _mapper;
 
-        public CreateModel(IJewelryService jewelryService, IOrderService orderService, IMaterialService materialService, IAccountService accountService, IMapper mapper)
+        public CreateModel(IJewelryService jewelryService, IOrderService orderService, IMaterialService materialService, IAccountService accountService, IMetalService metalService, IMapper mapper)
         {
             _materialService = materialService;
+            _metalService = metalService;
             _orderService = orderService;
             _jewelryService = jewelryService;
             _accountService = accountService;
@@ -38,12 +40,14 @@ namespace UI.Pages.Orders.Sell
         public List<CartItem> CartItems { get; set; } = new List<CartItem>();
         public PaginatedList<Jewelry>? Jewelries { get; set; }
         public string? CurrentFilter { get; set; }
-        private IList<MetalPrice> Prices = new List<MetalPrice>();
+        public IList<MetalResponse> Metals = new List<MetalResponse>();
         public string? Message { get; set; }
 
         public void OnGet(string currentFilter, string searchString, int? pageIndex)
         {
             LoadJewelries(currentFilter, searchString, pageIndex);
+            Metals = _metalService.GetPrices();
+            HttpContext.Session.SetObjectAsJson("PRICE", Metals);
         }
 
         [BindProperties]
@@ -101,12 +105,15 @@ namespace UI.Pages.Orders.Sell
                                 return Page();
                             }
                         }
-                        // if jewelry don't have gem in the cart
-                        if (addedItem.Quantity >= jewelry.Quantity)
+                        addedItem.Quantity += 1;
+
+                        if (addedItem.Quantity > jewelry.Quantity)
                         {
+                            Message = $"Curren quantity of this item is: {jewelry.Quantity}";
+                            addedItem.Quantity -= 1;
                             return Page();
                         }
-                        addedItem.Quantity += 1;
+
                         SaveCart(CartItems);
                         return Page();
                     }
@@ -250,29 +257,29 @@ namespace UI.Pages.Orders.Sell
 
         private void UpdatePrice()
         {
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-            var gold = JsonSerializer.Deserialize<MetalPrice>(Utils.ReadJsonFile("gold.json"), options);
-            var silver = JsonSerializer.Deserialize<MetalPrice>(Utils.ReadJsonFile("silver.json"), options);
-            var palladium = JsonSerializer.Deserialize<MetalPrice>(Utils.ReadJsonFile("palladium.json"), options);
-            if (gold != null && silver != null && palladium != null)
-            {
-                Prices.Add(gold);
-                Prices.Add(silver);
-                Prices.Add(palladium);
-            }
+            //var options = new JsonSerializerOptions
+            //{
+            //    PropertyNameCaseInsensitive = true
+            //};
+            //var gold = JsonSerializer.Deserialize<MetalPrice>(Utils.ReadJsonFile("gold.json"), options);
+            //var silver = JsonSerializer.Deserialize<MetalPrice>(Utils.ReadJsonFile("silver.json"), options);
+            //var palladium = JsonSerializer.Deserialize<MetalPrice>(Utils.ReadJsonFile("palladium.json"), options);
+            //if (gold != null && silver != null && palladium != null)
+            //{
+            //    Metals.Add(gold);
+            //    Metals.Add(silver);
+            //    Metals.Add(palladium);
+            //}
 
             var metals = _materialService.GetMaterials();
             foreach (var metal in metals.Where(x => x.IsMetail == true))
             {
-                foreach (var price in Prices)
+                foreach (var price in Metals)
                 {
                     if (price.Metal.Equals(metal.MaterialName))
                     {
-                        metal.BidPrice = price.Rate.Bid;
-                        metal.OfferPrice = price.Rate.Ask;
+                        metal.BidPrice = (decimal) price.Rate.Bid;
+                        metal.OfferPrice = (decimal) price.Rate.Ask;
                         _materialService.UpdateMaterial(metal);
                         break;
                     }
@@ -286,7 +293,10 @@ namespace UI.Pages.Orders.Sell
             LoadJewelries(searchString, currentFilter, pageIndex);
             LoadCart();
             LoadCustomer();
+            LoadPrice();
         }
+
+        private void LoadPrice() => Metals = HttpContext.Session.GetObjectFromJson<IList<MetalResponse>>("PRICE");
 
         public void LoadCustomer()
         {
@@ -305,6 +315,52 @@ namespace UI.Pages.Orders.Sell
             {
                 Message = "Can find this account";
             }
+            return Page();
+        }
+
+        public IActionResult OnPostDecreaseQuantity(int id)
+        {
+            LoadData("", "", 1);
+
+            foreach (var item in CartItems)
+            {
+                if (item.Jewelry.JewelryId == id)
+                {
+                    item.Quantity -= 1;
+                    if (item.Quantity == 0)
+                    {
+                        CartItems.Remove(item);
+                        break;
+                    }
+                }
+            }
+
+            SaveCart(CartItems);
+
+            return Page();
+        }
+
+        public IActionResult OnPostIncreaseQuantity(int id)
+        {
+            LoadData("", "", 1);
+
+            var jewelry = _jewelryService.GetJewelryById(id);
+
+            foreach (var item in CartItems)
+            {
+                if (item.Jewelry.JewelryId == id)
+                {
+                    item.Quantity += 1;
+                    if (item.Quantity > jewelry.Quantity)
+                    {
+                        Message = $"The remaining of this item is {jewelry.Quantity}";
+                        item.Quantity -= 1;
+                        return Page();
+                    }
+                }
+            }
+
+            SaveCart(CartItems);
             return Page();
         }
     }

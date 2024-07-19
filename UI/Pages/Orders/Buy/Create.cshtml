@@ -219,6 +219,66 @@
 						</div>
 					</div>
 				</section>
+                <!-- JEWELRY CART -->
+                <div class="feature_1 text-center clearfix">
+                    <div class="col-sm-12">
+                        <h3 class="mgt">JEWELRY</h3>
+                        <hr>
+                    </div>
+                    <section id="cart_page" class="clearfix cart">
+                        <div class="container">
+                            <div class="row">
+                                <div class="cart_3 clearfix">
+                                    <div class="col-sm-8">
+
+                                        <div class="cart_3l1 clearfix">
+                                            @{
+                                                var cart = Model.Cart;
+                                            }
+                                            @if (cart != null && cart.Count > 0)
+                                            {
+                                                @foreach (var jewelry in cart)
+                                                {
+                                                    <div class="col-sm-3 space_left">
+                                                        <div class="cart_3l1i clearfix">
+                                                            @switch (jewelry.Jewelry.JewelryName)
+                                                            {
+                                                                case "gold":
+                                                                    <a href="#"><img src="~/img/gold.jpg" alt="abc" class="iw"></a>
+                                                                    break;
+                                                                case "silver":
+                                                                    <a href="#"><img src="~/img/silver.jpg" alt="abc" class="iw"></a>
+                                                                    break;
+                                                                case "palladium":
+                                                                    <a href="#"><img src="~/img/palladium.jpg" alt="abc" class="iw"></a>
+                                                                    break;
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-9">
+                                                        <div class="cart_3l1i1 clearfix">
+                                                            <h5 class="mgt">
+                                                                <a href="#">
+                                                                    @jewelry.Jewelry.JewelryName.ToUpper()
+                                                                </a>
+                                                            </h5>
+                                                            <h5>@jewelry.SellPrice.ToString("F2")</h5>
+                                                            <h5>@jewelry.Jewelry.TotalWeight</h5>
+                                                            <h5>@jewelry.UnitPrice.ToString("F2")</h5>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                            <form method="post" asp-page-handler="CreateOrder">
+                                                <input type="submit" class="button_1 mgt" value="CREATE ORDER" /></h6>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
             </div>
             <!-- CART -->
             <div class="col-sm-6">
@@ -273,66 +333,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- JEWELRY CART -->
-                            <div class="feature_1 text-center clearfix">
-                                <div class="col-sm-12">
-                                    <h3 class="mgt">JEWELRY</h3>
-                                    <hr>
-                                </div>
-                                <section id="cart_page" class="clearfix cart">
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="cart_3 clearfix">
-                                                <div class="col-sm-8">
-
-                                                    <div class="cart_3l1 clearfix">
-                                                        @{
-                                                            var cart = Model.Cart;
-                                                        }
-                                                        @if (cart != null && cart.Count > 0)
-                                                        {
-                                                            @foreach (var jewelry in cart)
-                                                            {
-                                                                <div class="col-sm-3 space_left">
-                                                                    <div class="cart_3l1i clearfix">
-                                                                        @switch (jewelry.Jewelry.JewelryName)
-                                                                        {
-                                                                            case "gold":
-                                                                                <a href="#"><img src="~/img/gold.jpg" alt="abc" class="iw"></a>
-                                                                                break;
-                                                                            case "silver":
-                                                                                <a href="#"><img src="~/img/silver.jpg" alt="abc" class="iw"></a>
-                                                                                break;
-                                                                            case "palladium":
-                                                                                <a href="#"><img src="~/img/palladium.jpg" alt="abc" class="iw"></a>
-                                                                                break;
-                                                                        }
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-9">
-                                                                    <div class="cart_3l1i1 clearfix">
-                                                                        <h5 class="mgt">
-                                                                            <a href="#">
-                                                                                @jewelry.Jewelry.JewelryName.ToUpper()
-                                                                            </a>
-                                                                        </h5>
-                                                                        <h5>@jewelry.SellPrice.ToString("F2")</h5>
-                                                                        <h5>@jewelry.Jewelry.TotalWeight</h5>
-                                                                        <h5>@jewelry.UnitPrice.ToString("F2")</h5>
-                                                                    </div>
-                                                                </div>
-                                                            }
-                                                        }
-                                                        <form method="post" asp-page-handler="CreateOrder">
-                                                            <input type="submit" class="button_1 mgt" value="CREATE ORDER" /></h6>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </section>
                             </div>
                         </div>
                     </div>
