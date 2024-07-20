@@ -89,8 +89,8 @@
                                         <th>Name</th>
                                         <th>Unit Price</th>
                                         <th>Quantity</th>
-                                        <th>Total Price</th>
                                         <td>Discount Value</td>
+                                        <th>Total Price</th>
                                         <th>Discount Price</th>
                                         <th>Final Price</th>
                                         <th></th>
@@ -145,7 +145,7 @@
                                                         <input type="text" asp-for="@jewelry.Quantity" class="form-control text-center" value="1">
                                                     }
                                                 </td>
-                                                <td>@jewelry.DiscountValue</td>
+                                                <td>@jewelry.DiscountValue %</td>
                                                 <td>@jewelry.GetTotalPrice().ToString("F2")</td>
                                                 <td>@jewelry.GetDiscountPrice().ToString("F2")</td>
                                                 <td>@jewelry.GetFinalPrice().ToString("F2")</td>

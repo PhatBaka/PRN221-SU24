@@ -21,6 +21,7 @@ namespace UI.Pages.Jewelries
 
         [BindProperty]
       public Jewelry Jewelry { get; set; } = default!;
+      public string message;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -31,14 +32,16 @@ namespace UI.Pages.Jewelries
             }
             if (id == null || _context.Jewelries == null)
             {
-                return NotFound();
+                message = "Not found the jewelry id " + id;
+                return Page();
             }
 
             var jewelry = await _context.Jewelries.FirstOrDefaultAsync(m => m.JewelryId == id);
 
             if (jewelry == null)
             {
-                return NotFound();
+                message = "Not found the jewelry id " + id;
+                return Page();
             }
             else 
             {
@@ -51,16 +54,25 @@ namespace UI.Pages.Jewelries
         {
             if (id == null || _context.Jewelries == null)
             {
-                return NotFound();
+                message = "Not found the jewelry id " + id;
+                return Page();
             }
             var jewelry = await _context.Jewelries.FindAsync(id);
-
-            if (jewelry != null)
+            try
             {
-                Jewelry = jewelry;
-                _context.Jewelries.Remove(Jewelry);
-                await _context.SaveChangesAsync();
+                if (jewelry != null)
+                {
+                    Jewelry = jewelry;
+                    _context.Jewelries.Remove(Jewelry);
+                    await _context.SaveChangesAsync();
+                }
             }
+            catch(Exception ex)
+            {
+                message = "Can not delete because the jewelry is in used.";
+                    return Page();
+            }
+            
 
             return RedirectToPage("./Index");
         }

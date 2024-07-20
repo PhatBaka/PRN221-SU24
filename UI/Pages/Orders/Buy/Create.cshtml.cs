@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Services.Interfaces;
 using System.Diagnostics.Metrics;
+using System.Text.RegularExpressions;
 using UI.Helper;
 using UI.Payload.AccountPayload;
 using UI.Payload.JewelryPayload;
@@ -37,6 +38,8 @@ namespace UI.Pages.Orders.Buy
         public IList<CartItem> Cart { get; set; }
         public GetAccountRequest CurrentCustomer { get; set; }
         public string Message { get; set; }
+        [BindProperty]
+        public Account Account { get; set; }
 
         public void OnGet()
         {
@@ -46,26 +49,26 @@ namespace UI.Pages.Orders.Buy
                 RedirectToPage("/AccessDenied");
             }
             LoadData();
-           
+
         }
 
-		[BindProperties]
-		public class CartItem
-		{
+        [BindProperties]
+        public class CartItem
+        {
             public int Index { get; set; }
             public double BuyPrice { get; set; }
-			public GetJewelryRequest Jewelry { get; set; }
-			public int Quantity { get; set; }
+            public GetJewelryRequest Jewelry { get; set; }
+            public int Quantity { get; set; }
             public Category Category { get; set; }
             public double Weight { get; set; }
-		}
+        }
 
         [BindProperties]
-		public class MetalItem
-		{
-			public MetalResponse? Item { get; set; }
-			public decimal Weight { get; set; }
-		}
+        public class MetalItem
+        {
+            public MetalResponse? Item { get; set; }
+            public decimal Weight { get; set; }
+        }
 
         public IActionResult OnPostRemoveFromCart(int index, int jewelryId)
         {
@@ -138,7 +141,7 @@ namespace UI.Pages.Orders.Buy
             }
 
             GetJewelryRequest jewelry = new()
-            { 
+            {
                 JewelryName = metal,
                 Description = "FROM CUSTOMER",
                 TotalWeight = weight
@@ -218,6 +221,9 @@ namespace UI.Pages.Orders.Buy
 
                 if (newOrder != null)
                 {
+                    HttpContext.Session.Remove("ACCOUNT");
+                    HttpContext.Session.Remove("METALCART");
+                    HttpContext.Session.Remove("CART");
                     return RedirectToPage("./Detail", new { id = newOrder.OrderId });
                 }
 
@@ -247,6 +253,64 @@ namespace UI.Pages.Orders.Buy
             HttpContext.Session.Remove("CART");
             HttpContext.Session.Remove("METALCART");
             LoadData();
+            return Page();
+        }
+
+        public IActionResult OnPostCreateAccount()
+        {
+            LoadData();
+
+            // Define regex patterns
+            string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$"; // Basic email validation pattern
+            string phonePattern = @"^09\d{8}$"; // Phone number starting with 09 followed by 8 digits
+
+            // Validate email
+            if (!Regex.IsMatch(Account.Email, emailPattern))
+            {
+                Message = "Invalid email format";
+                return Page();
+            }
+
+            // Validate phone number
+            if (!Regex.IsMatch(Account.PhoneNumber, phonePattern))
+            {
+                Message = "Invalid phone number format";
+                return Page();
+            }
+
+            // Check if email already exists
+            if (_accountService.GetAccounts().FirstOrDefault(x => x.Email.Equals(Account.Email)) != null)
+            {
+                Message = "This email already exists";
+                return Page();
+            }
+
+            // Check if phone number already exists
+            else if (_accountService.GetAccounts().FirstOrDefault(x => x.PhoneNumber.Equals(Account.PhoneNumber)) != null)
+            {
+                Message = "This phone number already exists";
+                return Page();
+            }
+
+            // Create new account
+            Account account = new()
+            {
+                CreatedDate = DateTime.Now,
+                Email = Account.Email,
+                FullName = Account.FullName,
+                ObjectStatus = ObjectStatus.ACTIVE,
+                PhoneNumber = Account.PhoneNumber,
+                Role = AccountRole.CUSTOMER
+            };
+
+            var newAccount = _accountService.CreateAccount(account);
+
+            if (newAccount != null)
+            {
+                CurrentCustomer = _mapper.Map<GetAccountRequest>(newAccount);
+                HttpContext.Session.SetObjectAsJson("ACCOUNT", CurrentCustomer);
+            }
+
             return Page();
         }
 

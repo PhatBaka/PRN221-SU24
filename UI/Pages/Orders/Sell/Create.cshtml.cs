@@ -250,6 +250,7 @@ namespace UI.Pages.Orders.Sell
             if (order != null)
             {
                 HttpContext.Session.Remove("CART");
+                HttpContext.Session.Remove("ACCOUNT");
                 return RedirectToPage("./Detail", new { id = newOrder.OrderId });
             }
             // Clear cart
@@ -456,9 +457,11 @@ namespace UI.Pages.Orders.Sell
                 Role = AccountRole.CUSTOMER
             };
 
-            if (account != null)
+            var newAccount = _accountService.CreateAccount(account);
+
+            if (newAccount != null)
             {
-                CurrentCustomer = _mapper.Map<GetAccountRequest>(account);
+                CurrentCustomer = _mapper.Map<GetAccountRequest>(newAccount);
                 HttpContext.Session.SetObjectAsJson("ACCOUNT", CurrentCustomer);
             }
 
