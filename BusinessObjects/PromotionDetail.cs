@@ -21,6 +21,6 @@ namespace BusinessObjects
 
         public virtual Promotion Promotion { get; set; }
 
-        public virtual OrderDetail OrderDetail { get; set; }
+        public virtual ICollection<OrderDetail> OrderDetail { get; set; }
     }
 }
