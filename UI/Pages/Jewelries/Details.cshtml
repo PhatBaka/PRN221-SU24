@@ -118,13 +118,32 @@
                             <dd>@jewelry.LaborPrice USD</dd>
                         </div>
 
-@*                          <div class="details-item">
-                             <dt>Quantity in stock:</dt>
-                             <dd>@jewelry.Quantity</dd>
-                             <dt>Status:</dt>
-                             <dd>@ViewData["StatusSaleDisplay"]</dd>
+                        @{
+                            var haveGem = false;
+                            foreach (var material in Model.Jewelry.JewelryMaterials)
+                            {
+                                if (!material.Material.IsMetail)
+                                {
+                                    haveGem = true;
+                                    break;
+                                }
+                            }
+                        }
 
-                         </div> *@
+                        @if (!haveGem)
+                        {
+                            <div class="details-item">
+                                <dt>Quantity in stock:</dt>
+                                <dd>@jewelry.Quantity</dd>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="details-item">
+                                <dt>Quantity in stock:</dt>
+                                <dd>1</dd>
+                            </div>
+                        }
 
                         <div class="details-item">
                             <dt>Category:</dt>
@@ -158,7 +177,7 @@
                                     </div>
                                     <div class="details-item">
                                         <dt>Jewelry's Metal Price (Ask price * weight)</dt>
-                                        <dd>@metalPrice $</dd>
+                                        <dd>@metalPrice.ToString("F2") $</dd>
                                     </div>
                                     @{
                                         jewelryPrice += metalPrice;
@@ -200,12 +219,8 @@
                                         <dd>@item.Material.Sharp</dd>
                                     </div>
                                     <div class="details-item">
-                                        <dt>Weight:</dt>
-                                        <dd>@item.JewelryWeight karat</dd>
-                                    </div>
-                                    <div class="details-item">
                                         <dt>Gemstone Price:</dt>
-                                        <dd>@item.Material.MaterialCost $</dd>
+                                        <dd>@item.Material.MaterialCost.ToString("F2") $</dd>
                                     </div>
                                 </div>
                             }
@@ -218,7 +233,7 @@
                     @{
                         double finalPrce = (double) jewelryPrice + (double) Model.Jewelry.LaborPrice;
                     }
-                        <dt><h4><strong>@finalPrce</strong></h4></dt>
+                        <dt><h4><strong>@finalPrce.ToString("F2")</strong></h4></dt>
                     </div>
                 </dl>
             </div>

@@ -26,10 +26,14 @@ namespace UI.Pages.Orders.Sell
         private readonly IMaterialService _materialService;
         private readonly IJewelryService _jewelryService;
         private readonly IOrderService _orderService;
+        private readonly IPromotionService _promotionService;
         private readonly IMapper _mapper;
 
-        public CreateModel(IJewelryService jewelryService, IOrderService orderService, IMaterialService materialService, IAccountService accountService, IMetalService metalService, IMapper mapper)
+        public CreateModel(IJewelryService jewelryService, IOrderService orderService, IMaterialService materialService, 
+                            IAccountService accountService, IMetalService metalService, IMapper mapper,
+                            IPromotionService promotionService)
         {
+            _promotionService = promotionService;
             _materialService = materialService;
             _metalService = metalService;
             _orderService = orderService;
@@ -129,11 +133,14 @@ namespace UI.Pages.Orders.Sell
                 }
             }
 
+            var promotion = _promotionService.GetPromotionDetailByJewleryId(jewelry.JewelryId);
+
             CartItem item = new CartItem()
             {
                 Jewelry = _mapper.Map<GetJewelryRequest>(jewelry),
                 Quantity = 1,
-                UnitPrice = unitPrice
+                UnitPrice = unitPrice,
+                DiscountValue = promotion != null ? (decimal)promotion.DiscountPercent : 0
             };
 
             CartItems.Add(item);
@@ -215,12 +222,16 @@ namespace UI.Pages.Orders.Sell
             foreach (var cartItem in CartItems)
             {
                 Debug.WriteLine(cartItem.Jewelry.JewelryName);
+
+                var promotion = _promotionService.GetPromotionDetailByJewleryId(cartItem.Jewelry.JewelryId);
+
                 var orderDetail = new OrderDetail
                 {
                     JewelryId = cartItem.Jewelry.JewelryId,
                     Quantity = cartItem.Quantity,
-                    UnitPrice = (double)cartItem.Jewelry.LaborPrice,
-                    DiscountPercent = 0
+                    UnitPrice = (double) cartItem.GetFinalPrice(),
+                    DiscountPercent = promotion != null ? promotion.DiscountPercent : 0,
+                    PromotionDetailId = promotion != null ? promotion.PromotionDetailId : null,
                 };
 
                 items.Add(orderDetail);
@@ -234,13 +245,17 @@ namespace UI.Pages.Orders.Sell
             }
 
             // Save order and order details
-            await _orderService.CreateOrderAsync(newOrder, items);
+            Order order = await _orderService.CreateOrderAsync(newOrder, items);
 
+            if (order != null)
+            {
+                HttpContext.Session.Remove("CART");
+                return RedirectToPage("./Detail", new { id = newOrder.OrderId });
+            }
             // Clear cart
-            HttpContext.Session.Remove("Cart");
 
             // Redirect to order confirmation page
-            return RedirectToPage("OrderConfirmation", new { orderId = newOrder.OrderId });
+            return Page();
         }
 
         private void LoadJewelries(string currentFilter,

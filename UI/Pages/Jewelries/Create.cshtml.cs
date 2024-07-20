@@ -21,6 +21,7 @@ namespace UI.Pages.Jewelries
         private readonly IMetalService _metalService;
         private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
+        public string Message;
 
         public CreateJewelryModel(IJewelryService jewelryService,
                                 IMaterialService materialService,
@@ -131,10 +132,27 @@ namespace UI.Pages.Jewelries
         {
             LoadData();
 
+            var errorMessages = new List<string>();
+
+            // Validate weight input
+            if (weight <= 0)
+            {
+                errorMessages.Add("Weight must be greater than 0.");
+            }
+
+            if (errorMessages.Count > 0)
+            {
+                Message = string.Join(" ", errorMessages);
+                foreach (var error in errorMessages)
+                {
+                    ModelState.AddModelError(string.Empty, error);
+                }
+                return Page();
+            }
+
             switch (action)
             {
                 case "update":
-
                     MaterialCart ??= new List<MaterialItem>();
 
                     bool duplicate = false;
@@ -148,7 +166,7 @@ namespace UI.Pages.Jewelries
                             break;
                         }
                     }
-                    
+
                     if (!duplicate)
                     {
                         MaterialItem materialItem = new()
@@ -165,6 +183,7 @@ namespace UI.Pages.Jewelries
 
             return Page();
         }
+
 
         public IActionResult OnPostAddGemToCart(int MaterialId)
         {
@@ -202,47 +221,82 @@ namespace UI.Pages.Jewelries
         {
             LoadData();
 
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
             IList<JewelryMaterial> jewelryMaterials = new List<JewelryMaterial>();
-
             double totalWeight = 0;
+            List<string> errorMessages = new List<string>();
 
-            foreach (var material in MaterialCart)
+            // Check if MaterialCart is null or empty
+            if (MaterialCart == null || MaterialCart.Count == 0)
             {
-                totalWeight += material.Weight;
-                jewelryMaterials.Add(new()
+                errorMessages.Add("Material cart is empty or not initialized.");
+            }
+
+            // Validate other properties
+            if (string.IsNullOrEmpty(Jewelry.JewelryName))
+            {
+                errorMessages.Add("Jewelry name is required.");
+            }
+
+            // Validate LaborPrice: check if it's provided and greater than zero
+            if (Jewelry.LaborPrice <= 0)
+            {
+                if (Jewelry.LaborPrice == 0)
                 {
-                    JewelryWeight = material.Weight,
-                    MaterialId = material.Material.MaterialId
-                });
+                    errorMessages.Add("Labor price must be provided.");
+                }
+                else
+                {
+                    errorMessages.Add("Labor price must be greater than zero.");
+                }
             }
 
-            Jewelry jewelry = new()
+            if (Jewelry.Quantity <= 0)
             {
-                CategoryId = selectedCategory,
-                Description = Jewelry.Description,
-                JewelryImage = Util.ToByteArrayAsync(Jewelry.ImageDataFile).Result,
-                JewelryName = Jewelry.JewelryName,
-                JewelryMaterials = jewelryMaterials,
-                LaborPrice = Jewelry.LaborPrice,
-                Quantity = Jewelry.Quantity,
-                StatusSale = StatusSale.NEW,
-                TotalWeight = (decimal) totalWeight
-            };
-
-            var newJewelry = _jewelryService.AddJewelry(jewelry);
-            if (newJewelry != null)
-            {
-                HttpContext.Session.Remove("MATERIALCART");
-                return RedirectToPage("./Index");
+                errorMessages.Add("Quantity must be greater than 0");
             }
 
+            // Process the materials if no errors so far
+            if (errorMessages.Count == 0)
+            {
+                foreach (var material in MaterialCart)
+                {
+                    totalWeight += material.Weight;
+                    jewelryMaterials.Add(new JewelryMaterial
+                    {
+                        JewelryWeight = material.Weight,
+                        MaterialId = material.Material.MaterialId
+                    });
+                }
+
+                Jewelry jewelry = new Jewelry
+                {
+                    CategoryId = selectedCategory,
+                    Description = Jewelry.Description,
+                    JewelryImage = Util.ToByteArrayAsync(Jewelry.ImageDataFile).Result,
+                    JewelryName = Jewelry.JewelryName,
+                    JewelryMaterials = jewelryMaterials,
+                    LaborPrice = Jewelry.LaborPrice,
+                    Quantity = Jewelry.Quantity,
+                    StatusSale = StatusSale.NEW,
+                    TotalWeight = (decimal)totalWeight
+                };
+
+                var newJewelry = _jewelryService.AddJewelry(jewelry);
+                if (newJewelry != null)
+                {
+                    HttpContext.Session.Remove("MATERIALCART");
+                    HttpContext.Session.Remove("METALCART");
+                    return RedirectToPage("./Index");
+                }
+
+                errorMessages.Add("Failed to create jewelry. Please try again later.");
+            }
+
+            // Concatenate error messages into a single string
+            Message = string.Join(" ", errorMessages);
             return Page();
         }
+
 
         public IActionResult OnPostRemoveFromMaterialCart(int materialId)
         {

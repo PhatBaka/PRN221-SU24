@@ -66,9 +66,9 @@
 					<th>
 						Quantity
 					</th>
-					<th>
+@* 					<th>
 						Sale Status
-					</th>
+					</th> *@
 					<th>
 						Category
 					</th>
@@ -105,7 +105,7 @@
 						<td>
 							@Html.DisplayFor(modelItem => item.Quantity)
 						</td>
-						<td>
+@* 						<td>
 
 							@switch (@ViewData[$"ItemStatusSale_{item.JewelryId}"])
 							{
@@ -123,7 +123,7 @@
 									break;
 							}
 
-						</td>
+						</td> *@
 						<td>
 							@Html.DisplayFor(modelItem => item.Category.CategoryName)
 						</td>

@@ -79,22 +79,72 @@ namespace UI.Pages.Materials.Gems
             string role = HttpContext.Session.GetString("ROLE");
             if (role != "MANAGER")
             {
-                RedirectToPage("/AccessDenied");
+                return RedirectToPage("/AccessDenied");
             }
-            if (!ModelState.IsValid)
+
+            var validationErrors = new List<string>();
+
+            // Manual validation logic
+            if (string.IsNullOrWhiteSpace(Gem.MaterialName))
             {
+                validationErrors.Add("Name is required");
+            }
+
+            if (Gem.MaterialCost <= 0)
+            {
+                validationErrors.Add("Cost must be greater than zero");
+            }
+
+            if (!Enum.IsDefined(typeof(ClarityEnum), Gem.Clarity))
+            {
+                validationErrors.Add("Invalid clarity value");
+            }
+
+            if (Gem.Purity < 0 || Gem.Purity > 100)
+            {
+                validationErrors.Add("Purity must be between 0 and 100");
+            }
+
+            if (string.IsNullOrWhiteSpace(Gem.Color))
+            {
+                validationErrors.Add("Color is required");
+            }
+
+            if (string.IsNullOrWhiteSpace(Gem.Sharp))
+            {
+                validationErrors.Add("Sharp is required");
+            }
+
+            if (Gem.MaterialImageData == null)
+            {
+                validationErrors.Add("Material image is required");
+            }
+
+            if (Gem.GemCertificateData == null)
+            {
+                validationErrors.Add("Gem certificate is required");
+            }
+
+            // Check for validation errors
+            if (validationErrors.Count > 0)
+            {
+                Message = string.Join("; ", validationErrors);
                 return Page();
             }
 
             var gem = _mapper.Map<Material>(Gem);
             gem.MaterialImage = await ImageHelper.ConvertToByteArrayAsync(Gem.MaterialImageData);
             gem.GemCertificate = await ImageHelper.ConvertToByteArrayAsync(Gem.GemCertificateData);
-            if (_materialService.AddMaterial(gem) != null)
-            {
 
+            var result = _materialService.AddMaterial(gem);
+            if (result == null)
+            {
+                ModelState.AddModelError(string.Empty, "An error occurred while adding the material.");
+                return Page();
             }
 
             return RedirectToPage("./Index");
         }
+
     }
 }

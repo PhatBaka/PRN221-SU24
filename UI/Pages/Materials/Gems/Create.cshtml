@@ -32,15 +32,16 @@
                         <h4 class="mgt">NEW GEM</h4>
                     </div>
                 </div>
-                <div class="col-sm-6">
-                    <div class="center_shop_tr text-right clearfix">
-                        <h6 class="col_2">You are here: <a asp-asp-page="Gems/Index">Home</a> / Gem</h6>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 </section>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <h3 style="color: red">@Model.Message</h3>
+}
+<h1></h1>
 <form method="post" enctype="multipart/form-data">
     <section id="checkout" class="clearfix">
         <div class="container">

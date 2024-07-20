@@ -32,6 +32,7 @@ namespace UI.Pages.Orders.Buy
         }
 
         public IList<MetalResponse>? Metals { get; set; }
+        [BindProperty]
         public IList<MetalItem> MetalCart { get; set; }
         public IList<CartItem> Cart { get; set; }
         public GetAccountRequest CurrentCustomer { get; set; }
@@ -51,11 +52,12 @@ namespace UI.Pages.Orders.Buy
 		[BindProperties]
 		public class CartItem
 		{
-            public double SellPrice { get; set; }
+            public int Index { get; set; }
+            public double BuyPrice { get; set; }
 			public GetJewelryRequest Jewelry { get; set; }
 			public int Quantity { get; set; }
-			public double UnitPrice { get; set; }
             public Category Category { get; set; }
+            public double Weight { get; set; }
 		}
 
         [BindProperties]
@@ -65,9 +67,14 @@ namespace UI.Pages.Orders.Buy
 			public decimal Weight { get; set; }
 		}
 
-        public IActionResult OnPostRemoveMetalFromCart(decimal weight)
+        public IActionResult OnPostRemoveFromCart(int index, int jewelryId)
         {
             LoadData();
+
+            if (jewelryId == 0)
+            {
+                Cart.RemoveAt(index);
+            }
 
             return Page();
         }
@@ -80,22 +87,22 @@ namespace UI.Pages.Orders.Buy
             LoadCustomer();
         }
 
-        public IActionResult OnPostAddMetalToCart(string metal)
+        public IActionResult OnPostAddMetalToCart(string metal, int i)
         {
             LoadData();
             MetalCart ??= new List<MetalItem>();
 
-            if (MetalCart != null && MetalCart.Count > 0)
-            {
-                foreach (var item in MetalCart)
-                {
-                    // check metal already in cart
-                    if (item.Item.Metal.Equals(metal))
-                    {
-                        return Page();
-                    }
-                }
-            }
+            //if (MetalCart != null && MetalCart.Count > 0)
+            //{
+            //    foreach (var item in MetalCart)
+            //    {
+            //        // check metal already in cart
+            //        if (item.Item.Metal.Equals(metal))
+            //        {
+            //            return Page();
+            //        }
+            //    }
+            //}
 
             MetalItem metalCart = new()
             {
@@ -108,24 +115,30 @@ namespace UI.Pages.Orders.Buy
             return Page();
         }
 
-        public IActionResult OnPostUpdateCart(double weight, string metal)
+        public IActionResult OnPostUpdateCart(double weight, int index, string metal)
         {
             LoadData();
 
+            if (weight <= 0)
+            {
+                Message = "Weight must be greater than 0.";
+                return Page();
+            }
+
+            // update in the same cart
             // check metal already in the cart
             if (Cart != null && Cart.Count > 0)
             {
-                var existedItem = Cart.FirstOrDefault(x => x.Jewelry.JewelryName.Equals(metal));
+                var existedItem = Cart.FirstOrDefault(x => x.Index == index);
                 if (existedItem != null)
                 {
-                    existedItem.Jewelry.TotalWeight = weight;
-                    existedItem.UnitPrice = Metals.FirstOrDefault(x => x.Metal.Equals(metal)).Rate.Bid * weight;
+                    existedItem.Weight = weight;
                     return Page();
                 }
             }
 
             GetJewelryRequest jewelry = new()
-            {
+            { 
                 JewelryName = metal,
                 Description = "FROM CUSTOMER",
                 TotalWeight = weight
@@ -133,9 +146,10 @@ namespace UI.Pages.Orders.Buy
 
             CartItem cartItem = new CartItem()
             {
-                SellPrice = Metals.FirstOrDefault(x => x.Metal.Equals(metal)).Rate.Bid,
+                Index = index,
+                BuyPrice = Metals.FirstOrDefault(x => x.Metal.Equals(metal)).Rate.Bid,
                 Jewelry = jewelry,
-                UnitPrice = Metals.FirstOrDefault(x => x.Metal.Equals(metal)).Rate.Bid * weight
+                Weight = weight
             };
 
             Cart ??= new List<CartItem>();
@@ -149,6 +163,12 @@ namespace UI.Pages.Orders.Buy
         public async Task<IActionResult> OnPostCreateOrderAsync()
         {
             LoadData();
+            if (CurrentCustomer == null)
+            {
+                Message = "Please enter customer";
+                return Page();
+            }
+
             List<OrderDetail> orderDetails = new List<OrderDetail>();
             if (Cart != null && Cart.Count > 0)
             {
@@ -180,7 +200,7 @@ namespace UI.Pages.Orders.Buy
                         OrderDetail orderDetail = new OrderDetail()
                         {
                             JewelryId = jewelry.JewelryId,
-                            UnitPrice = Cart.FirstOrDefault(x => x.Jewelry.JewelryName.Equals(jewelry.JewelryName.ToLower())).UnitPrice
+                            UnitPrice = Cart.FirstOrDefault(x => x.Jewelry.JewelryName.Equals(jewelry.JewelryName.ToLower())).BuyPrice
                         };
 
                         orderDetails.Add(orderDetail);
@@ -194,7 +214,12 @@ namespace UI.Pages.Orders.Buy
                     OrderType = OrderEnum.OLD
                 };
 
-                await _orderService.CreateOrderAsync(order, orderDetails);
+                var newOrder = _orderService.CreateOrderAsync(order, orderDetails).Result;
+
+                if (newOrder != null)
+                {
+                    return RedirectToPage("./Detail", new { id = newOrder.OrderId });
+                }
 
                 return Page();
             }
@@ -214,6 +239,14 @@ namespace UI.Pages.Orders.Buy
                 return Page();
             }
 
+            return Page();
+        }
+
+        public IActionResult OnPostRemoveTempCart()
+        {
+            HttpContext.Session.Remove("CART");
+            HttpContext.Session.Remove("METALCART");
+            LoadData();
             return Page();
         }
 

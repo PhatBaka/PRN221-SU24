@@ -21,6 +21,11 @@
     }
 </style>
 
+@if(Model.Message != null)
+{
+    <h5 style="color: red">@Model.Message</h5>
+}
+
 <div class="container">
     <div class="row">
         <div class="cart_3 clearfix">
@@ -42,7 +47,6 @@
                                         }
                                         @if (metalCarts != null && metalCarts.Count > 0)
                                         {
-                                            <form method="post" asp-page-handler="UpdateCart">
                                                 <table class="table">
                                                     <thead>
                                                         <tr>
@@ -53,50 +57,55 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach (var metal in metalCarts)
+                                                        @for (var i = 0; i < metalCarts.Count; i++)
                                                         {
+
                                                             <tr>
+                                                                <td>@i</td>
                                                                 <td>
-                                                                    @switch (metal.Item.Metal)
+                                                                    @switch (metalCarts[i].Item.Metal)
                                                                     {
                                                                         case "gold":
-                                                                            <a href="#"><img src="~/img/gold.jpg" alt="gold" class="iw"></a>
+                                                                            <a href="#"><img src="~/img/gold.jpg" style="max-width: 100px; max-height: 100px" alt="gold" class="iw"></a>
                                                                             break;
                                                                         case "silver":
-                                                                            <a href="#"><img src="~/img/silver.jpg" alt="silver" class="iw"></a>
+                                                                            <a href="#"><img src="~/img/silver.jpg" style="max-width: 100px; max-height: 100px" alt="silver" class="iw"></a>
                                                                             break;
                                                                         case "palladium":
-                                                                            <a href="#"><img src="~/img/palladium.jpg" alt="palladium" class="iw"></a>
+                                                                            <a href="#"><img src="~/img/palladium.jpg" style="max-width: 100px; max-height: 100px" alt="palladium" class="iw"></a>
                                                                             break;
                                                                     }
                                                                 </td>
                                                                 <td>
                                                                     <a href="#">
-                                                                        @metal.Item.Metal.ToUpper()
+                                                                        @metalCarts[i].Item.Metal.ToUpper()
                                                                     </a>
                                                                 </td>
                                                                 <td>
-                                                                    <div class="input-group number-spinner">
-                                                                        <input type="text" class="form-control text-center" value="@metal.Weight" name="weight">
-                                                                        <input type="hidden" name="metal" value="@metal.Item.Metal" />
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="actions">
-                                                                        <button type="submit" class="btn btn-primary mgt">UPDATE CART</button>
-                                                                        <form method="post" asp-page-handler="RemoveMetalFromCart" style="display:inline;">
-                                                                            <input type="hidden" name="metal" value="@metal.Item.Metal" />
-                                                                            <button type="submit" class="btn btn-danger mgt">REMOVE</button>
-                                                                        </form>
-                                                                    </div>
+                                                                    <form method="post" asp-page-handler="UpdateCart">
+                                                                        <span>
+                                                                        <div class="input-group number-spinner">
+                                                                            <input type="text" class="form-control text-center" name="weight">
+                                                                            <input type="hidden" name="index" value="@i" />
+                                                                            <input type="hidden" name="metal" value="@metalCarts[i].Item.Metal" />
+                                                                        </div>
+                                                                        <div>
+                                                                            <button type="submit" class="btn btn-primary mgt">UPDATE CART</button>
+                                                                        </div>
+                                                                        </span>
+                                                                    </form>
                                                                 </td>
                                                             </tr>
                                                         }
-                                                    </tbody>
                                                 </table>
-                                            </form>
                                         }
                                     </div>
+                                    @if (Model.MetalCart != null && Model.MetalCart.Count > 0)
+                                    {
+                                        <form method="post" asp-page-handler="RemoveTempCart">
+                                            <input type="submit" class="button_1 mgt" value="REMOVE TEMP CART" />
+                                        </form>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -123,9 +132,11 @@
                                                 <table class="table">
                                                     <thead>
                                                         <tr>
+                                                            <td></td>
                                                             <th>Image</th>
+                                                            <th>Jewelry ID</th>
                                                             <th>Jewelry</th>
-                                                            <th>Sell Price</th>
+                                                            <th>Buy Price</th>
                                                             <th>Total Weight</th>
                                                             <th>Unit Price</th>
                                                         </tr>
@@ -134,33 +145,47 @@
                                                         @foreach (var jewelry in cart)
                                                         {
                                                             <tr>
+                                                                <td>@jewelry.Index</td>
                                                                 <td>
                                                                     @switch (jewelry.Jewelry.JewelryName)
                                                                     {
                                                                         case "gold":
-                                                                            <a href="#"><img src="~/img/gold.jpg" alt="gold" class="iw"></a>
+                                                                            <a href="#"><img src="~/img/gold.jpg" style="max-height: 100px; min-width: 100px" alt="gold" class="iw"></a>
                                                                             break;
                                                                         case "silver":
-                                                                            <a href="#"><img src="~/img/silver.jpg" alt="silver" class="iw"></a>
+                                                                            <a href="#"><img src="~/img/silver.jpg" style="max-height: 100px; min-width: 100px" alt="silver" class="iw"></a>
                                                                             break;
                                                                         case "palladium":
-                                                                            <a href="#"><img src="~/img/palladium.jpg" alt="palladium" class="iw"></a>
+                                                                            <a href="#"><img src="~/img/palladium.jpg" style="max-height: 100px; min-width: 100px" alt="palladium" class="iw"></a>
                                                                             break;
                                                                     }
                                                                 </td>
+                                                                <td></td>
                                                                 <td>
                                                                     <a href="#">
                                                                         @jewelry.Jewelry.JewelryName.ToUpper()
                                                                     </a>
                                                                 </td>
                                                                 <td>
-                                                                    @jewelry.SellPrice.ToString("F2")
+                                                                    @jewelry.BuyPrice
                                                                 </td>
                                                                 <td>
-                                                                    @jewelry.Jewelry.TotalWeight
+                                                                    @jewelry.Weight
+                                                                </td>
+                                                                @{
+                                                                    var totalPrice = jewelry.BuyPrice * jewelry.Weight;
+                                                                }
+                                                                <td>
+                                                                    @totalPrice.ToString("F2")
                                                                 </td>
                                                                 <td>
-                                                                    @jewelry.UnitPrice.ToString("F2")
+                                                                    <div class="actions">
+                                                                        <form method="post" asp-page-handler="RemoveFromCart" style="display:inline;">
+                                                                            <input type="hidden" name="index" value="@jewelry.Index" />
+                                                                            <input type="hidden" name="jewelryId" value="@jewelry.Jewelry.JewelryId" />
+                                                                            <button type="submit" class="btn btn-danger mgt">REMOVE</button>
+                                                                        </form>
+                                                                    </div>
                                                                 </td>
                                                             </tr>
                                                         }
@@ -197,8 +222,8 @@
                                                     <thead>
                                                         <tr>
                                                             <th>Image</th>
-                                                            <th>Bid Price</th>
-                                                            <th>Action</th>
+                                                            <th>Buy Price</th>
+                                                            <th></th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -209,13 +234,13 @@
                                                                     @switch (metal.Metal)
                                                                     {
                                                                         case "gold":
-                                                                            <img src="~/img/gold.jpg" width="200px" height="200px" class="iw" alt="@metal.Metal">
+                                                                            <img src="~/img/gold.jpg" style="max-height: 100px; max-width 100px" class="iw" alt="@metal.Metal">
                                                                             break;
                                                                         case "silver":
-                                                                            <img src="~/img/silver.jpg" width="200px" height="200px" class="iw" alt="@metal.Metal">
+                                                                            <img src="~/img/silver.jpg" style="max-height: 100px; min-width: 100px" class="iw" alt="@metal.Metal">
                                                                             break;
                                                                         case "palladium":
-                                                                            <img src="~/img/palladium.jpg" width="200px" height="200px" class="iw" alt="@metal.Metal">
+                                                                            <img src="~/img/palladium.jpg" style="max-height: 100px; min-width: 100px" class="iw" alt="@metal.Metal">
                                                                             break;
                                                                     }
                                                                 </td>
