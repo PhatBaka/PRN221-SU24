@@ -285,6 +285,7 @@ namespace UI.Pages.Jewelries
                 if (newJewelry != null)
                 {
                     HttpContext.Session.Remove("MATERIALCART");
+                    HttpContext.Session.Remove("METALCART");
                     return RedirectToPage("./Index");
                 }
 

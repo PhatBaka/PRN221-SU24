@@ -26,10 +26,14 @@ namespace UI.Pages.Orders.Sell
         private readonly IMaterialService _materialService;
         private readonly IJewelryService _jewelryService;
         private readonly IOrderService _orderService;
+        private readonly IPromotionService _promotionService;
         private readonly IMapper _mapper;
 
-        public CreateModel(IJewelryService jewelryService, IOrderService orderService, IMaterialService materialService, IAccountService accountService, IMetalService metalService, IMapper mapper)
+        public CreateModel(IJewelryService jewelryService, IOrderService orderService, IMaterialService materialService, 
+                            IAccountService accountService, IMetalService metalService, IMapper mapper,
+                            IPromotionService promotionService)
         {
+            _promotionService = promotionService;
             _materialService = materialService;
             _metalService = metalService;
             _orderService = orderService;
@@ -129,11 +133,14 @@ namespace UI.Pages.Orders.Sell
                 }
             }
 
+            var promotion = _promotionService.GetPromotionDetailByJewleryId(jewelry.JewelryId);
+
             CartItem item = new CartItem()
             {
                 Jewelry = _mapper.Map<GetJewelryRequest>(jewelry),
                 Quantity = 1,
-                UnitPrice = unitPrice
+                UnitPrice = unitPrice,
+                DiscountValue = promotion != null ? (decimal)promotion.DiscountPercent : 0
             };
 
             CartItems.Add(item);
