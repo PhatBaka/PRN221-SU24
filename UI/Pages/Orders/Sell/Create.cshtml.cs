@@ -222,12 +222,16 @@ namespace UI.Pages.Orders.Sell
             foreach (var cartItem in CartItems)
             {
                 Debug.WriteLine(cartItem.Jewelry.JewelryName);
+
+                var promotion = _promotionService.GetPromotionDetailByJewleryId(cartItem.Jewelry.JewelryId);
+
                 var orderDetail = new OrderDetail
                 {
                     JewelryId = cartItem.Jewelry.JewelryId,
                     Quantity = cartItem.Quantity,
                     UnitPrice = (double) cartItem.GetFinalPrice(),
-                    DiscountPercent = 0
+                    DiscountPercent = promotion != null ? promotion.DiscountPercent : 0,
+                    PromotionDetailId = promotion != null ? promotion.PromotionDetailId : null,
                 };
 
                 items.Add(orderDetail);
