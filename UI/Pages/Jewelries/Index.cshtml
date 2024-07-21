@@ -34,9 +34,9 @@
 	<h1 id="title">@ViewData["Title"]</h1>
 	<form method="get">
 		<div class="input-group" id="tableSearch">
-			<input asp-for="@Model.search" type="text" placeholder="Search..">
+			<input class="input-primary" asp-for="@Model.search" type="text" placeholder="Search..">
 			<div class="input-group-append btnsearchcontainer">
-				<input class="btn btn-outline-secondary btnsearch" type="submit" value="Search" />
+				<input class="btn btn-outline-primary btnsearch input-primary" type="submit" value="Search" />
 			</div>
 		</div>
 	</form>

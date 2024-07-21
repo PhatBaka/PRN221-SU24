@@ -25,6 +25,8 @@ namespace UI.Pages.Accounts
 
         public List<SelectListItem> RoleOptions { get; set; }
 
+        public List<SelectListItem> StatusOptions { get; set; }
+
         public IActionResult OnGet()
         {
             string role = HttpContext.Session.GetString("ROLE");
@@ -41,7 +43,14 @@ namespace UI.Pages.Accounts
                     Text = r.ToString()
                 })
                 .ToList();
-
+            StatusOptions = Enum.GetValues(typeof(ObjectStatus))
+                .Cast<ObjectStatus>()
+                .Select(r => new SelectListItem
+                {
+                    Value = r.ToString(),
+                    Text = r.ToString()
+                })
+                .ToList();
             return Page();
         }
 
