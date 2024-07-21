@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessObjects;
 using DataAccessObjects;
+using BusinessObjects.Enums;
 
 namespace UI.Pages.Accounts
 {
@@ -22,7 +23,8 @@ namespace UI.Pages.Accounts
 
         [BindProperty]
         public Account Account { get; set; } = default!;
-
+        public List<SelectListItem> RoleOptions { get; set; }
+        public List<SelectListItem> StatusOptions { get; set; }
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             string role = HttpContext.Session.GetString("ROLE");
@@ -36,6 +38,23 @@ namespace UI.Pages.Accounts
             }
 
             var account =  await _context.Accounts.FirstOrDefaultAsync(m => m.AccountId == id);
+            RoleOptions = Enum.GetValues(typeof(AccountRole))
+                .Cast<AccountRole>()
+                .Select(r => new SelectListItem
+                {
+                    Value = r.ToString(),
+                    Text = r.ToString()
+                })
+                .ToList();
+
+            StatusOptions = Enum.GetValues(typeof(ObjectStatus))
+                .Cast<ObjectStatus>()
+                .Select(r => new SelectListItem
+                {
+                    Value = r.ToString(),
+                    Text = r.ToString()
+                })
+                .ToList();
             if (account == null)
             {
                 return NotFound();

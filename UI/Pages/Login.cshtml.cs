@@ -15,6 +15,7 @@ using BusinessObjects.Commons;
 using System.Text.Json;
 using UI.Helper;
 using UI.Payload.MaterialPayload;
+using System.Diagnostics;
 
 namespace UI.Pages
 {
@@ -30,7 +31,7 @@ namespace UI.Pages
         public IActionResult OnGet()
         {
             var role = HttpContext.Session.GetString("ROLE");
-
+            Debug.WriteLine(222222222222);
             if (role != null)
             {
                 switch (role)
@@ -67,13 +68,13 @@ namespace UI.Pages
 				HttpContext.Session.SetString("EMAIL", adminEmail);
 				HttpContext.Session.SetString("FULLNAME", adminEmail);
 				HttpContext.Session.SetString("ISAUTHENTICATED", "True");
-				return RedirectToPage("./IndexHome");
+				return RedirectToPage("./Accounts/Index");
 
 			}
 
             var existedAccount = _accountService.GetAccount(Account.Email, Account.Password);
             
-            if (existedAccount != null)
+            if (existedAccount != null && existedAccount.ObjectStatus == ObjectStatus.ACTIVE)
             {
 				HttpContext.Session.SetString("ISAUTHENTICATED", "True");
 				switch (existedAccount.Role)
@@ -95,7 +96,7 @@ namespace UI.Pages
 						HttpContext.Session.SetString("FULLNAME", existedAccount.FullName);
 						HttpContext.Session.SetString("EMAIL", existedAccount.Email);
 						HttpContext.Session.SetString("ROLE", "ADMIN");
-                        return RedirectToPage("./IndexHome");
+                        return RedirectToPage("./Accounts");
                 }
             }
             else
