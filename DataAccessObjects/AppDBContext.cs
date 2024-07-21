@@ -28,10 +28,10 @@ namespace DataAccessObjects
                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                     .Build();
 
-                var connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException("Connection string is null");
+               /* var connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException("Connection string is null");*/
                 optionsBuilder.UseLazyLoadingProxies();
-                optionsBuilder.UseSqlServer(connectionString);
-				//optionsBuilder.UseSqlServer("Server=(local);Database=JewelryDB;Uid=sa;Pwd=hanh3533.;");
+                /*optionsBuilder.UseSqlServer(connectionString);*/
+				optionsBuilder.UseSqlServer("Server=(local);Database=JewelryDB;Uid=sa;Pwd=12345;");
 			}
         }
 
@@ -167,7 +167,8 @@ namespace DataAccessObjects
                     .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(d => d.PromotionDetail)
-                    .WithOne(d => d.OrderDetail)
+                    .WithMany(d => d.OrderDetail)
+                    .HasForeignKey(d => d.PromotionDetailId)
                     .OnDelete(DeleteBehavior.NoAction);
             });
 
@@ -205,7 +206,7 @@ namespace DataAccessObjects
                     .HasForeignKey(d => d.JewelryId)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasOne(d => d.OrderDetail)
+                entity.HasMany(d => d.OrderDetail)
                     .WithOne(d => d.PromotionDetail)
                     .OnDelete(DeleteBehavior.NoAction);
             });
