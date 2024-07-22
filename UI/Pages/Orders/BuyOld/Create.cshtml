@@ -16,7 +16,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="center_shop_tr text-right clearfix">
-                        <h6 class="col_2">You are here: <a asp-asp-page="Gems/Index">Order</a></h6>
+                        <h6 class="col_2">You are here: <a asp-page="/Gems/Index">Order</a></h6>
                     </div>
                 </div>
             </div>
@@ -57,11 +57,11 @@
                                     <td>@metal.Rate?.High.ToString("0.00")</td>
                                     <td>@metal.Rate?.Low.ToString("0.00")</td>
                                     <td>
-                                        @metal.Rate?.Change.ToString("0.00")%
+                                        @metal.Rate?.Change.ToString("0.00")
                                         <span class="@changeClass"></span>
                                     </td>
                                     <td>
-                                        @metal.Rate?.ChangePercent.ToString()%
+                                        @metal.Rate?.ChangePercent.ToString("0.00")%
                                         <span class="@changeClass"></span>
                                     </td>
                                 </tr>
@@ -103,7 +103,7 @@
                                         <input type="email" class="form-control" placeholder="Email" asp-for="Account.Email" required>
                                         <input type="text" class="form-control" placeholder="Full Name" asp-for="Account.FullName" required>
                                         <input type="phone" class="form-control" placeholder="Phone Number" required asp-for="Account.PhoneNumber">
-                                        <h4><input class="button" type="submit" value="CREATE CUSTOMER" href="#" />
+                                        <h4><input class="button" type="submit" value="CREATE CUSTOMER" />
                                     </form>
                                 }
                                 else
@@ -128,25 +128,21 @@
                                 <th>Buy Price</th>
                                 <th>Weight</th>
                                 <th>Total Price</th>
-                                <th></th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if (Model.MaterialCart != null && Model.MaterialCart.Count() > 0)
+                            @if (Model.MaterialCart != null && Model.MaterialCart.Count > 0)
                             {
                                 @foreach (var material in Model.MaterialCart)
                                 {
                                     <tr class="d-flex justify-content-center">
                                         <td>@material.MaterialId</td>
                                         <td>@material.MaterialName</td>
-                                        <td>@material.BidPrice</td>
+                                        <td>@material.BidPrice.ToString("0.00")</td>
                                         <td>
                                             <input type="number" class="form-control weight-input" data-id="@material.MaterialId" value="0" min="0" step="any" />
                                         </td>
                                         <td class="total-price" data-id="@material.MaterialId">0.00</td>
-                                        <td></td>
-                                        <td></td>
                                     </tr>
                                 }
                             }
@@ -154,20 +150,11 @@
                     </table>
                     @if (Model.MaterialCart != null && Model.MaterialCart.Count > 0)
                     {
-                        <div class="center_shop_1li clearfix">
-                            <h2 class="mgt">TOTALS: </h2>
-                            <hr />
-                            <h4 id="grand-total">Grand Total: 0.00</h4>
+                        <div class="center_shop_1li1 clearfix">
+                            <h2 id="grand-total">Grand Total: 0.00</h2>
+                            <button id="send-json-button" class="button">Submit Order</button>
                         </div>
                     }
-                    <hr />
-                    <div style="display: flex; justify-content: space-between; gap: 10px; ">
-                        <h4 class="mgt"><input id="send-json-button" class="button" type="submit" value="CREATE ORDER" /></h4>
-                        <form method="post" asp-page-handler="ClearCart">
-                            <h4 class="mgt"><input class="button" type="submit" value="CLEAR CART" /></h4>
-                        </form>
-                    </div>
-                    <hr />
                 </div>
             </div>
         </div>
@@ -176,7 +163,6 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Function to update the total price when weight is updated
         function updateTotalPrice(materialId, bidPrice, weight) {
             let totalPriceElement = document.querySelector(`.total-price[data-id="${materialId}"]`);
             let totalPrice = bidPrice * weight;
@@ -184,7 +170,6 @@
             updateGrandTotal();
         }
 
-        // Function to update the grand total
         function updateGrandTotal() {
             let grandTotal = 0;
             document.querySelectorAll('.total-price').forEach(element => {
@@ -193,7 +178,6 @@
             document.getElementById('grand-total').innerText = "Grand Total: " + grandTotal.toFixed(2);
         }
 
-        // Attach event listener to weight inputs
         document.querySelectorAll('.weight-input').forEach(input => {
             input.addEventListener('input', function () {
                 let materialId = this.getAttribute('data-id');
@@ -206,50 +190,53 @@
             });
         });
 
-        // Function to collect cart data and send it as JSON
         function sendCartDataAsJson() {
-            let cartData = [];
-            document.querySelectorAll('tbody tr').forEach(row => {
-                let materialId = row.querySelector('.weight-input').getAttribute('data-id');
-                let materialName = row.querySelector('td:nth-child(2)').innerText;
-                let bidPrice = parseFloat(row.querySelector('td:nth-child(3)').innerText);
-                let weight = parseFloat(row.querySelector('.weight-input').value);
-                let totalPrice = parseFloat(row.querySelector('.total-price').innerText);
+            let cartData = Array.from(document.querySelectorAll('tbody tr'))
+                .map(row => {
+                    let weightInput = row.querySelector('.weight-input');
+                    if (weightInput) {
+                        let materialId = parseInt(weightInput.getAttribute('data-id'));
+                        let materialName = row.querySelector('td:nth-child(2)').innerText;
+                        let bidPrice = parseFloat(row.querySelector('td:nth-child(3)').innerText);
+                        let weight = parseFloat(weightInput.value);
 
-                if (!isNaN(weight)) {
-                    cartData.push({
-                        materialId: materialId,
-                        materialName: materialName,
-                        bidPrice: bidPrice,
-                        weight: weight,
-                        totalPrice: totalPrice
-                    });
-                }
-            });
+                        if (!isNaN(weight)) {
+                            return {[
+                                MaterialId: materialId,
+                                MaterialName: materialName,
+                                BidPrice: bidPrice,
+                                Weight: weight
+                            ]};
+                        }
+                    }
+                }).filter(item => item !== undefined);
 
-            console.log('Sending cart data:', cartData);
+            console.log(cartData);
 
-            fetch('@Url.Page("Orders/BuyOld/SubmitOrderJson")', {
+            fetch('/Orders/BuyOld/Create?handler=SubmitOrderJson', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(cartData)
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     console.log('Success:', data);
+                    alert('Order processed successfully!');
                 })
                 .catch((error) => {
                     console.error('Error:', error);
+                    alert('Failed to process order.');
                 });
         }
 
-        // Attach event listener to the send JSON button
         document.getElementById('send-json-button').addEventListener('click', sendCartDataAsJson);
-
-        // Initial grand total update in case of pre-filled values
         updateGrandTotal();
     });
-
 </script>
