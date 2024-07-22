@@ -23,8 +23,9 @@ namespace UI.Pages.Materials.Gems
         private readonly IMaterialService _materialService;
         private readonly IMapper _mapper;
 
-        public DetailsModel(IMaterialService materialService, IMapper mapper)
+        public DetailsModel(IMaterialService materialService, IJewelryService jewelryService, IMapper mapper)
         {
+            _jewelryService = jewelryService;
             _materialService = materialService;
             _mapper = mapper;
             ClarityOptions = Enum.GetValues(typeof(ClarityEnum))
@@ -66,7 +67,7 @@ namespace UI.Pages.Materials.Gems
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             string role = HttpContext.Session.GetString("ROLE");
-            if (role != "MANAGER")
+            if (role == "ADMIN")
             {
                 RedirectToPage("/AccessDenied");
             }

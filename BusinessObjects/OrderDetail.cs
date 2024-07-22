@@ -14,6 +14,8 @@ namespace BusinessObjects
 
         public int JewelryId { get; set; }
 
+        public int MaterialId { get; set; }
+
         public int? PromotionDetailId { get; set; }
 
         [Required]
@@ -28,6 +30,8 @@ namespace BusinessObjects
         public virtual Order Order { get; set; }
 
         public virtual Jewelry Jewelry { get; set; }
+
+        public virtual Material Material { get; set; }
 
         public virtual PromotionDetail PromotionDetail { get; set; }
     }

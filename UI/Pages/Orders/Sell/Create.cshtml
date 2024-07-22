@@ -36,42 +36,52 @@
             <div class="center_shop_1 clearfix">
                 <div class="col-sm-5">
                     <div class="center_shop_1r clearfix">
-                        @foreach (var jewelryChunk in jewelryChunks)
+                        @if (jewelryChunks != null && jewelryChunks.Count > 0)
                         {
-                            <div class="row">
-                                @foreach (var jewelry in jewelryChunk)
-                                {
-                                    <div class="col-sm-3">
-                                        <div class="collcet_1r clearfix">
-                                            <div class="feature_2im clearfix">
-                                                <div class="feature_2im1 clearfix">
-                                                    <img style="width: 150px" src="data:image/jpeg;base64,@Convert.ToBase64String(jewelry.JewelryImage)" alt="@jewelry.JewelryName" width="180px" />
-                                                </div>
-                                                <div class="feature_2im4 clearfix">
-                                                    <div class="col-sm-6 space_left">
+                            @foreach (var jewelryChunk in jewelryChunks)
+                            {
+                                <div class="row">
+                                    @foreach (var jewelry in jewelryChunk)
+                                    {
+                                        <div class="col-sm-3">
+                                            <div class="collcet_1r clearfix">
+                                                <div class="feature_2im clearfix">
+                                                    <div class="feature_2im1 clearfix">
+                                                        @if (jewelry.JewelryImage != null)
+                                                        {
+                                                            <img style="width: 150px" src="data:image/jpeg;base64,@Convert.ToBase64String(jewelry.JewelryImage)" alt="@jewelry.JewelryName" width="180px" />
+                                                        }
                                                     </div>
-                                                    <div class="col-sm-6 feature_2im4r space_right">
-                                                        <ul>
-                                                            <li>
-                                                                <a asp-page="/Jewelries/Details" asp-route-id="@jewelry.JewelryId"><i class="fa fa-rocket"></i></a>
-                                                            </li>
-                                                            <li>
-                                                                <form method="post" asp-page-handler="AddToCart">
-                                                                    <input type="hidden" name="JewelryId" value="@jewelry.JewelryId" />
-                                                                    <i><button type="submit" class="fa fa-shopping-cart" /></i>
-                                                                </form>
-                                                            </li>
-                                                        </ul>
+                                                    <div class="feature_2im4 clearfix">
+                                                        <div class="col-sm-6 space_left">
+                                                        </div>
+                                                        <div class="col-sm-6 feature_2im4r space_right">
+                                                            <ul>
+                                                                <li>
+                                                                    <a asp-page="/Jewelries/Details" asp-route-id="@jewelry.JewelryId"><i class="fa fa-rocket"></i></a>
+                                                                </li>
+                                                                <li>
+                                                                    <form method="post" asp-page-handler="AddToCart">
+                                                                        <input type="hidden" name="JewelryId" value="@jewelry.JewelryId" />
+                                                                        <i><button type="submit" class="fa fa-shopping-cart" /></i>
+                                                                    </form>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="item_last text-center clearfix">
-                                                <h4>@jewelry.JewelryName</h4>
+                                                <div class="item_last text-center clearfix">
+                                                    <h4>@jewelry.JewelryName</h4>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                }
-                            </div>
+                                    }
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p>You don't have any jewelry right now'</p>
                         }
                     </div>
                     <form method="post" asp-page-handler="ClearCart">
@@ -89,8 +99,8 @@
                                         <th>Name</th>
                                         <th>Unit Price</th>
                                         <th>Quantity</th>
-                                        <th>Total Price</th>
                                         <td>Discount Value</td>
+                                        <th>Total Price</th>
                                         <th>Discount Price</th>
                                         <th>Final Price</th>
                                         <th></th>
@@ -145,7 +155,7 @@
                                                         <input type="text" asp-for="@jewelry.Quantity" class="form-control text-center" value="1">
                                                     }
                                                 </td>
-                                                <td>@jewelry.DiscountValue</td>
+                                                <td>@jewelry.DiscountValue %</td>
                                                 <td>@jewelry.GetTotalPrice().ToString("F2")</td>
                                                 <td>@jewelry.GetDiscountPrice().ToString("F2")</td>
                                                 <td>@jewelry.GetFinalPrice().ToString("F2")</td>
@@ -166,6 +176,28 @@
                                     }
                                 </tbody>
                             </table>
+                            @if (Model.CartItems != null && Model.CartItems.Count > 0)
+                            {
+                                <div class="center_shop_1li clearfix">
+                                    <h5 class="mgt">TOTALS</h5>
+                                    <table class="table table-striped table-center">
+                                        <thead>
+                                            <tr>
+                                                <th>Total Price</th>
+                                                <th>Discount Price</th>
+                                                <th>Final Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>@Model.CartItems.Sum(x => x.GetTotalPrice()).ToString("F2")</td>
+                                                <td>@Model.CartItems.Sum(x => x.GetDiscountPrice()).ToString("F2")</td>
+                                                <td>@Model.CartItems.Sum(x => x.GetFinalPrice()).ToString("F2")</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
                             <form method="post" asp-page-handler="SubmitOrder">
                                 <h4 class="mgt"><input class="button" type="submit" value="CREATE ORDER" /></h4>
                             </form>

@@ -1,258 +1,471 @@
 using AutoMapper;
-using BusinessObjects;
 using BusinessObjects.Enums;
+using BusinessObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Services.Helpers;
 using Services.Interfaces;
-using System.Diagnostics.Metrics;
+using System.Diagnostics;
 using UI.Helper;
-using UI.Payload.AccountPayload;
-using UI.Payload.JewelryPayload;
+using System.Text.Json;
 using UI.Payload.MaterialPayload;
+using JsonSerializer = System.Text.Json.JsonSerializer;
+using UI.Payload.JewelryPayload;
+using UI.Payload.AccountPayload;
+using System.Text.RegularExpressions;
+using Services.Impls;
 
 namespace UI.Pages.Orders.Buy
 {
     public class CreateModel : PageModel
     {
-        private readonly IAccountService _accountService;
-        private readonly IOrderService _orderService;
         private readonly IMetalService _metalService;
-        private readonly IJewelryService _jewelryService;
+        private readonly IAccountService _accountService;
         private readonly IMaterialService _materialService;
+        private readonly IJewelryService _jewelryService;
+        private readonly IOrderService _orderService;
+        private readonly IPromotionService _promotionService;
         private readonly IMapper _mapper;
 
-        public CreateModel(IAccountService accountService, IOrderService orderService, IMetalService metalService, IJewelryService jewelryService, IMaterialService materialService, IMapper mapper)
+        public CreateModel(IJewelryService jewelryService, IOrderService orderService, IMaterialService materialService,
+                            IAccountService accountService, IMetalService metalService, IMapper mapper,
+                            IPromotionService promotionService)
         {
-            _accountService = accountService;
-            _orderService = orderService;
-            _metalService = metalService;
-            _jewelryService = jewelryService;
+            _promotionService = promotionService;
             _materialService = materialService;
+            _metalService = metalService;
+            _orderService = orderService;
+            _jewelryService = jewelryService;
+            _accountService = accountService;
             _mapper = mapper;
         }
 
-        public IList<MetalResponse>? Metals { get; set; }
+        public GetAccountRequest? CurrentCustomer { get; set; }
+        public List<CartItem> CartItems { get; set; } = new List<CartItem>();
+        public PaginatedList<Jewelry>? Jewelries { get; set; }
+        public string? CurrentFilter { get; set; }
+        public IList<MetalResponse> Metals = new List<MetalResponse>();
+        public string? Message { get; set; }
         [BindProperty]
-        public IList<MetalItem> MetalCart { get; set; }
-        public IList<CartItem> Cart { get; set; }
-        public GetAccountRequest CurrentCustomer { get; set; }
-        public string Message { get; set; }
+        public Account Account { get; set; }
 
-        public void OnGet()
+        public void OnGet(string currentFilter, string searchString, int? pageIndex)
         {
             string role = HttpContext.Session.GetString("ROLE");
             if (role != "STAFF" && role != "MANAGER")
             {
                 RedirectToPage("/AccessDenied");
             }
-            LoadData();
-           
+            LoadJewelries(currentFilter, searchString, pageIndex);
+            Metals = _metalService.GetPrices();
+            HttpContext.Session.SetObjectAsJson("PRICE", Metals);
         }
-
-		[BindProperties]
-		public class CartItem
-		{
-            public int Index { get; set; }
-            public double BuyPrice { get; set; }
-			public GetJewelryRequest Jewelry { get; set; }
-			public int Quantity { get; set; }
-            public Category Category { get; set; }
-            public double Weight { get; set; }
-		}
 
         [BindProperties]
-		public class MetalItem
-		{
-			public MetalResponse? Item { get; set; }
-			public decimal Weight { get; set; }
-		}
-
-        public IActionResult OnPostRemoveFromCart(int index, int jewelryId)
+        public class CartItem
         {
-            LoadData();
-
-            if (jewelryId == 0)
-            {
-                Cart.RemoveAt(index);
-            }
-
-            return Page();
+            public GetJewelryRequest Jewelry { get; set; }
+            public int Quantity { get; set; }
+            public decimal UnitPrice { get; set; }
+            public decimal DiscountValue { get; set; }
+            public decimal GetTotalPrice() => UnitPrice * Quantity;
+            public decimal GetDiscountPrice() => GetTotalPrice() * DiscountValue / 100;
+            public decimal GetFinalPrice() => GetTotalPrice() - GetDiscountPrice();
         }
 
-        private void LoadData()
+        public IActionResult OnPostAddToCart(int JewelryId)
         {
-            LoadMetalCart();
-            LoadPrice();
-            LoadCart();
-            LoadCustomer();
-        }
+            LoadData("", "", 1);
+            Jewelry jewelry = _jewelryService.GetJewelryById(JewelryId);
+            // total gem + total current price + labor price
+            decimal unitPrice = 0;
 
-        public IActionResult OnPostAddMetalToCart(string metal, int i)
-        {
-            LoadData();
-            MetalCart ??= new List<MetalItem>();
-
-            //if (MetalCart != null && MetalCart.Count > 0)
-            //{
-            //    foreach (var item in MetalCart)
-            //    {
-            //        // check metal already in cart
-            //        if (item.Item.Metal.Equals(metal))
-            //        {
-            //            return Page();
-            //        }
-            //    }
-            //}
-
-            MetalItem metalCart = new()
+            foreach (var material in jewelry.JewelryMaterials)
             {
-                Item = Metals.FirstOrDefault(x => x.Metal.Equals(metal))
-            };
+                var currentMaterial = _materialService.GetMaterialById(material.MaterialId);
 
-            MetalCart.Add(metalCart);
-            HttpContext.Session.SetObjectAsJson("METALCART", MetalCart);
-
-            return Page();
-        }
-
-        public IActionResult OnPostUpdateCart(double weight, int index, string metal)
-        {
-            LoadData();
-
-            if (weight <= 0)
-            {
-                Message = "Weight must be greater than 0.";
-                return Page();
-            }
-
-            // update in the same cart
-            // check metal already in the cart
-            if (Cart != null && Cart.Count > 0)
-            {
-                var existedItem = Cart.FirstOrDefault(x => x.Index == index);
-                if (existedItem != null)
+                if (currentMaterial.IsMetail)
                 {
-                    existedItem.Weight = weight;
-                    return Page();
+                    unitPrice += currentMaterial.BidPrice * (decimal)material.JewelryWeight;
+                }
+                else
+                {
+                    unitPrice += (decimal)currentMaterial.MaterialCost;
                 }
             }
 
-            GetJewelryRequest jewelry = new()
-            { 
-                JewelryName = metal,
-                Description = "FROM CUSTOMER",
-                TotalWeight = weight
-            };
+            unitPrice += jewelry.LaborPrice;
 
-            CartItem cartItem = new CartItem()
+            // check jewelry have gem or not
+            // if jewelry have gem, don't show quantity
+            // if jewelry don't have gem, show quantity
+
+            if (CartItems != null && CartItems.Count > 0)
             {
-                Index = index,
-                BuyPrice = Metals.FirstOrDefault(x => x.Metal.Equals(metal)).Rate.Bid,
-                Jewelry = jewelry,
-                Weight = weight
+                // check if item already in the cart
+                foreach (var addedItem in CartItems)
+                {
+                    if (addedItem.Jewelry.JewelryId == jewelry.JewelryId)
+                    {
+                        // if jewelry have gem already in the cart
+                        foreach (var material in addedItem.Jewelry.JewelryMaterials)
+                        {
+                            if (!material.Material.IsMetail)
+                            {
+                                Message = "This item already in the cart";
+                                return Page();
+                            }
+                        }
+                        addedItem.Quantity += 1;
+
+                        if (addedItem.Quantity > jewelry.Quantity)
+                        {
+                            Message = $"Curren quantity of this item is: {jewelry.Quantity}";
+                            addedItem.Quantity -= 1;
+                            return Page();
+                        }
+
+                        SaveCart(CartItems);
+                        return Page();
+                    }
+                }
+            }
+
+            var promotion = _promotionService.GetPromotionDetailByJewleryId(jewelry.JewelryId);
+
+            CartItem item = new CartItem()
+            {
+                Jewelry = _mapper.Map<GetJewelryRequest>(jewelry),
+                Quantity = 1,
+                UnitPrice = unitPrice,
+                DiscountValue = promotion != null ? (decimal)promotion.DiscountPercent : 0
             };
 
-            Cart ??= new List<CartItem>();
-            Cart.Add(cartItem);
+            CartItems.Add(item);
 
-            HttpContext.Session.SetObjectAsJson("CART", Cart);
+            SaveCart(CartItems);
 
             return Page();
         }
 
-        public async Task<IActionResult> OnPostCreateOrderAsync()
+        private void SaveCart(List<CartItem> cartItems) => HttpContext.Session.SetObjectAsJson("BUYCART", cartItems);
+        private void LoadCart()
         {
-            LoadData();
+            CartItems = HttpContext.Session.GetObjectFromJson<List<CartItem>>("BUYCART");
+            CartItems ??= new List<CartItem>();
+        }
+
+        public IActionResult OnPostRemoveFromCart(int id)
+        {
+            LoadData("", "", 1);
+            //var cartJson = HttpContext.Session.GetString("Cart");
+            //if (!string.IsNullOrEmpty(cartJson))
+            //{
+            //    var cart = JsonConvert.DeserializeObject<Dictionary<int, int>>(cartJson);
+            //    if (cart != null && cart.ContainsKey(id))
+            //    {
+            //        cart.Remove(id);
+            //        HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(cart));
+            //    }
+            //}
+            foreach (var cartItem in CartItems)
+            {
+                if (cartItem.Jewelry.JewelryId == id)
+                {
+                    CartItems.Remove(cartItem);
+                    SaveCart(CartItems);
+                    break;
+                }
+            }
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostSubmitOrder(string phoneNumber)
+        {
+            LoadData("", "", 1);
+
+            //// Retrieve account ID from session
+            //int? accountID = HttpContext.Session.GetInt32("ID");
+            //if (accountID == null)
+            //{
+            //    // Handle case where user is not logged in
+            //    return RedirectToPage("/Login");
+            //}
+
+            // Check if cart is empty
+            if (CartItems == null || CartItems.Count == 0)
+            {
+                Message = "Cart is empty";
+                return Page();
+            }
+
             if (CurrentCustomer == null)
             {
                 Message = "Please enter customer";
                 return Page();
             }
 
-            List<OrderDetail> orderDetails = new List<OrderDetail>();
-            if (Cart != null && Cart.Count > 0)
+            // Create new order
+            var newOrder = new Order
             {
-                foreach (var item in Cart)
+                OrderDate = DateTime.Now,
+                OrderType = OrderEnum.OLD,
+                CustomerId = CurrentCustomer.AccountId
+            };
+
+            // Initialize list of order details
+            List<OrderDetail> items = new List<OrderDetail>();
+
+            // Add order details from cart items
+            foreach (var cartItem in CartItems)
+            {
+                Debug.WriteLine(cartItem.Jewelry.JewelryName);
+
+                var promotion = _promotionService.GetPromotionDetailByJewleryId(cartItem.Jewelry.JewelryId);
+
+                var orderDetail = new OrderDetail
                 {
-                    // jewelryMaterials.Add(new JewelryMaterial { Material = material, JewelryWeight = metal.MaterialQuantWeight, Jewelry = jewelry });
-
-                    JewelryMaterial jewelryMaterial = new JewelryMaterial()
-                    {
-                        Material = _materialService.GetMaterialByName(item.Jewelry.JewelryName.ToLower()),
-                        JewelryWeight = item.Jewelry.TotalWeight
-                    };
-
-                    IList<JewelryMaterial> jewelryMaterials = new List<JewelryMaterial>();
-                    jewelryMaterials.Add(jewelryMaterial);
-
-                    Jewelry jewelry = new()
-                    {
-                        JewelryName = item.Jewelry.JewelryName,
-                        Description = "From customer",
-                        JewelryMaterials = jewelryMaterials,
-                        CategoryId = 8
-                    };
-
-                    _jewelryService.AddJewelry(jewelry);
-                    if (jewelry != null)
-                    {
-
-                        OrderDetail orderDetail = new OrderDetail()
-                        {
-                            JewelryId = jewelry.JewelryId,
-                            UnitPrice = Cart.FirstOrDefault(x => x.Jewelry.JewelryName.Equals(jewelry.JewelryName.ToLower())).BuyPrice
-                        };
-
-                        orderDetails.Add(orderDetail);
-                    }
-                }
-
-                Order order = new Order()
-                {
-                    CustomerId = CurrentCustomer.AccountId,
-                    OrderDate = DateTime.Now,
-                    OrderType = OrderEnum.OLD
+                    JewelryId = cartItem.Jewelry.JewelryId,
+                    Quantity = cartItem.Quantity,
+                    UnitPrice = (double)cartItem.GetFinalPrice(),
+                    DiscountPercent = promotion != null ? promotion.DiscountPercent : 0,
+                    PromotionDetailId = promotion != null ? promotion.PromotionDetailId : null,
                 };
 
-                var newOrder = _orderService.CreateOrderAsync(order, orderDetails).Result;
-
-                if (newOrder != null)
-                {
-                    return RedirectToPage("./Detail", new { id = newOrder.OrderId });
-                }
-
-                return Page();
+                items.Add(orderDetail);
             }
 
+            foreach (var item in items)
+            {
+                var jewelry = _jewelryService.GetJewelryById(item.JewelryId);
+                jewelry.Quantity -= item.Quantity;
+                await _jewelryService.UpdateJewelryAsync(jewelry);
+            }
+
+            // Save order and order details
+            Order order = await _orderService.CreateOrderAsync(newOrder, items);
+
+            if (order != null)
+            {
+                HttpContext.Session.Remove("BUYCART");
+                HttpContext.Session.Remove("ACCOUNT");
+                return RedirectToPage("./Detail", new { id = newOrder.OrderId });
+            }
+            // Clear cart
+
+            // Redirect to order confirmation page
             return Page();
         }
+
+        private void LoadJewelries(string currentFilter,
+                                        string searchString,
+                                        int? pageIndex)
+        {
+            if (searchString != null)
+                pageIndex = 1;
+            else
+                searchString = currentFilter;
+            CurrentFilter = searchString;
+
+            IQueryable<Jewelry> jewelries = _jewelryService.GetJewelries().Where(j =>
+                                                !(j.JewelryMaterials.Any(m => !m.Material.IsMetail) && j.OrderDetails.Count > 0) &&
+                                                !(j.JewelryMaterials.All(m => m.Material.IsMetail) && j.Quantity == 0)).AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+                jewelries = jewelries.Where(s => s.JewelryId.ToString() == searchString);
+
+            Jewelries = PaginatedList<Jewelry>.Create(
+                jewelries.AsNoTracking(), pageIndex ?? 1, 5);
+        }
+
+        private void UpdatePrice()
+        {
+            //var options = new JsonSerializerOptions
+            //{
+            //    PropertyNameCaseInsensitive = true
+            //};
+            //var gold = JsonSerializer.Deserialize<MetalPrice>(Utils.ReadJsonFile("gold.json"), options);
+            //var silver = JsonSerializer.Deserialize<MetalPrice>(Utils.ReadJsonFile("silver.json"), options);
+            //var palladium = JsonSerializer.Deserialize<MetalPrice>(Utils.ReadJsonFile("palladium.json"), options);
+            //if (gold != null && silver != null && palladium != null)
+            //{
+            //    Metals.Add(gold);
+            //    Metals.Add(silver);
+            //    Metals.Add(palladium);
+            //}
+
+            var metals = _materialService.GetMaterials();
+            foreach (var metal in metals.Where(x => x.IsMetail == true))
+            {
+                foreach (var price in Metals)
+                {
+                    if (price.Metal.Equals(metal.MaterialName))
+                    {
+                        metal.BidPrice = (decimal)price.Rate.Bid;
+                        metal.OfferPrice = (decimal)price.Rate.Ask;
+                        _materialService.UpdateMaterial(metal);
+                        break;
+                    }
+                }
+            }
+        }
+
+        public IActionResult OnPostClearCart()
+        {
+            HttpContext.Session.Remove("BUYCART");
+            LoadData("", "", 1);
+            return Page();
+        }
+
+        public void LoadData(String searchString, String currentFilter, int pageIndex)
+        {
+            LoadJewelries(searchString, currentFilter, pageIndex);
+            LoadCart();
+            LoadCustomer();
+            LoadPrice();
+        }
+
+        private void LoadPrice() => Metals = HttpContext.Session.GetObjectFromJson<IList<MetalResponse>>("PRICE");
+
+        public void LoadCustomer()
+        {
+            CurrentCustomer = HttpContext.Session.GetObjectFromJson<GetAccountRequest>("ACCOUNT");
+        }
+
 
         public IActionResult OnPostFindCustomer(string phoneNumber)
         {
-            LoadData();
-            GetAccountRequest account = _mapper.Map<GetAccountRequest>(_accountService.GetAccounts().FirstOrDefault(x => x.PhoneNumber.Equals(phoneNumber)));
+            LoadData("", "", 1);
 
-            if (account != null)
+            // Define regex pattern for phone number validation
+            string phonePattern = @"^09\d{8}$"; // Phone number starting with 09 followed by 8 digits
+
+            // Validate phone number
+            if (!Regex.IsMatch(phoneNumber, phonePattern))
             {
-                CurrentCustomer = account;
-                HttpContext.Session.SetObjectAsJson("ACCOUNT", CurrentCustomer);
+                Message = "Invalid phone number format";
                 return Page();
+            }
+
+            // Find the customer by phone number
+            CurrentCustomer = _mapper.Map<GetAccountRequest>(_accountService.GetAccounts().FirstOrDefault(x => x.PhoneNumber.Equals(phoneNumber)));
+            if (CurrentCustomer != null)
+            {
+                HttpContext.Session.SetObjectAsJson("ACCOUNT", CurrentCustomer);
+            }
+            else
+            {
+                Message = "Cannot find this account";
             }
 
             return Page();
         }
 
-        public IActionResult OnPostRemoveTempCart()
+
+        public IActionResult OnPostDecreaseQuantity(int id)
         {
-            HttpContext.Session.Remove("CART");
-            HttpContext.Session.Remove("METALCART");
-            LoadData();
+            LoadData("", "", 1);
+
+            foreach (var item in CartItems)
+            {
+                if (item.Jewelry.JewelryId == id)
+                {
+                    item.Quantity -= 1;
+                    if (item.Quantity == 0)
+                    {
+                        CartItems.Remove(item);
+                        break;
+                    }
+                }
+            }
+
+            SaveCart(CartItems);
+
             return Page();
         }
 
-        private void LoadMetalCart() => MetalCart = HttpContext.Session.GetObjectFromJson<IList<MetalItem>>("METALCART");
-        private void LoadPrice() => Metals = _metalService.GetPrices();
-        private void LoadCart() => Cart = HttpContext.Session.GetObjectFromJson<IList<CartItem>>("CART");
-        private void LoadCustomer() => CurrentCustomer = HttpContext.Session.GetObjectFromJson<GetAccountRequest>("ACCOUNT");
+        public IActionResult OnPostIncreaseQuantity(int id)
+        {
+            LoadData("", "", 1);
+
+            var jewelry = _jewelryService.GetJewelryById(id);
+
+            foreach (var item in CartItems)
+            {
+                if (item.Jewelry.JewelryId == id)
+                {
+                    item.Quantity += 1;
+                    if (item.Quantity > jewelry.Quantity)
+                    {
+                        Message = $"The remaining of this item is {jewelry.Quantity}";
+                        item.Quantity -= 1;
+                        return Page();
+                    }
+                }
+            }
+
+            SaveCart(CartItems);
+            return Page();
+        }
+
+        public IActionResult OnPostCreateAccount()
+        {
+            LoadData("", "", 1);
+
+            // Define regex patterns
+            string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$"; // Basic email validation pattern
+            string phonePattern = @"^09\d{8}$"; // Phone number starting with 09 followed by 8 digits
+
+            // Validate email
+            if (!Regex.IsMatch(Account.Email, emailPattern))
+            {
+                Message = "Invalid email format";
+                return Page();
+            }
+
+            // Validate phone number
+            if (!Regex.IsMatch(Account.PhoneNumber, phonePattern))
+            {
+                Message = "Invalid phone number format";
+                return Page();
+            }
+
+            // Check if email already exists
+            if (_accountService.GetAccounts().FirstOrDefault(x => x.Email.Equals(Account.Email)) != null)
+            {
+                Message = "This email already exists";
+                return Page();
+            }
+
+            // Check if phone number already exists
+            else if (_accountService.GetAccounts().FirstOrDefault(x => x.PhoneNumber.Equals(Account.PhoneNumber)) != null)
+            {
+                Message = "This phone number already exists";
+                return Page();
+            }
+
+            // Create new account
+            Account account = new()
+            {
+                CreatedDate = DateTime.Now,
+                Email = Account.Email,
+                FullName = Account.FullName,
+                ObjectStatus = ObjectStatus.ACTIVE,
+                PhoneNumber = Account.PhoneNumber,
+                Role = AccountRole.CUSTOMER
+            };
+
+            var newAccount = _accountService.CreateAccount(account);
+
+            if (newAccount != null)
+            {
+                CurrentCustomer = _mapper.Map<GetAccountRequest>(newAccount);
+                HttpContext.Session.SetObjectAsJson("ACCOUNT", CurrentCustomer);
+            }
+
+            return Page();
+        }
     }
 }

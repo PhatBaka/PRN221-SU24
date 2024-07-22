@@ -15,6 +15,7 @@ using BusinessObjects.Commons;
 using System.Text.Json;
 using UI.Helper;
 using UI.Payload.MaterialPayload;
+using System.Diagnostics;
 
 namespace UI.Pages
 {
@@ -30,7 +31,7 @@ namespace UI.Pages
         public IActionResult OnGet()
         {
             var role = HttpContext.Session.GetString("ROLE");
-
+            Debug.WriteLine(222222222222);
             if (role != null)
             {
                 switch (role)
@@ -61,13 +62,13 @@ namespace UI.Pages
             var adminEmail = StringConstants.ADMIN_EMAIL;
             var adminPassword = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("AdminAccount:Password").Value;
 
-            if (Account.Email == adminEmail && Account.Password == adminPassword)
+            if (Account.Email.ToLower() == adminEmail.ToLower() && Account.Password == adminPassword)
             {
                 HttpContext.Session.SetString("ROLE", "ADMIN");
 				HttpContext.Session.SetString("EMAIL", adminEmail);
 				HttpContext.Session.SetString("FULLNAME", adminEmail);
 				HttpContext.Session.SetString("ISAUTHENTICATED", "True");
-				return RedirectToPage("./IndexHome");
+				return RedirectToPage("./Accounts/Index");
 
 			}
 
@@ -75,6 +76,12 @@ namespace UI.Pages
             
             if (existedAccount != null)
             {
+                if(existedAccount.ObjectStatus != ObjectStatus.ACTIVE)
+                {
+					HttpContext.Session.SetString("ISAUTHENTICATED", "False");
+					Message = "Account is in status inactive";
+                    return Page();
+				}
 				HttpContext.Session.SetString("ISAUTHENTICATED", "True");
 				switch (existedAccount.Role)
                 {
@@ -95,13 +102,13 @@ namespace UI.Pages
 						HttpContext.Session.SetString("FULLNAME", existedAccount.FullName);
 						HttpContext.Session.SetString("EMAIL", existedAccount.Email);
 						HttpContext.Session.SetString("ROLE", "ADMIN");
-                        return RedirectToPage("./IndexHome");
+                        return RedirectToPage("./Accounts");
                 }
             }
             else
             {
 				HttpContext.Session.SetString("ISAUTHENTICATED", "False");
-				Message = "Can't find account";
+				Message = "Email or Password is incorrect !";
             }
 
             return Page();

@@ -1,56 +1,79 @@
 ﻿@page
 @model UI.Pages.Accounts.CreateModel
 
-<h4>Account</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Account.Email" class="control-label"></label>
-                <input asp-for="Account.Email" class="form-control" />
-                <span asp-validation-for="Account.Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Account.Password" class="control-label"></label>
-                <input asp-for="Account.Password" class="form-control" />
-                <span asp-validation-for="Account.Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Account.PhoneNumber" class="control-label"></label>
-                <input asp-for="Account.PhoneNumber" class="form-control" />
-                <span asp-validation-for="Account.PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Account.CreatedDate" class="control-label"></label>
-                <input asp-for="Account.CreatedDate" class="form-control" />
-                <span asp-validation-for="Account.CreatedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Account.FullName" class="control-label"></label>
-                <input asp-for="Account.FullName" class="form-control" />
-                <span asp-validation-for="Account.FullName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Account.Role" class="control-label"></label>
-                <input asp-for="Account.Role" class="form-control" />
-                <span asp-validation-for="Account.Role" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Account.ObjectStatus" class="control-label"></label>
-                <input asp-for="Account.ObjectStatus" class="form-control" />
-                <span asp-validation-for="Account.ObjectStatus" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+<style>
+    .form-account{
+        margin: auto 200px;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+    }
+    .form-group{
+       
+        margin: auto;
+        margin-top: 20px;
+    }
 
-<div>
-    <a asp-page="Index">Back to List</a>
+</style>
+
+<div class="form-account">
+    <h1>Account</h1>
+    <hr />
+    <div class="form-group">
+        @* Display any custom message *@
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+
+            <div class="alert alert-danger d-flex align-items-center mt-3 mb-3" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+                    <use xlink:href="#exclamation-triangle-fill" />
+                </svg>
+                <div>
+                    <div class="text-danger">@Model.Message</div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Account.Email" class="control-label"></label>
+                    <input asp-for="Account.Email" class="form-control" />
+                    <span asp-validation-for="Account.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Account.Password" class="control-label"></label>
+                    <input asp-for="Account.Password" class="form-control" />
+                    <span asp-validation-for="Account.Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Account.PhoneNumber" class="control-label"></label>
+                    <input asp-for="Account.PhoneNumber" class="form-control" />
+                    <span asp-validation-for="Account.PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Account.FullName" class="control-label"></label>
+                    <input asp-for="Account.FullName" class="form-control" />
+                    <span asp-validation-for="Account.FullName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Role</label>
+                    <select asp-for="Account.Role" class="form-control" asp-items=@Model.RoleOptions></select>
+                    <span asp-validation-for="Account.Role" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <a asp-page="Index">Back to List</a>
+    </div>
+
 </div>
 
 @section Scripts {

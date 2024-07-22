@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataAccessObjects.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Initdatabase3 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,7 +16,7 @@ namespace DataAccessObjects.Migrations
                     AccountId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhoneNumber = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -58,7 +58,9 @@ namespace DataAccessObjects.Migrations
                     OfferPrice = table.Column<decimal>(type: "money", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MaterialImage = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    GemCertificate = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
+                    GemCertificate = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    StockQuantity = table.Column<decimal>(type: "decimal", nullable: false),
+                    MaterialStatus = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -219,10 +221,12 @@ namespace DataAccessObjects.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OrderId = table.Column<int>(type: "int", nullable: false),
                     JewelryId = table.Column<int>(type: "int", nullable: false),
-                    PromotionDetailId = table.Column<int>(type: "int", nullable: true),
+                    MaterialId = table.Column<int>(type: "int", nullable: false),
+                    PromotionDetailId = table.Column<int>(type: "int", nullable: false),
                     DiscountPercent = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PromotionId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -234,11 +238,22 @@ namespace DataAccessObjects.Migrations
                         principalColumn: "JewelryId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_OrderDetail_Material_MaterialId",
+                        column: x => x.MaterialId,
+                        principalTable: "Material",
+                        principalColumn: "MaterialId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_OrderDetail_Order_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Order",
                         principalColumn: "OrderId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrderDetail_Promotion_PromotionId",
+                        column: x => x.PromotionId,
+                        principalTable: "Promotion",
+                        principalColumn: "PromotionId");
                     table.ForeignKey(
                         name: "FK_OrderDetail_PromotionDetail_PromotionDetailId",
                         column: x => x.PromotionDetailId,
@@ -279,84 +294,25 @@ namespace DataAccessObjects.Migrations
                 columns: new[] { "AccountId", "CreatedDate", "Email", "FullName", "ObjectStatus", "Password", "PhoneNumber", "Role" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8353), "customer1@example.com", "Customer One", 0, "123", "1234567890", 2 },
-                    { 2, new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8364), "customer2@example.com", "Customer Two", 0, "123", "0987654321", 2 },
-                    { 3, new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8366), "customer3@example.com", "Customer Three", 0, "123", "1122334455", 2 },
-                    { 4, new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8367), "customer4@example.com", "Customer Four", 0, "123", "5566778899", 2 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Category",
-                columns: new[] { "CategoryId", "CategoryName" },
-                values: new object[,]
-                {
-                    { 1, "Jewelry Type" },
-                    { 2, "Rings" },
-                    { 3, "Necklaces" },
-                    { 4, "Earrings" },
-                    { 5, "Bracelets" },
-                    { 6, "Pendants" },
-                    { 7, "Brooches" }
+                    { 1, new DateTime(2024, 7, 22, 14, 24, 32, 581, DateTimeKind.Local).AddTicks(4945), "adminA@mail.com", "Admin A", 0, "123", "1234567890", 3 },
+                    { 2, new DateTime(2024, 7, 22, 14, 24, 32, 581, DateTimeKind.Local).AddTicks(4967), "managerA@mail.com", "Manager A", 0, "123", "0987654321", 1 },
+                    { 3, new DateTime(2024, 7, 22, 14, 24, 32, 581, DateTimeKind.Local).AddTicks(4969), "staffA@mail.com", "Staff A", 0, "123", "1122334455", 0 },
+                    { 4, new DateTime(2024, 7, 22, 14, 24, 32, 581, DateTimeKind.Local).AddTicks(4970), "staffB@mail.com", "Staff B", 0, "123", "5566778899", 0 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Material",
-                columns: new[] { "MaterialId", "BidPrice", "Clarity", "Color", "Description", "GemCertificate", "IsMetail", "MaterialCost", "MaterialImage", "MaterialName", "OfferPrice", "Purity", "Sharp" },
+                columns: new[] { "MaterialId", "BidPrice", "Clarity", "Color", "Description", "GemCertificate", "IsMetail", "MaterialCost", "MaterialImage", "MaterialName", "MaterialStatus", "OfferPrice", "Purity", "Sharp", "StockQuantity" },
                 values: new object[,]
                 {
-                    { 1, 2000000m, 10, "Yellow", "Pure gold with 99.99% purity", null, true, 2000000.0, null, "Gold 24K", 2500000m, 99.989997863769531, null },
-                    { 2, 25000m, 10, "Silver", "Sterling silver with 92.5% purity", null, true, 25000.0, null, "Silver 925", 35000m, 92.5, null },
-                    { 3, 3000000m, 10, "White", "High purity platinum", null, true, 3000000.0, null, "Platinum", 3500000m, 95.0, null },
-                    { 4, 2200000m, 10, "Silver", "High purity palladium", null, true, 2200000.0, null, "Palladium", 2700000m, 95.0, null },
-                    { 5, 0m, 1, "Colorless", "High quality diamond with excellent clarity", null, false, 5000000.0, null, "Diamond", 0m, 100.0, "Round Brilliant" },
-                    { 6, 0m, 3, "Red", "High quality ruby with vivid red color", null, false, 3000000.0, null, "Ruby", 0m, 100.0, "Oval" },
-                    { 7, 0m, 4, "Blue", "High quality sapphire with deep blue color", null, false, 2500000.0, null, "Sapphire", 0m, 100.0, "Cushion" },
-                    { 8, 0m, 5, "Green", "High quality emerald with vivid green color", null, false, 4000000.0, null, "Emerald", 0m, 100.0, "Emerald Cut" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Jewelry",
-                columns: new[] { "JewelryId", "CategoryId", "Description", "JewelryImage", "JewelryName", "WorkPrice", "MarkupPercentage", "Quantity", "StatusSale", "Weight" },
-                values: new object[,]
-                {
-                    { 1, 2, "Beautiful pendant necklace crafted in 14k gold with intricate design.", null, "Gold Pendant Necklace", 4500000m, 0.17999999999999999, 1, 0, 250m },
-                    { 2, 3, "Classic hoop earrings crafted in sterling silver for everyday elegance.", null, "Sterling Silver Hoop Earrings", 2500000m, 0.14999999999999999, 2, 0, 500m },
-                    { 3, 4, "Luxurious diamond tennis bracelet set in 18k white gold.", null, "Diamond Tennis Bracelet", 1800000m, 0.12, 3, 0, 100m },
-                    { 4, 5, "Elegant cultured pearl pendant with 18k rose gold setting.", null, "Cultured Pearl Pendant", 3200000m, 0.20000000000000001, 1, 0, 150m }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Order",
-                columns: new[] { "OrderId", "CustomerId", "OrderDate", "OrderType" },
-                values: new object[,]
-                {
-                    { 1, 1, new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8382), 0 },
-                    { 2, 2, new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8384), 0 },
-                    { 3, 3, new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8384), 0 },
-                    { 4, 4, new DateTime(2024, 7, 15, 21, 54, 42, 907, DateTimeKind.Local).AddTicks(8385), 0 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "JewelryMaterial",
-                columns: new[] { "JewelryId", "MaterialId", "JewelryWeight" },
-                values: new object[,]
-                {
-                    { 1, 1, 200.0 },
-                    { 1, 2, 5.0 },
-                    { 2, 2, 500.0 },
-                    { 3, 5, 10.0 },
-                    { 4, 6, 50.0 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "OrderDetail",
-                columns: new[] { "OrderDetailId", "DiscountPercent", "JewelryId", "OrderId", "PromotionDetailId", "Quantity", "UnitPrice" },
-                values: new object[,]
-                {
-                    { 1, 10m, 1, 1, null, 2, 150m },
-                    { 2, 5m, 2, 1, null, 1, 200m },
-                    { 3, 15m, 1, 2, null, 3, 120m },
-                    { 4, 20m, 3, 3, null, 1, 300m }
+                    { 1, 2000000m, 10, "Yellow", "Pure gold with 99.99% purity", null, true, 2000000.0, null, "Gold 24K", null, 2500000m, 99.989997863769531, null, 0m },
+                    { 2, 25000m, 10, "Silver", "Sterling silver with 92.5% purity", null, true, 25000.0, null, "Silver 925", null, 35000m, 92.5, null, 0m },
+                    { 3, 3000000m, 10, "White", "High purity platinum", null, true, 3000000.0, null, "Platinum", null, 3500000m, 95.0, null, 0m },
+                    { 4, 2200000m, 10, "Silver", "High purity palladium", null, true, 2200000.0, null, "Palladium", null, 2700000m, 95.0, null, 0m },
+                    { 5, 0m, 1, "Colorless", "High quality diamond with excellent clarity", null, false, 5000000.0, null, "Diamond", null, 0m, 100.0, "Round Brilliant", 0m },
+                    { 6, 0m, 3, "Red", "High quality ruby with vivid red color", null, false, 3000000.0, null, "Ruby", null, 0m, 100.0, "Oval", 0m },
+                    { 7, 0m, 4, "Blue", "High quality sapphire with deep blue color", null, false, 2500000.0, null, "Sapphire", null, 0m, 100.0, "Cushion", 0m },
+                    { 8, 0m, 5, "Green", "High quality emerald with vivid green color", null, false, 4000000.0, null, "Emerald", null, 0m, 100.0, "Emerald Cut", 0m }
                 });
 
             migrationBuilder.CreateIndex(
@@ -380,6 +336,11 @@ namespace DataAccessObjects.Migrations
                 column: "JewelryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrderDetail_MaterialId",
+                table: "OrderDetail",
+                column: "MaterialId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderDetail_OrderId",
                 table: "OrderDetail",
                 column: "OrderId");
@@ -387,9 +348,12 @@ namespace DataAccessObjects.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_OrderDetail_PromotionDetailId",
                 table: "OrderDetail",
-                column: "PromotionDetailId",
-                unique: true,
-                filter: "[PromotionDetailId] IS NOT NULL");
+                column: "PromotionDetailId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderDetail_PromotionId",
+                table: "OrderDetail",
+                column: "PromotionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PromotionDetail_JewelryId",

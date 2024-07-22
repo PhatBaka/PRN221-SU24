@@ -34,13 +34,13 @@ namespace UI.Pages.Jewelries
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            string role = HttpContext.Session.GetString("ROLE");
-            if (role != "MANAGER")
-            {
-                RedirectToPage("/AccessDenied");
-            }
+			string role = HttpContext.Session.GetString("ROLE");
+			if (role == "ADMIN")
+			{
+				return RedirectToPage("/AccessDenied");
+			}
 
-            Jewelry jewelry = jewerlryService.GetJewelryById(id.Value);
+			Jewelry jewelry = jewerlryService.GetJewelryById(id.Value);
             Metals = _metalService.GetPrices();
             ImageDataBase64String = StringConstants.IMAGE_DATABASE64_DEFAULT;
             if (jewelry.JewelryImage != null && jewelry.JewelryImage.Length > 0)
@@ -54,8 +54,8 @@ namespace UI.Pages.Jewelries
             else
             {
                 Jewelry = jewelry;
-                //ViewData["StatusSaleDisplay"] = StatusSaleExtension.GetDisplayName(jewelry.StatusSale);
-                //ViewData["BasePriceDisplay"] = (Decimal) jewerlryService.GetJewelrySalePrice(jewelry);
+                ViewData["StatusSaleDisplay"] = StatusSaleExtension.GetDisplayName(jewelry.StatusSale);
+                ViewData["BasePriceDisplay"] = (Decimal) jewerlryService.GetJewelrySalePrice(jewelry);
             }
             return Page();
         }

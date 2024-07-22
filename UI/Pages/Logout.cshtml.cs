@@ -7,7 +7,11 @@ namespace UI.Pages
     {
         public void OnGet()
         {
-            HttpContext.Session.Clear();
+			
+			HttpContext.Session.Clear();
+			Response.Headers["Cache-Control"] = "no-store";
+			Response.Headers["Pragma"] = "no-cache";
+			Response.Headers["Expires"] = "0";
 			Response.Redirect("/Login");
         }
 

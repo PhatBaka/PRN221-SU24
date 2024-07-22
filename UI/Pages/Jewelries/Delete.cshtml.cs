@@ -25,22 +25,24 @@ namespace UI.Pages.Jewelries
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            string role = HttpContext.Session.GetString("ROLE");
-            if (role != "MANAGER")
+			string role = HttpContext.Session.GetString("ROLE");
+			if (role == "ADMIN")
+			{
+				return RedirectToPage("/AccessDenied");
+			}
+			if (id == null || _context.Jewelries == null)
             {
-                return RedirectToPage("/AccessDenied");
-            }
-            if (id == null || _context.Jewelries == null)
-            {
-                return NotFound();
-            }
+				message = $"Jewelry iD {id} not found!";
+				return Page();
+			}
 
             var jewelry = await _context.Jewelries.FirstOrDefaultAsync(m => m.JewelryId == id);
 
             if (jewelry == null)
             {
-                return NotFound();
-            }
+				message = $"Jewelry iD {id} not found!";
+				return Page();
+			}
             else 
             {
                 Jewelry = jewelry;
@@ -66,7 +68,7 @@ namespace UI.Pages.Jewelries
 
 			}catch(Exception ex)
             {
-                message = "Cannot delete this jewelry id " + id + " because of in using constraint";
+                message = "Cannot delete this jewelry id " + id + " because of inusing";
                 Console.WriteLine(ex.Message);
                 return Page();
             }

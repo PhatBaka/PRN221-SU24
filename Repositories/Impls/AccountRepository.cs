@@ -16,7 +16,7 @@ namespace Repositories.Impls
 
 		public Account GetAccountByEmailAndPassword(string email, string password)
 		{
-			return _accountGenericDAO.FirstOrDefaultAsync(x => x.Email == email && x.Password == password).Result;
+			return _accountGenericDAO.FirstOrDefaultAsync(x => x.Email.ToLower() == email.ToLower() && x.Password == password).Result;
 		}
 	}
 }

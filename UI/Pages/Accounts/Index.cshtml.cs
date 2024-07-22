@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BusinessObjects;
 using DataAccessObjects;
+using System.Diagnostics;
 
 namespace UI.Pages.Accounts
 {
@@ -19,19 +20,20 @@ namespace UI.Pages.Accounts
             _context = context;
         }
 
-        public IList<Account> Account { get;set; } = default!;
+        public IList<Account> Account { get;set; } = default;
 
-        public async Task OnGetAsync()
-        {
-            string role = HttpContext.Session.GetString("ROLE");
-            if (role != "ADMIN")
-            {
-                RedirectToPage("/AccessDenied");
-            }
-            if (_context.Accounts != null)
-            {
-                Account = await _context.Accounts.ToListAsync();
-            }
-        }
-    }
+		public async Task OnGetAsync()
+		{
+			string role = HttpContext.Session.GetString("ROLE");
+
+			if (role == null || role != "ADMIN")
+			{
+				Response.Redirect("/AccessDenied");
+			}
+			if (_context.Accounts != null)
+			{
+				Account = await _context.Accounts.ToListAsync();
+			}
+		}
+	}
 }

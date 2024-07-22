@@ -10,61 +10,71 @@ using DataAccessObjects;
 using AutoMapper;
 using Services.Interfaces;
 
-namespace UI.Pages.Warranties.FixRequests
+namespace UI.Pages.FixRequests
 {
     public class DeleteModel : PageModel
     {
-		private readonly IWarrantyService warrantySerivce;
-		private readonly IJewelryService jewelryService;
-		private readonly IWarrantyHistoryService warrantyHistoryService;
+        private readonly IWarrantyService warrantySerivce;
+        private readonly IJewelryService jewelryService;
+        private readonly IWarrantyHistoryService warrantyHistoryService;
 
-		public DeleteModel(IServiceProvider service)
-		{
-			jewelryService = service.GetRequiredService<IJewelryService>();
-			warrantySerivce = service.GetRequiredService<IWarrantyService>();
-			warrantyHistoryService = service.GetRequiredService<IWarrantyHistoryService>();
-		}
-		[BindProperty]
-		public WarrantyHistory WarrantyHistory { get; set; } = default!;
-		public string Message { get; set; }
-
-
-		public async Task<IActionResult> OnGetAsync(int? id)
+        public DeleteModel(IServiceProvider service)
         {
+            jewelryService = service.GetRequiredService<IJewelryService>();
+            warrantySerivce = service.GetRequiredService<IWarrantyService>();
+            warrantyHistoryService = service.GetRequiredService<IWarrantyHistoryService>();
+        }
+        [BindProperty]
+        public WarrantyHistory WarrantyHistory { get; set; } = default!;
+        public string Message { get; set; }
+
+
+        public async Task<IActionResult> OnGetAsync(int? id)
+        {
+			string role = HttpContext.Session.GetString("ROLE");
+			if (role == "ADMIN")
+			{
+				return RedirectToPage("/AccessDenied");
+			}
 			if (id == null)
-			{
-				Message = $"Warranty History ID {id} not found to update";
-				return Page();
-			}
+            {
+                Message = $"Warranty History ID {id} not found to update";
+                return Page();
+            }
 
-			WarrantyHistory = warrantyHistoryService.GetWarrantyHistoryById(id.Value);
-			if (WarrantyHistory == null)
-			{
-				Message = $"Warranty History ID {id} not found to update";
-				return Page();
-			}
+            WarrantyHistory = warrantyHistoryService.GetWarrantyHistoryById(id.Value);
+            if (WarrantyHistory == null)
+            {
+                Message = $"Warranty History ID {id} not found to update";
+                return Page();
+            }
 
-			return Page();
+            return Page();
 
-		}
+        }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
+			string role = HttpContext.Session.GetString("ROLE");
+			if (role == "ADMIN")
+			{
+				return RedirectToPage("/AccessDenied");
+			}
 			try
-			{
-				var WarrantyHistory = warrantyHistoryService.GetWarrantyHistoryById(id.Value);
-				if (WarrantyHistory == null)
-				{
-					throw new Exception($"Warranty History ID {id} not found to delete");
-				}
-				warrantyHistoryService.DeleteWarrantyHistory(id.Value);
-			}
-			catch (Exception ex)
-			{
-				Message = ex.Message;
-				return Page();
-			}
-			return RedirectToPage("./Index");
+            {
+                var WarrantyHistory = warrantyHistoryService.GetWarrantyHistoryById(id.Value);
+                if (WarrantyHistory == null)
+                {
+                    throw new Exception($"Warranty History ID {id} not found to delete");
+                }
+                warrantyHistoryService.DeleteWarrantyHistory(id.Value);
+            }
+            catch (Exception ex)
+            {
+                Message = ex.Message;
+                return Page();
+            }
+            return RedirectToPage("./Index");
         }
     }
 }
