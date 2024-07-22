@@ -31,9 +31,11 @@ namespace UI.AppStarts
 
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IJewelryRepository, JewelryRepository>();
 
             services.AddScoped<IAccountDAO, AccountDAO>();
             services.AddScoped<IOrderDAO, OrderDAO>();
+            services.AddScoped<IJewelryDAO, JewelryDAO>();
 
             services.AddScoped(typeof(IGenericDAO<>), typeof(GenericDAO<>));
 
