@@ -1,4 +1,5 @@
 using DataAccessObjects;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -30,9 +31,14 @@ namespace UI.Pages
             public double TotalPrice { get; set; }
         }
         public double FullPrice = 0;
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            CategoryDataList = await _context.Jewelries
+			string role = HttpContext.Session.GetString("ROLE") ?? "";
+			if (role != "ADMIN")
+			{
+				return RedirectToPage("/AccessDenied");
+			}
+			CategoryDataList = await _context.Jewelries
                 .Join(_context.Categories, j => j.CategoryId, c => c.CategoryId, (j, c) => new { j, c })
                 .Join(_context.JewelryMaterials, jc => jc.j.JewelryId, jm => jm.JewelryId, (jc, jm) => new { jc.j, jc.c, jm })
                 .Join(_context.Materials, jcm => jcm.jm.MaterialId, m => m.MaterialId, (jcm, m) => new
@@ -68,6 +74,8 @@ namespace UI.Pages
                 .ToListAsync();
 
             OrderDataList.ForEach(g => FullPrice += g.TotalPrice);
+
+            return Page();
         }
     }
 }
