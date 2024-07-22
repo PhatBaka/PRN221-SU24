@@ -30,5 +30,7 @@ namespace UI.PathDefine
         public readonly static string TRANSACTION_INDEX_BUY_PATH = "/Orders/Buy/Index";
         public readonly static string TRANSACTION_BUY_PATH = "/Orders/Buy/Create";
 		public readonly static string TRANSACTION_SELL_PATH = "/Orders/Sell/Create";
+
+		public readonly static string DASHBOARD_INDEX_PATH = "/Dashboard";
 	}
 }

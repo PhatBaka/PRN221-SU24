@@ -1,14 +1,24 @@
 ﻿@page
 @model UI.Pages.DashBoardModel
 @{
-    
+
 }
 
-<h2>Total Revenue: @Model.FullPrice</h2>e
+<style>
+    .chart-container {
+        width: 300px;
+        height:300px;
+    }
+</style>
+
+<h2>Total Revenue: @Model.FullPrice</h2>
 
 <h2>Jewelry Distribution by Category</h2>
 
-<canvas id="categoryChart" width="100" height="50"></canvas>
+<div class="chart-container">
+
+    <canvas id="categoryChart" width="500" height="500" style="height:50% !important; width: 50% !important"></canvas>
+</div>
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -21,30 +31,47 @@
             var categoryLabels = categoryData.map(item => item.CategoryName);
             var categoryPrices = categoryData.map(item => item.TotalPrice);
 
+            // Define colors for each category
+            var colors = [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ];
+
+            // Define border colors for each category
+            var borderColors = [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ];
+
             new Chart(ctx, {
-                type: 'bar',
+                type: 'doughnut',
                 data: {
                     labels: categoryLabels,
                     datasets: [{
                         label: 'Total Price of Jewelries',
                         data: categoryPrices,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: colors,
+                        borderColor: borderColors,
                         borderWidth: 1
                     }]
                 },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
-                        y: {
-                            beginAtZero: true,
+                        yAxes: [{
                             ticks: {
-                                callback: function (value) {
-                                    if (Number.isInteger(value)) {
-                                        return value;
-                                    }
-                                }
+                                beginAtZero: true
                             }
-                        }
+                        }]
                     }
                 }
             });
