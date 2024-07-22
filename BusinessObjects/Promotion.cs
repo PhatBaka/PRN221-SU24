@@ -28,5 +28,7 @@ namespace BusinessObjects
 
         [Required]
         public virtual ICollection<PromotionDetail> PromotionDetails { get; set; }
+
+        public virtual ICollection<OrderDetail> OrderDetail { get; set; }
     }
 }

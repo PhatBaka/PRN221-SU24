@@ -73,10 +73,7 @@
 						Category
 					</th>
 					<th>
-						Status
-					</th>
-					<th>
-						Base Price (USE)
+						Base Price (VNĐ)
 					</th>
 					<th>
 						Actions
@@ -129,9 +126,6 @@
 						</td> *@
 						<td>
 							@Html.DisplayFor(modelItem => item.Category.CategoryName)
-						</td>
-						<td>
-							@Html.DisplayFor(modelItem => item.JewelryStatus)
 						</td>
 						<td>
 							@(((Decimal)ViewData[$"ItemBasePrice_{item.JewelryId}"]).ToString("#,##0"))

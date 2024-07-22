@@ -209,13 +209,28 @@ namespace UI.Pages.Jewelries
                 jewelryMaterials.Add(new JewelryMaterial { Material = material, JewelryWeight = metal.MaterialQuantWeight, Jewelry = jewelry });
 
             }
-            if (jewelry.Quantity > 0 && jewelry.StatusSale.Equals(StatusSale.OUT_OF_STOCK))
-            {
-                setupReturnPage(message: "The quantity of product in stock is greater than zero, the sale status mus be instock");
-                return Page();
-            }
+			if (jewelry.Quantity < 0)
+			{
+				setupReturnPage(message: "The quantity of product in stock must >= 0");
+				return Page();
+			}
+			if (jewelry.Quantity > 0 && !jewelry.StatusSale.Equals(StatusSale.IN_STOCK))
+			{
+				setupReturnPage(message: "The quantity of product in stock is greater than zero, the sale status mus be instock");
+				return Page();
+			}
+			if (jewelry.Quantity == 0 && !jewelry.StatusSale.Equals(StatusSale.OUT_OF_STOCK))
+			{
+				setupReturnPage(message: "The quantity of product in stock is zero, the sale status mus be out of stock");
+				return Page();
+			}
+			if (!Gemstones.IsNullOrEmpty() && jewelry.Quantity > 1)
+			{
+				setupReturnPage(message: "The quantity of product has gemstone must be 0  or 1");
+				return Page();
+			}
 
-            jewelry.JewelryMaterials = jewelryMaterials;
+			jewelry.JewelryMaterials = jewelryMaterials;
 
             try
             {

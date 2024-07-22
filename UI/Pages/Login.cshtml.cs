@@ -62,7 +62,7 @@ namespace UI.Pages
             var adminEmail = StringConstants.ADMIN_EMAIL;
             var adminPassword = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("AdminAccount:Password").Value;
 
-            if (Account.Email == adminEmail && Account.Password == adminPassword)
+            if (Account.Email.ToLower() == adminEmail.ToLower() && Account.Password == adminPassword)
             {
                 HttpContext.Session.SetString("ROLE", "ADMIN");
 				HttpContext.Session.SetString("EMAIL", adminEmail);

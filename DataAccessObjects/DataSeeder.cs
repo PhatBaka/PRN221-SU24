@@ -13,13 +13,13 @@ namespace DataAccessObjects
     {
         public static void SeedData(this ModelBuilder modelBuilder)
         {
-            //modelBuilder.CategoriesSeedData();
-            //modelBuilder.MaterialDataSeed();
-            //modelBuilder.JewelriesDataSeed();
-           // modelBuilder.JewelryMaterialDataSeed();
-            //modelBuilder.AccountDataSeed();
-            //modelBuilder.OrderDataSeed();
-           // modelBuilder.OrderDetailDataSeed();
+           modelBuilder.CategoriesSeedData();
+            modelBuilder.MaterialDataSeed();
+           //modelBuilder.JewelriesDataSeed();
+           //// modelBuilder.JewelryMaterialDataSeed();
+           modelBuilder.AccountDataSeed();
+           // //modelBuilder.OrderDataSeed();
+           ////modelBuilder.OrderDetailDataSeed();
         }
         public static void CategoriesSeedData(this ModelBuilder modelBuilder)
         {
@@ -279,45 +279,45 @@ namespace DataAccessObjects
             new Account
             {
                 AccountId = 1,
-                Email = "customer1@example.com",
+                Email = "adminA@mail.com",
                 Password = "123", // Ensure to hash passwords in a real application
                 PhoneNumber = "1234567890",
                 CreatedDate = DateTime.Now,
-                FullName = "Customer One",
-                Role = AccountRole.CUSTOMER,
+                FullName = "Admin A",
+                Role = AccountRole.ADMIN,
                 ObjectStatus = ObjectStatus.ACTIVE
             },
             new Account
             {
                 AccountId = 2,
-                Email = "customer2@example.com",
+                Email = "managerA@mail.com",
                 Password = "123", // Ensure to hash passwords in a real application
                 PhoneNumber = "0987654321",
                 CreatedDate = DateTime.Now,
-                FullName = "Customer Two",
-                Role = AccountRole.CUSTOMER,
+                FullName = "Manager A",
+                Role = AccountRole.MANAGER,
                 ObjectStatus = ObjectStatus.ACTIVE
             },
             new Account
             {
                 AccountId = 3,
-                Email = "customer3@example.com",
+                Email = "staffA@mail.com",
                 Password = "123", // Ensure to hash passwords in a real application
                 PhoneNumber = "1122334455",
                 CreatedDate = DateTime.Now,
-                FullName = "Customer Three",
-                Role = AccountRole.CUSTOMER,
+                FullName = "Staff A",
+                Role = AccountRole.STAFF,
                 ObjectStatus = ObjectStatus.ACTIVE
             },
             new Account
             {
                 AccountId = 4,
-                Email = "customer4@example.com",
+                Email = "staffB@mail.com",
                 Password = "123", // Ensure to hash passwords in a real application
                 PhoneNumber = "5566778899",
                 CreatedDate = DateTime.Now,
-                FullName = "Customer Four",
-                Role = AccountRole.CUSTOMER,
+                FullName = "Staff B",
+                Role = AccountRole.STAFF,
                 ObjectStatus = ObjectStatus.ACTIVE
             }
         );
