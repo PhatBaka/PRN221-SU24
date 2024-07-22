@@ -47,6 +47,11 @@ namespace BusinessObjects
         [Required]
         public StatusSale StatusSale { get; set; }
 
+        [Column(TypeName = "decimal")]
+        public decimal StockQuantity { get; set; }
+
+        public string? JewelryStatus { get; set; }
+
         public virtual ICollection<JewelryMaterial> JewelryMaterials { get; set; }
 
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

@@ -270,7 +270,7 @@ namespace UI.Pages.Orders.Buy
             CurrentFilter = searchString;
 
             IQueryable<Jewelry> jewelries = _jewelryService.GetJewelries().Where(j =>
-                                                (j.JewelryStatus == "OLD") &&
+                                                //(j.JewelryStatus == "OLD") &&
                                                 !(j.JewelryMaterials.Any(m => !m.Material.IsMetail) && j.OrderDetails.Count > 0) &&
                                                 !(j.JewelryMaterials.All(m => m.Material.IsMetail) && j.Quantity == 0)).AsQueryable();
 

@@ -48,5 +48,7 @@ namespace BusinessObjects
         public byte[]? GemCertificate { get; set; }
 
         public virtual ICollection<JewelryMaterial> JewelryMaterials { get; set; }
+
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }
