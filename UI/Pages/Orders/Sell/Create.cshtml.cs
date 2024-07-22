@@ -77,6 +77,7 @@ namespace UI.Pages.Orders.Sell
 
         public IActionResult OnPostAddToCart(int JewelryId)
         {
+            UpdatePrice();
             LoadData("", "", 1);
             Jewelry jewelry = _jewelryService.GetJewelryById(JewelryId);
             // total gem + total current price + labor price
@@ -150,10 +151,10 @@ namespace UI.Pages.Orders.Sell
             return Page();
         }
 
-        private void SaveCart(List<CartItem> cartItems) => HttpContext.Session.SetObjectAsJson("CART", cartItems);
+        private void SaveCart(List<CartItem> cartItems) => HttpContext.Session.SetObjectAsJson("SELLCART", cartItems);
         private void LoadCart()
         {
-            CartItems = HttpContext.Session.GetObjectFromJson<List<CartItem>>("CART");
+            CartItems = HttpContext.Session.GetObjectFromJson<List<CartItem>>("SELLCART");
             CartItems ??= new List<CartItem>();
         }
 
@@ -249,7 +250,7 @@ namespace UI.Pages.Orders.Sell
 
             if (order != null)
             {
-                HttpContext.Session.Remove("CART");
+                HttpContext.Session.Remove("SELLCART");
                 HttpContext.Session.Remove("ACCOUNT");
                 return RedirectToPage("./Detail", new { id = newOrder.OrderId });
             }
@@ -270,7 +271,6 @@ namespace UI.Pages.Orders.Sell
             CurrentFilter = searchString;
 
             IQueryable<Jewelry> jewelries = _jewelryService.GetJewelries().Where(j =>
-                                                (j.JewelryStatus == "NEW") &&
                                                 !(j.JewelryMaterials.Any(m => !m.Material.IsMetail) && j.OrderDetails.Count > 0) &&
                                                 !(j.JewelryMaterials.All(m => m.Material.IsMetail) && j.Quantity == 0)).AsQueryable();
 
@@ -315,7 +315,7 @@ namespace UI.Pages.Orders.Sell
 
         public IActionResult OnPostClearCart()
         {
-            HttpContext.Session.Remove("CART");
+            HttpContext.Session.Remove("SELLCART");
             LoadData("", "", 1);
             return Page();
         }

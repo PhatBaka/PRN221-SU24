@@ -28,6 +28,7 @@ namespace UI.Pages.Jewelries
         private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
         private readonly IMaterialService materialService;
+        private readonly IMetalService metalService;
 
         public List<SelectListItem> SaleStatusOptions { get; set; }
         public List<SelectListItem> CategoryOptions { get; set; }
@@ -42,6 +43,7 @@ namespace UI.Pages.Jewelries
             jewerlryService = service.GetRequiredService<IJewelryService>();
             categoryService = service.GetRequiredService<ICategoryService>();
             materialService = service.GetRequiredService<IMaterialService>();
+            metalService = service.GetRequiredService<IMetalService>();
             mapper = service.GetRequiredService<IMapper>();
             this.UpdateSelectOptions();
         }
@@ -208,12 +210,29 @@ namespace UI.Pages.Jewelries
             {
                 return NotFound();
             }
+            double BIDPRICE = 0;
+            double OFFERPRICE = 0;
+            switch (metal.MaterialName.ToLower())
+            {
+                case "gold":
+                    BIDPRICE = metalService.GetPrices().FirstOrDefault(x => x.Metal.Equals("gold")).Rate.Bid;
+                    OFFERPRICE = metalService.GetPrices().FirstOrDefault(x => x.Metal.Equals("gold")).Rate.Ask;
+					break;
+				case "silver":
+					BIDPRICE = metalService.GetPrices().FirstOrDefault(x => x.Metal.Equals("silver")).Rate.Bid;
+					OFFERPRICE = metalService.GetPrices().FirstOrDefault(x => x.Metal.Equals("silver")).Rate.Ask;
+					break;
+				case "palladium":
+					BIDPRICE = metalService.GetPrices().FirstOrDefault(x => x.Metal.Equals("palladium")).Rate.Bid;
+					OFFERPRICE = metalService.GetPrices().FirstOrDefault(x => x.Metal.Equals("palladium")).Rate.Ask;
+					break;
+			}
             var result = new
             {
                 id = metal.MaterialId,
                 purity = metal.Purity,
-                bidPrice = metal.BidPrice,
-                offerPrice = metal.OfferPrice,
+                bidPrice = BIDPRICE,
+                offerPrice = OFFERPRICE,
                 image = metal.MaterialImage
             };
             return new JsonResult(result);

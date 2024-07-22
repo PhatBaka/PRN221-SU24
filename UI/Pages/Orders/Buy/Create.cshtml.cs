@@ -150,10 +150,10 @@ namespace UI.Pages.Orders.Buy
             return Page();
         }
 
-        private void SaveCart(List<CartItem> cartItems) => HttpContext.Session.SetObjectAsJson("CART", cartItems);
+        private void SaveCart(List<CartItem> cartItems) => HttpContext.Session.SetObjectAsJson("BUYCART", cartItems);
         private void LoadCart()
         {
-            CartItems = HttpContext.Session.GetObjectFromJson<List<CartItem>>("CART");
+            CartItems = HttpContext.Session.GetObjectFromJson<List<CartItem>>("BUYCART");
             CartItems ??= new List<CartItem>();
         }
 
@@ -249,7 +249,7 @@ namespace UI.Pages.Orders.Buy
 
             if (order != null)
             {
-                HttpContext.Session.Remove("CART");
+                HttpContext.Session.Remove("BUYCART");
                 HttpContext.Session.Remove("ACCOUNT");
                 return RedirectToPage("./Detail", new { id = newOrder.OrderId });
             }
@@ -270,7 +270,6 @@ namespace UI.Pages.Orders.Buy
             CurrentFilter = searchString;
 
             IQueryable<Jewelry> jewelries = _jewelryService.GetJewelries().Where(j =>
-                                                //(j.JewelryStatus == "OLD") &&
                                                 !(j.JewelryMaterials.Any(m => !m.Material.IsMetail) && j.OrderDetails.Count > 0) &&
                                                 !(j.JewelryMaterials.All(m => m.Material.IsMetail) && j.Quantity == 0)).AsQueryable();
 
@@ -315,7 +314,7 @@ namespace UI.Pages.Orders.Buy
 
         public IActionResult OnPostClearCart()
         {
-            HttpContext.Session.Remove("CART");
+            HttpContext.Session.Remove("BUYCART");
             LoadData("", "", 1);
             return Page();
         }

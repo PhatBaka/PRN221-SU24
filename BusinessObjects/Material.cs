@@ -47,6 +47,11 @@ namespace BusinessObjects
 
         public byte[]? GemCertificate { get; set; }
 
+        [Column(TypeName = "decimal")]
+        public decimal StockQuantity { get; set; }
+
+        public string? MaterialStatus { get; set; }
+
         public virtual ICollection<JewelryMaterial> JewelryMaterials { get; set; }
 
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

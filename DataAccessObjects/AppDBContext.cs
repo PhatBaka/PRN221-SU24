@@ -167,7 +167,8 @@ namespace DataAccessObjects
                     .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(d => d.PromotionDetail)
-                    .WithOne(d => d.OrderDetail)
+                    .WithMany(d => d.OrderDetail)
+                    .HasForeignKey(d => d.PromotionDetailId)
                     .OnDelete(DeleteBehavior.NoAction);
             });
 
@@ -179,11 +180,6 @@ namespace DataAccessObjects
                 entity.Property(e => e.PromotionName).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.StartDate).HasColumnType("datetime2").IsRequired();
                 entity.Property(e => e.EndDate).HasColumnType("datetime2").IsRequired();
-
-                entity.HasMany(d => d.PromotionDetails)
-                    .WithOne(p => p.Promotion)
-                    .HasForeignKey(d => d.PromotionId)
-                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<PromotionDetail>(entity =>
@@ -205,7 +201,7 @@ namespace DataAccessObjects
                     .HasForeignKey(d => d.JewelryId)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasOne(d => d.OrderDetail)
+                entity.HasMany(d => d.OrderDetail)
                     .WithOne(d => d.PromotionDetail)
                     .OnDelete(DeleteBehavior.NoAction);
             });
