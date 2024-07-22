@@ -88,7 +88,7 @@ namespace UI.Pages.Orders.Buy
 
                 if (currentMaterial.IsMetail)
                 {
-                    unitPrice += currentMaterial.OfferPrice * (decimal)material.JewelryWeight;
+                    unitPrice += currentMaterial.BidPrice * (decimal)material.JewelryWeight;
                 }
                 else
                 {

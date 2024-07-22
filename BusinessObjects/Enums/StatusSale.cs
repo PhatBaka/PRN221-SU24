@@ -10,11 +10,7 @@ namespace BusinessObjects.Enums
     {
         IN_STOCK,
         OUT_OF_STOCK,
-        DISCONTINUED,
-
-        OLD,
-        NEW,
-        RENEW
+        DISCONTINUED
     }
 
     public static class StatusSaleExtension

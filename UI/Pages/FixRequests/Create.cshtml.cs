@@ -12,7 +12,7 @@ using Services.Interfaces;
 using UI.Payload.WarrantyPayload;
 using BusinessObjects.Enums;
 
-namespace UI.Pages.Warranties.FixRequests
+namespace UI.Pages.FixRequests
 {
     public class CreateModel : PageModel
     {
@@ -34,10 +34,10 @@ namespace UI.Pages.Warranties.FixRequests
         public WarrantyFixRequest WarrantyFixRequest { get; set; } = default!;
         public Warranty WarrantyRequestToFix { get; set; } = default!;
         private WarrantyHistory WarrantyHistory { get; set; } = default!;
-		[BindProperty(SupportsGet = true)]
-		public int? OrderId { get; set; }
-		public string Message { get; set; }
-        public Boolean hasExpired { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int? OrderId { get; set; }
+        public string Message { get; set; }
+        public bool hasExpired { get; set; }
 
 
         public async Task<IActionResult> OnGetAsync()
@@ -49,18 +49,18 @@ namespace UI.Pages.Warranties.FixRequests
             }
             else
             {
-				Warranty warranty = warrantySerivce.GetWarrantyById(OrderId.Value);
-				if (warranty == null)
-				{
-					Message = $"Warranty ID {OrderId.Value} not found";
-					return Page();
+                Warranty warranty = warrantySerivce.GetWarrantyById(OrderId.Value);
+                if (warranty == null)
+                {
+                    Message = $"Warranty ID {OrderId.Value} not found";
+                    return Page();
                 }
                 else
                 {
-					WarrantyRequestToFix = warranty;
-					hasExpired = warrantyHistoryService.IsDateWithinWarrantyPeriod(DateTime.Now, warranty.ActiveDate, warranty.EndDate);
-				}	
-			}
+                    WarrantyRequestToFix = warranty;
+                    hasExpired = warrantyHistoryService.IsDateWithinWarrantyPeriod(DateTime.Now, warranty.ActiveDate, warranty.EndDate);
+                }
+            }
             return Page();
         }
 
@@ -72,15 +72,16 @@ namespace UI.Pages.Warranties.FixRequests
             try
             {
                 warrantyHistoryService.AddWarrantyHistory(warrantyHistory);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
-				Message = ex.Message;
+                Message = ex.Message;
                 OrderId = WarrantyFixRequest.WarrantyId;
-				return await OnGetAsync();
-			}
+                return await OnGetAsync();
+            }
             return RedirectToPage("./Index");
         }
 
-		
-	}
+
+    }
 }

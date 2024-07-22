@@ -1,367 +1,276 @@
-﻿@page
-@model UI.Pages.Jewelries.CreateJewelryModel
+﻿﻿
+@page "{handler?}"
+@model UI.Pages.Jewelries.CreateModel
+
 @{
+	ViewData["Title"] = "Create";
+}
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"]</title>
+	<link rel="stylesheet" href="https://cdn.quilljs.com/1.3.6/quill.snow.css">
+</head>
+<div style="margin: auto 20px;">
+	<h1>New Jewelry</h1>
+	<hr />
 
+	<form method="post" id="jewelryForm" enctype="multipart/form-data">
+		<div class="form-group">
+			@* Display any custom message *@
+			@if (!string.IsNullOrEmpty(Model.Message))
+			{
+
+				<div class="alert alert-danger d-flex align-items-center mt-3 mb-3" role="alert">
+					<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+						<use xlink:href="#exclamation-triangle-fill" />
+					</svg>
+					<div>
+						<div class="text-danger">@Model.Message</div>
+					</div>
+				</div>
+			}
+		</div>
+		<div class="container-lg product-form">
+			<div class="container section">
+				<h3 id="product-info-title">Product Information</h3>
+				<div class="row product-info">
+					<div class="col-md-4 image-section" style="align-content: center; padding: 20px;">
+						<div class="mb-4 d-flex justify-content-center">
+							<img id="selectedImage" class="mx-auto d-block img-fluid"
+								 src="https://mdbootstrap.com/img/Photos/Others/placeholder.jpg"
+								 alt="example placeholder" style="height: 300px" />
+						</div>
+						<div class="d-flex justify-content-center">
+							<div data-mdb-ripple-init class="btn-sm btn-primary btn-rounded" style="width: 450px; margin-top: 10px;">
+								<label class="form-label text-white m-1" for="customFile1">Load product image</label>
+								<input type="file" asp-for="Jewelry.ImageDataFile" class="form-control d-none" id="customFile1" onchange="displaySelectedImage(event, 'selectedImage')" />
+							</div>
+							<span asp-validation-for="Jewelry.ImageDataFile" class="text-danger"></span>
+						</div>
+						<div class="d-flex justify-content-center mt-2" id="removeButtonContainer" style="display: none;">
+							<button type="button" class="btn btn-danger btn-sm" onclick="removeSelectedImage('selectedImage', 'customFile1')">Remove</button>
+						</div>
+					</div>
+					<div class="col-md-7 information-section" style="padding-left: 35px;">
+						<div class="row">
+							<div class="form-group col-8">
+								<label class="control-label">Jewelry Name </label>
+								<input asp-for="Jewelry.JewelryName" class="form-control" type="text" />
+								<span asp-validation-for="Jewelry.JewelryName" class="text-danger"></span>
+							</div>
+							<div class="form-group col-4">
+								<label class="control-label">Category</label>
+								<select asp-for="Jewelry.CategoryName" class="form-control" asp-items=@Model.CategoryOptions></select>
+							</div>
+							<div class="form-group col-auto">
+								<label class="control-label"> Total Weight (Gam)</label>
+								<input asp-for="Jewelry.TotalWeight" class="form-control" type="number" min="0.01" />
+								<span asp-validation-for="Jewelry.TotalWeight" class="text-danger"></span>
+							</div>
+							<div data-mdb-input-init class="form-group col-auto">
+								<label class="control-label">Description</label>
+								<textarea asp-for="Jewelry.Description" class="form-control" id="textAreaExample6" rows="5"></textarea>
+								<span asp-validation-for="Jewelry.Description" class="text-danger"></span>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="container section">
+				<h3 id="product-info-title">Product Metal</h3>
+				<div id="material-container">
+					<div id="material-template" style="display: none;">
+						<table class="table table-bordered table-sm material-item ">
+							<thead>
+								<tr>
+									<th>Image</th>
+									<th>Metal Type</th>
+									<th>Material Weight (oz)</th>
+									<th>Bid Price (USD/oz)</th>
+									<th>Offer Price (USD/oz)</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="material-info product-info">
+									<td></td>
+									<td>
+										<select class="form-control metal-dropdown">
+											<option value="" disabled selected>Select Metal Type</option>
+											@foreach (var metaltype in Model.MetalOptions)
+											{
+												<option value="@metaltype.Value">@metaltype.Text</option>
+											}
+										</select>
+									</td>
+									<td>
+										<input type="number" class="form-control metal-weight" placeholder="0" min="0" step="0.01" />
+									</td>
+									<td>
+										<input type="text" class="form-control metal-bidprice" readonly />
+									</td>
+									<td>
+										<input type="text" class="form-control metal-offerprice" readonly />
+									</td>
+									<td>
+										<button type="button" class="btn btn-sm btn-outline-danger remove-material">
+											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+												<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+											</svg>
+										</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<button type="button" style="margin: 15px 4px;" class="btn btn-md btn-outline-secondary" id="add-material">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+						<path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"></path>
+					</svg>
+					Add metal
+				</button>
+			</div>
+
+			<div class="container section">
+				<h3 id="product-info-title">Product Gemstone</h3>
+				<div id="gemstone-container">
+					<div id="gemstone-template" style="display: none;">
+						<table class="table table-bordered table-sm gemstone-item">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>Gemstone Type</th>
+									<th>Quantity</th>
+									<th>Gemstone Price</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="gemstone-info product-info">
+									<td>
+										<input type="text" class="form-control gemstone-id" readonly />
+									</td>
+									<td>
+										<select class="form-control gemstone-dropdown">
+											<option value="" disabled selected>Select Gemstone Type</option>
+											@foreach (var gem in Model.GemstoneOptions)
+											{
+												<option value="@gem.Value">@gem.Text</option>
+											}
+										</select>
+									</td>
+									<td>
+										<input type="number" class="form-control gemstone-weight" placeholder="0" min="0" step="1" value="1" readonly />
+									</td>
+									<td>
+										<input type="text" class="form-control gemstone-cost" readonly />
+									</td>
+									<td>
+										<button type="button" class="btn btn-sm btn-outline-danger remove-gemstone">
+											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+												<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+											</svg>
+										</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
+				</div>
+				<button type="button" style="margin: 15px 4px;" class="btn btn-md btn-outline-secondary" id="add-gemstone">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+						<path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"></path>
+					</svg>
+					Add gemstone
+				</button>
+			</div>
+
+			<div class="container section">
+				<h3 id="product-info-title">Stock Inventory</h3>
+				<div class="row">
+					<div class="form-group col-md-3">
+						<label class="control-label">Quantity</label>
+						<input asp-for="Jewelry.Quantity" class="form-control" type="number" min=0 placeholder="0" />
+						<span asp-validation-for="Jewelry.Quantity" class="text-danger"></span>
+					</div>
+					<div class="form-group col-md-3">
+						<label class="control-label">Sale Status</label>
+						<select asp-for="Jewelry.StatusSale" class="form-control" asp-items=@Model.SaleStatusOptions></select>
+						<span asp-validation-for="Jewelry.StatusSale" class="text-danger"></span>
+					</div>
+				</div>
+			</div>
+			<div class="container section">
+				<h3 id="product-info-title">Product Price</h3>
+				<div class="row">
+					<div class="form-group col-md-3">
+						<label class="control-label">Total Metal Price (VNĐ)</label>
+						<input class="form-control price-input" id="total-metal-cost" readonly placeholder="0" />
+					</div>
+					<div class="form-group col-md-3">
+						<label class="control-label">Total Stone Cost (VNĐ)</label>
+						<input class="form-control price-input" id="total-gemstone-cost" readonly placeholder="0" />
+					</div>
+					<div class="form-group col-md-3">
+						<label class="control-label">Labor Price (VNĐ)</label>
+						<input id="labor-cost" asp-for="Jewelry.LaborPrice" class="form-control price-input" placeholder="0" />
+						<span asp-validation-for="Jewelry.LaborPrice" class="text-danger"></span>
+					</div>
+					<div class="form-group col-md-3">
+						<label class="control-label">Markup Percentage (%)</label>
+						<input asp-for="Jewelry.MarkupPercentage" class="form-control" type="number" id="markup-percent" min=0 placeholder="0" />
+						<span asp-validation-for="Jewelry.MarkupPercentage" class="text-danger"></span>
+					</div>
+
+				</div>
+				<hr />
+				<div class="row">
+					<div class=" form-group col-md-2">
+						<div>
+							<label style="font-size: 20px;" class="control-label">Sale Price</label>
+						</div>
+						<input style="height: 45px; width: 400px;" class="form-control price-input" id="sale-price" type="text" disabled>
+
+					</div>
+				</div>
+			</div>
+			<div>
+				<input type="hidden" id="metalsJson" asp-for="MetalsJson" />
+				<input type="hidden" id="gemstonesJson" asp-for="GemstonesJson" />
+			</div>
+
+			<div>
+				<input type="hidden" id="metalsJson" asp-for="MetalsJson" />
+				<input type="hidden" id="gemstonesJson" asp-for="GemstonesJson" />
+				<div style="text-align: end; align-items: center; display: flex; flex-direction: row;justify-content:space-between; margin-left: 50px; margin-top: 40px; margin-right: 50px;">
+					<div>
+						<a style="background-color: gray; color: white" class="btn btn-lg" asp-page="./Index">Cancel</a>
+
+					</div>
+					<div>
+						<input type="submit" value="Create" class="btn-lg btn-primary" />
+
+					</div>
+				</div>
+			</div>
+			<
+		</div>
+	</form>
+
+</div>
+
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+		<script src="~/js/jewelrycreate.js"></script>
+	}
 }
 
-<style>
-    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
-        padding: 8px;
-        line-height: 1.42857143;
-        vertical-align: middle;
-        border-top: 1px solid #ddd
-    }
-
-    .wrap-text {
-        word-wrap: break-word; /* IE */
-        overflow-wrap: break-word; /* CSS3 */
-        white-space: normal;
-        max-width: 150px;
-    }
-</style>
-
-@if (!string.IsNullOrEmpty(Model.Message))
-{
-    <h3 style="color: red">@Model.Message</h3>
-}
-
-<section id="center" class="center_shop">
-    <div class="container">
-        <div class="row">
-            <div class="center_shop_t clearfix">
-                <div class="col-sm-6">
-                    <div class="center_shop_tl clearfix d-flex align-items-center">
-                        <h4 class="mgt">NEW JEWELRY</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-<section id="cart_page" class="clearfix cart">
-    <div class="container">
-        <div class="row">
-
-            <div class="cart_3 clearfix">
-
-                <div class="col-sm-6">
-
-                    <!-- Metal cart -->
-                    <div class="cart_3r clearfix">
-                        <h5 class="mgt head_1">METAL</h5>
-                    </div>
-                    <hr />
-                    @{
-                        var metalsInCart = Model.MetalCart;
-                        if (metalsInCart != null && metalsInCart.Count > 0)
-                        {
-                            foreach (var metal in metalsInCart)
-                            {
-                                <div class="cart_3l1 clearfix">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th>Metal Name</th>
-                                                <th>Weight (toz)</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    @switch (metal.MetalName)
-                                                    {
-                                                        case "gold":
-                                                            <a href="#"><img src="~/img/gold.jpg" alt="gold" style="max-width: 100px; max-height: 100px" class="iw"></a>
-                                                            break;
-                                                        case "silver":
-                                                            <a href="#"><img src="~/img/silver.jpg" alt="silver" style="max-width: 100px; max-height: 100px" class="iw"></a>
-                                                            break;
-                                                        case "palladium":
-                                                            <a href="#"><img src="~/img/palladium.jpg" alt="palladium" style="max-width: 100px; max-height: 100px" class="iw"></a>
-                                                            break;
-                                                    }
-                                                </td>
-                                                <td>
-                                                    <h5 class="mgt">
-                                                        @metal.MetalName.ToUpper()
-                                                    </h5>
-                                                </td>
-                                                <td>
-                                                    <h5 class="mgt">
-                                                        Weight (toz)
-                                                    </h5>
-                                                </td>
-                                                <form method="post" asp-page-handler="HandleMetalCart">
-                                                <td>
-                                                    <div class="input-group number-spinner">
-                                                        <input type="text" asp-for="@metal.Weight" size="2px" class="form-control text-center" name="weight">
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                        <input type="hidden" name="materialId" value="@metal.MaterialId" />
-                                                        <h6 class="mgt"><button class="button mgt" name="action" value="update">UPDATE</button></h6>
-                                                </td>
-                                                </form>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <p>You don't add any metal right now</p>
-                        }
-                    }
-                    <hr />
-
-                    <!-- Summanry -->
-                    <div class="cart_3r clearfix">
-                        <h5 class="mgt head_1">MATERIALS</h5>
-                    </div>
-                    <hr />
-                    @{
-                        if (Model.MaterialCart != null && Model.MaterialCart.Count > 0)
-                        {
-                            <table class="table table-striped table-center">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Weight</th>
-                                        <th>Sell Price</th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var material in Model.MaterialCart)
-                                    {
-
-                                        <tr class="d-flex justify-content-center">
-                                            @if (material.Material.IsMetail)
-                                            {
-                                                <td>@material.Material.MaterialId</td>
-                                                <td>@material.Material.MaterialName.ToUpper()</td>
-                                                <td>@material.Weight</td>
-                                                <td></td>
-                                                switch (material.Material.MaterialName)
-                                                {
-                                                    case "gold":
-                                                        <td>
-                                                            <img src="~/img/gold.jpg" style="max-width: 100px; max-height: 100px;" />
-                                                        </td>
-                                                        break;
-                                                    case "silver":
-                                                        <td>
-                                                            <img src="~/img/silver.jpg" style="max-width: 100px; max-height: 100px;" />
-                                                        </td>
-                                                        break;
-                                                    case "palladium":
-                                                        <td>
-                                                            <img src="~/img/palladium.jpg" style="max-width: 100px; max-height: 100px;" />
-                                                        </td>
-                                                        break;
-                                                }
-                                                <td></td>
-                                                <td>
-                                                    <form method="post" asp-page-handler="RemoveFromMaterialCart">
-                                                        <input type="hidden" name="materialId" value="@material.Material.MaterialId" />
-                                                        <h6 class="mgt"><button class="button_1 mgt" name="action" value="remove">REMOVE</button></h6>
-                                                    </form>
-                                                </td>
-                                            }
-                                            @if (!material.Material.IsMetail)
-                                            {
-                                                <td>@material.Material.MaterialId</td>
-                                                <td>@material.Material.MaterialName.ToUpper()</td>
-                                                <td></td>
-                                                <td>@material.Material.MaterialCost</td>
-                                                <td>
-                                                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(material.Material.MaterialImage)" style="max-width: 100px; max-height: 100px;" />
-                                                </td>
-                                                <td>
-                                                    <a class="button" asp-page="/Gems/Detail" asp-route-id="@material.Material.MaterialId">Details</a>
-                                                </td>
-                                                <td>
-                                                    <form method="post" asp-page-handler="RemoveFromMaterialCart">
-                                                        <input type="hidden" name="materialId" value="@material.Material.MaterialId" />
-                                                        <h6 class="mgt"><button class="button_1 mgt" name="action" value="remove">REMOVE</button></h6>
-                                                    </form>
-                                                </td>
-                                            }
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        }
-                        else
-                        {
-                            <p>You don't have any material right now</p>
-                        }
-                    }
-                    <hr />
-
-                </div>
-
-                <div class="col-sm-6">
-
-                    <!-- Load gem -->
-                    <div class="cart_3r clearfix">
-                        <h5 class="mgt head_1">GEM</h5>
-                    </div>
-                    <hr />
-                    <form asp-page-handler="SearchGem" method="post">
-                        <input type="text" />
-                        <input type="submit" value="Search" />
-                    </form>
-                    <table class="table table-striped table-center">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Type</th>
-                                <th>Sell Price</th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var gem in Model.Gems)
-                            {
-                                <tr class="d-flex justify-content-center">
-                                    <td>@gem.MaterialId</td>
-                                    <td>@gem.MaterialName</td>
-                                    <td>@gem.MaterialCost</td>
-                                    <td>
-                                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(gem.MaterialImage)" style="max-width: 100px; max-height: 100px;" />
-                                    </td>
-                                    <td>
-                                        <a class="button" asp-page="/Gems/Detail" asp-route-id="@gem.MaterialId">Details</a>
-                                    </td>
-                                    <td>
-                                        <form asp-page-handler="AddGemToCart" method="post">
-                                            <input type="hidden" name="MaterialId" value="@gem.MaterialId" />
-                                            <button class="button" type="submit">Cart</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                    <hr />
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-    </section>
-
-    <hr />
-<form method="post" enctype="multipart/form-data" asp-page-handler="CreateJewelry">
-    <section id="checkout" class="clearfix">
-        <div class="container">
-            <div class="row">
-                <div class="checkout_1 clearfix">
-                    <div class="col-sm-6">
-                        <div class="checkout_1l1 clearfix">
-                            <div class="col-sm-6 space_left">
-                                <h5>Jewelry Name <span class="col_1">*</span></h5>
-                                <input asp-for="@Model.Jewelry.JewelryName" class="form-control" type="tex">
-                            </div>
-                            @{
-                                bool haveGem = false;
-                            }
-                            @if (Model.MaterialCart != null && Model.MaterialCart.Count > 0)
-                            {
-                                @foreach (var material in Model.MaterialCart)
-                                {
-                                    if (!material.Material.IsMetail)
-                                    {
-                                        haveGem = true;
-                                    }
-                                }
-                            }
-                            @if (!haveGem)
-                            {
-                                <div class="col-sm-6 space_left">
-                                    <h5>Quantity <span class="col_1">*</span></h5>
-                                    <input asp-for="@Model.Jewelry.Quantity" class="form-control" type="number">
-                                </div>
-                            }
-                        </div>
-                        <div class="checkout_1l1 clearfix">
-                            <div class="col-sm-6 space_left">
-                                <h5>Category <span class="col_1">*</span></h5>
-                                <select id="jewelryCategory" name="selectedCategory" class="form-control">
-                                    @foreach (var option in Model.JewelryOptions)
-                                    {
-                                        <option value="@option.CategoryId">@option.CategoryName</option>
-                                    }
-                                </select>
-                            </div>
-                            <div class="col-sm-6 space_left">
-                                <h5>Work Fee <span class="col_1">*</span></h5>
-                                <input asp-for="@Model.Jewelry.LaborPrice" class="form-control" >
-                            </div>
-                        </div>
-                        <div class="checkout_1l1 clearfix">
-                            <div class="col-sm-12 space_left">
-                                <h5>Description <span class="col_1">*</span></h5>
-                                <textarea asp-for="@Model.Jewelry.Description" class="form-control"></textarea>
-                            </div>
-                        </div>
-                        <div class="checkout_1l1 clearfix">
-                            <h4 class="mgt"><input class="button" type="submit" value="CREATE" /></h4>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="checkout_1l1 clearfix">
-                            <h5>Jewelry Image <span class="col_1">*</span></h5>
-                            <input asp-for="Jewelry.ImageDataFile" type="file" class="form-control" id="materialImageInput" accept="image/*">
-                            <div class="mt-6" id="materialImagePreviewContainer">
-                                <!-- Preview images will be shown here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</form>
-
-<script>
-    // Function to handle file input change and show preview
-    function handleFileSelect(inputId, previewContainerId) {
-        const input = document.getElementById(inputId);
-        const previewContainer = document.getElementById(previewContainerId);
-
-        input.addEventListener('change', function () {
-            while (previewContainer.firstChild) {
-                previewContainer.removeChild(previewContainer.firstChild);
-            }
-
-            const file = input.files[0];
-            const reader = new FileReader();
-
-            reader.onload = function (e) {
-                const imgElement = document.createElement('img');
-                imgElement.setAttribute('src', e.target.result);
-                imgElement.setAttribute('class', 'img-thumbnail');
-                previewContainer.appendChild(imgElement);
-            }
-
-            reader.readAsDataURL(file);
-        });
-    }
-
-    // Call handleFileSelect for each file input
-    document.addEventListener('DOMContentLoaded', function () {
-        handleFileSelect('materialImageInput', 'materialImagePreviewContainer');
-    });
-</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>

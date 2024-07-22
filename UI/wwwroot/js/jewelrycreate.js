@@ -1,9 +1,17 @@
-﻿$(document).ready(function () {
+﻿var quill = new Quill('#editor', {
+    theme: 'snow'
+});
+document.getElementById('jewelryForm').addEventListener('submit', function (e) {
+    // Copy the HTML content from Quill editor to the hidden textarea
+    var description = document.getElementById('jewelryDescription');
+    description.value = quill.root.innerHTML;
+});
+
+$(document).ready(function () {
     // Load old data when errors return
     loadMetalsFromMetalsJson();
     loadGemstoneFromGemstonesJsons();
 
-  
     // Add new material row
     $('#add-material').on('click', function () {
         addMetalTemplate();
@@ -11,12 +19,12 @@
 
     // Remove material row
     $(document).on('click', '.remove-material', function () {
-        $(this).closest('.material-info').remove();
+        $(this).closest('.material-item').remove();
         calculateTotalMetalPrice();
     });
 
     // Update total metal price on weight change
-    $(document).on('input', '.metal-weight', function () {
+    $(document).on('change', '.metal-weight', function () {
         calculateTotalMetalPrice();
     });
 
@@ -51,12 +59,12 @@
 
     // Remove gemstone row
     $(document).on('click', '.remove-gemstone', function () {
-        $(this).closest('.gemstone-info').remove();
+        $(this).closest('.gemstone-item').remove();
         calculateTotalGemstonePrice();
     });
 
     // Update total gemstone price on weight change
-    $(document).on('input', '.gemstone-weight', function () {
+    $(document).on('change', '.gemstone-weight', function () {
         calculateTotalGemstonePrice();
     });
 
@@ -118,7 +126,7 @@
 
     function addMetalTemplate() {
         var materialTemplate = $('#material-template').html();
-        $('#material-container').append($newMaterial);
+        $('#material-container').append(materialTemplate);
         calculateTotalMetalPrice();
     }
 
@@ -203,7 +211,7 @@
                 $('#material-container').append($row);
                 calculateTotalMetalPrice();
             });
-        }
+        };
     }
 
     function loadGemstoneFromGemstonesJsons() {
@@ -224,20 +232,83 @@
                     .done(function (data) {
                         if (data) {
                             var gemCost = formatNumber(data.cost);
+                            var gemID = formatNumber(data.id);
                             $row.find('.gemstone-cost').val(gemCost);
+                            $row.find('.gemstone-id').val(gemID);
                             calculateTotalGemstonePrice();
                         } else {
                             $row.find('.gemstone-cost').val('no data');
+                            $row.find('.gemstone-id').val('no data');
                             calculateTotalGemstonePrice();
                         }
                     })
                     .fail(function () {
                         console.error('Failed to fetch gemstone details.');
                         $row.find('.gemstone-cost').val('no data');
+                        $row.find('.gemstone-id').val('no data');
                     });
                 $('#gemstone-container').append($row);
                 calculateTotalGemstonePrice();
             });
-        }
+        };
     }
+});
+
+
+
+
+function displaySelectedImage(event, elementId) {
+    const selectedImage = document.getElementById(elementId);
+    const fileInput = event.target;
+    const removeButtonContainer = document.getElementById('removeButtonContainer');
+
+    if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            selectedImage.src = e.target.result;
+            removeButtonContainer.style.display = 'block'; // Show the remove button
+        };
+
+        reader.readAsDataURL(fileInput.files[0]);
+    }
+}
+
+function removeSelectedImage(imageId, fileInputId) {
+    const selectedImage = document.getElementById(imageId);
+    const fileInput = document.getElementById(fileInputId);
+    const removeButtonContainer = document.getElementById('removeButtonContainer');
+
+    // Reset the file input
+    fileInput.value = '';
+
+    // Reset the image to the placeholder
+    selectedImage.src = 'https://mdbootstrap.com/img/Photos/Others/placeholder.jpg';
+
+    // Hide the remove button
+    removeButtonContainer.style.display = 'none';
+}
+
+document.querySelectorAll('.price-input').forEach(function (input) {
+    input.addEventListener('input', function (e) {
+        var value = e.target.value.replace(/,/g, ''); // Remove existing commas
+        if (value === "") {
+            e.target.value = "";
+            return;
+        }
+
+        var formattedValue = new Intl.NumberFormat('en-US').format(value);
+        e.target.value = formattedValue;
+    });
+
+    input.addEventListener('blur', function (e) {
+        var value = e.target.value.replace(/,/g, ''); // Remove existing commas
+        if (value === "") {
+            e.target.value = "0";
+            return;
+        }
+
+        var formattedValue = new Intl.NumberFormat('en-US').format(value);
+        e.target.value = formattedValue;
+    });
 });
