@@ -54,8 +54,8 @@ namespace UI.Pages.Jewelries
             else
             {
                 Jewelry = jewelry;
-                //ViewData["StatusSaleDisplay"] = StatusSaleExtension.GetDisplayName(jewelry.StatusSale);
-                //ViewData["BasePriceDisplay"] = (Decimal) jewerlryService.GetJewelrySalePrice(jewelry);
+                ViewData["StatusSaleDisplay"] = StatusSaleExtension.GetDisplayName(jewelry.StatusSale);
+                ViewData["BasePriceDisplay"] = (Decimal) jewerlryService.GetJewelrySalePrice(jewelry);
             }
             return Page();
         }

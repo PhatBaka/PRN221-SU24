@@ -28,10 +28,10 @@ namespace DataAccessObjects
                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                     .Build();
 
-                var connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException("Connection string is null");
+                //var connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException("Connection string is null");
                 optionsBuilder.UseLazyLoadingProxies();
-                optionsBuilder.UseSqlServer(connectionString);
-				//optionsBuilder.UseSqlServer("Server=(local);Database=JewelryDB;Uid=sa;Pwd=hanh3533.;");
+                //optionsBuilder.UseSqlServer(connectionString);
+				optionsBuilder.UseSqlServer("Server=(local);Database=JewelryDB;Uid=sa;Pwd=hanh3533.;");
 			}
         }
 
@@ -246,7 +246,7 @@ namespace DataAccessObjects
             });
 
             base.OnModelCreating(modelBuilder);
-            //modelBuilder.SeedData();
+            modelBuilder.SeedData();
         }
     }
 }

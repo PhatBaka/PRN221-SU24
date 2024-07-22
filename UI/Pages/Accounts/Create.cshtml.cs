@@ -18,12 +18,15 @@ namespace UI.Pages.Accounts
         public CreateModel(AppDBContext context)
         {
             _context = context;
+            SetRoleOptions();
         }
 
         [BindProperty]
         public Account Account { get; set; } = default!;
 
         public List<SelectListItem> RoleOptions { get; set; }
+        public string Message { get; set; }
+
 
         public IActionResult OnGet()
         {
@@ -33,14 +36,7 @@ namespace UI.Pages.Accounts
                 return RedirectToPage("/AccessDenied");
             }
 
-            RoleOptions = Enum.GetValues(typeof(AccountRole))
-                .Cast<AccountRole>()
-                .Select(r => new SelectListItem
-                {
-                    Value = r.ToString(),
-                    Text = r.ToString()
-                })
-                .ToList();
+            SetRoleOptions();
 
             return Page();
         }
@@ -53,16 +49,32 @@ namespace UI.Pages.Accounts
             {
                 return RedirectToPage("/AccessDenied");
             }
-
-            if (!ModelState.IsValid || _context.Accounts == null || Account == null)
+            try
             {
+                Account.CreatedDate = DateTime.Now;
+                Account.ObjectStatus = ObjectStatus.ACTIVE;
+                _context.Accounts.Add(Account);
+                await _context.SaveChangesAsync();
+            }catch(Exception ex)
+            {
+                Message = ex.Message;
                 return Page();
             }
-
-            _context.Accounts.Add(Account);
-            await _context.SaveChangesAsync();
+            
 
             return RedirectToPage("./Index");
+        }
+
+        private void SetRoleOptions()
+        {
+            RoleOptions = Enum.GetValues<AccountRole>()
+                .Select(r => new SelectListItem
+                {
+                    Value = r.ToString(),
+                    Text = r.ToString()
+                })
+                .ToList();
+                             
         }
     }
 }

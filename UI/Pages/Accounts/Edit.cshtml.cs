@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessObjects;
 using DataAccessObjects;
+using BusinessObjects.Enums;
 
 namespace UI.Pages.Accounts
 {
@@ -18,10 +19,15 @@ namespace UI.Pages.Accounts
         public EditModel(DataAccessObjects.AppDBContext context)
         {
             _context = context;
+            SetRoleOptions();
         }
 
         [BindProperty]
         public Account Account { get; set; } = default!;
+        public string Message { get; set; }
+        public List<SelectListItem> RoleOptions { get; set; }
+
+
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -32,13 +38,17 @@ namespace UI.Pages.Accounts
             }
             if (id == null || _context.Accounts == null)
             {
-                return NotFound();
+                Message = "Account ID " + id + "is not found!";
+                SetRoleOptions();
+                return Page();
             }
 
             var account =  await _context.Accounts.FirstOrDefaultAsync(m => m.AccountId == id);
             if (account == null)
             {
-                return NotFound();
+                Message = "Account ID " + id + "is not found!";
+                SetRoleOptions();
+                return Page();
             }
             Account = account;
             return Page();
@@ -55,25 +65,35 @@ namespace UI.Pages.Accounts
             }
             if (!ModelState.IsValid)
             {
+                SetRoleOptions();
                 return Page();
             }
 
-            _context.Attach(Account).State = EntityState.Modified;
 
             try
             {
+                _context.Attach(Account).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
                 if (!AccountExists(Account.AccountId))
                 {
-                    return NotFound();
+                    Message = "Save new account failed! Account ID " + Account.AccountId + " is not found!";
+                    SetRoleOptions();
+                    return Page();
                 }
                 else
                 {
-                    throw;
+                    Message = "Save new account failed! Account ID " + Account.AccountId + " is not found!";
+                    SetRoleOptions();
+                    return Page();
                 }
+            }catch(Exception ex)
+            {
+                Message = ex.Message;
+                SetRoleOptions();
+                return Page();
             }
 
             return RedirectToPage("./Index");
@@ -82,6 +102,18 @@ namespace UI.Pages.Accounts
         private bool AccountExists(int id)
         {
           return (_context.Accounts?.Any(e => e.AccountId == id)).GetValueOrDefault();
+        }
+
+        private void SetRoleOptions()
+        {
+            RoleOptions = Enum.GetValues<AccountRole>()
+                .Select(r => new SelectListItem
+                {
+                    Value = r.ToString(),
+                    Text = r.ToString()
+                })
+                .ToList();
+
         }
     }
 }
