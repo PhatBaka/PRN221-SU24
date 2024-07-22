@@ -28,14 +28,14 @@ namespace UI.Pages.Materials.Gems
         public PaginatedList<GetGemRequest> Gems { get; set; }
         public string? CurrentFilter { get; set; }
 
-        public async Task OnGetAsync(string currentFilter,
+        public async Task<IActionResult> OnGetAsync(string currentFilter,
                                         string searchString,
                                         int? pageIndex)
         {
             string role = HttpContext.Session.GetString("ROLE");
             if (role != "MANAGER")
             {
-                RedirectToPage("/AccessDenied");
+                return RedirectToPage("/AccessDenied");
             }
             if (searchString != null)
                 pageIndex = 1;
@@ -50,6 +50,7 @@ namespace UI.Pages.Materials.Gems
 
             Gems = PaginatedList<GetGemRequest>.Create(
                 gemsIQ.AsNoTracking(), pageIndex ?? 1, 5);
+            return Page();
         }
     }
 }

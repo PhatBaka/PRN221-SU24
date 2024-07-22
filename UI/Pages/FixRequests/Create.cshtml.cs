@@ -42,7 +42,12 @@ namespace UI.Pages.FixRequests
 
         public async Task<IActionResult> OnGetAsync()
         {
-            if (OrderId == null)
+			string role = HttpContext.Session.GetString("ROLE");
+			if (role == "ADMIN")
+			{
+				return RedirectToPage("/AccessDenied");
+			}
+			if (OrderId == null)
             {
                 Message = "Enter warranty id to create warranty request";
                 return Page();
@@ -67,7 +72,12 @@ namespace UI.Pages.FixRequests
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            WarrantyHistory warrantyHistory = new WarrantyHistory();
+			string role = HttpContext.Session.GetString("ROLE");
+			if (role == "ADMIN")
+			{
+				return RedirectToPage("/AccessDenied");
+			}
+			WarrantyHistory warrantyHistory = new WarrantyHistory();
             warrantyHistory = mapper.Map<WarrantyHistory>(WarrantyFixRequest);
             try
             {

@@ -69,7 +69,12 @@ namespace UI.Pages.Jewelries
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public IActionResult OnPost()
         {
-            if (!MetalsJson.IsNullOrEmpty())
+			string role = HttpContext.Session.GetString("ROLE");
+			if (role == "ADMIN")
+			{
+				return RedirectToPage("/AccessDenied");
+			}
+			if (!MetalsJson.IsNullOrEmpty())
             {
                 List<ProductMaterialDto> metalsInputList = JsonConvert.DeserializeObject<List<ProductMaterialDto>>(MetalsJson);
                 Metals = metalsInputList;

@@ -44,10 +44,15 @@ namespace UI.Pages.FixRequests
         [BindProperty(SupportsGet = true)]
         public string SortBy { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+			string role = HttpContext.Session.GetString("ROLE");
+			if (role == "ADMIN")
+			{
+				return RedirectToPage("/AccessDenied");
+			}
 
-            var warrantyHistory = warrantyHistoryService.GetAllWarrantyHistory().AsQueryable();
+			var warrantyHistory = warrantyHistoryService.GetAllWarrantyHistory().AsQueryable();
 
             if (!string.IsNullOrEmpty(Keyword))
             {
@@ -88,6 +93,7 @@ namespace UI.Pages.FixRequests
                 }
             }
             WarrantyHistory = warrantyHistory.ToList();
+            return Page();
         }
     }
 }

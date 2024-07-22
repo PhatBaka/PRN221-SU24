@@ -71,7 +71,12 @@ namespace UI.Pages.Jewelries
 
         public IActionResult OnGet(int? id)
         {
-            if (id == null)
+			string role = HttpContext.Session.GetString("ROLE");
+			if (role == "ADMIN")
+			{
+				return RedirectToPage("/AccessDenied");
+			}
+			if (id == null)
             {
                 return NotFound();
             }
@@ -91,7 +96,12 @@ namespace UI.Pages.Jewelries
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!MetalsJson.IsNullOrEmpty())
+			string role = HttpContext.Session.GetString("ROLE");
+			if (role == "ADMIN")
+			{
+				return RedirectToPage("/AccessDenied");
+			}
+			if (!MetalsJson.IsNullOrEmpty())
             {
                 List<ProductMaterialDto> metalsInputList = JsonConvert.DeserializeObject<List<ProductMaterialDto>>(MetalsJson);
                 Metals = metalsInputList;

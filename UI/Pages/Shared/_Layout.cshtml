@@ -139,14 +139,14 @@
 					<!-- Collect the nav links, forms, and other content for toggling -->
 					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<ul class="nav navbar-nav nav_m">
-							@if (role.Equals(AccountRole.MANAGER.ToString()))
+							@if (role.Equals(AccountRole.MANAGER.ToString()) || role.Equals(AccountRole.STAFF.ToString()))
 							{
 								<li><a class="m_tag " asp-page=@JEWELRY_INDEX_PATH>Jewelry</a></li>
 								<li class="dropdown">
 									<a class="m_tag" href="#" data-toggle="dropdown" role="button"
 									   aria-expanded="false">Material<span class="caret"></span></a>
 									<ul class="dropdown-menu drop_3" role="menu">
-										<li><a asp-page=@MATERIAL_METAL_INDEX_PATH>Metal</a></li>
+										@* <li><a asp-page=@MATERIAL_METAL_INDEX_PATH>Metal</a></li> *@
 										<li><a asp-page=@MATERIAL_GEM_INDEX_PATH>Gemstone</a></li>
 									</ul>
 								</li>

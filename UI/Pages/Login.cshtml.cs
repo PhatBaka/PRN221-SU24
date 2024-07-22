@@ -74,8 +74,14 @@ namespace UI.Pages
 
             var existedAccount = _accountService.GetAccount(Account.Email, Account.Password);
             
-            if (existedAccount != null && existedAccount.ObjectStatus == ObjectStatus.ACTIVE)
+            if (existedAccount != null)
             {
+                if(existedAccount.ObjectStatus != ObjectStatus.ACTIVE)
+                {
+					HttpContext.Session.SetString("ISAUTHENTICATED", "False");
+					Message = "Account is in status inactive";
+                    return Page();
+				}
 				HttpContext.Session.SetString("ISAUTHENTICATED", "True");
 				switch (existedAccount.Role)
                 {
@@ -102,7 +108,7 @@ namespace UI.Pages
             else
             {
 				HttpContext.Session.SetString("ISAUTHENTICATED", "False");
-				Message = "Can't find account";
+				Message = "Email or Password is incorrect !";
             }
 
             return Page();

@@ -66,7 +66,7 @@ namespace UI.Pages.Materials.Gems
         public IActionResult OnGet()
         {
             string role = HttpContext.Session.GetString("ROLE");
-            if (role != "MANAGER")
+            if (role == "ADMIN")
             {
                 RedirectToPage("/AccessDenied");
             }
