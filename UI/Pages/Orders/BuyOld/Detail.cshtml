@@ -1,9 +1,6 @@
-﻿@page
-@using BusinessObjects.Enums
+﻿@* @page
 @model UI.Pages.Orders.Buy.DetailModel
-
 @{
-
 }
 
 <style>
@@ -68,8 +65,6 @@
                                 <th>Jewelry Name</th>
                                 <th>Quantity</th>
                                 <th>Price</th>
-                                <th>Discount %</th>
-                                <td>Final price</td>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -82,10 +77,6 @@
                                     <td>@order.Jewelry.JewelryName</td>
                                     <td>@order.Quantity</td>
                                     <td>@order.UnitPrice</td>
-                                    <td>@order.DiscountPercent %</td>
-                                    <td>
-                                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(order.Jewelry.JewelryImage)" style="max-width: 100px; max-height: 100px;" />
-                                    </td>
                                     <td>
                                         <a class="button" asp-page="/Jewelries/Details" asp-route-id="@order.JewelryId">Detail</a>
                                     </td>
@@ -99,3 +90,4 @@
         </div>
     </div>
 </section>
+ *@
