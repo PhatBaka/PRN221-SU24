@@ -71,7 +71,12 @@ namespace UI.Pages.Jewelries
 
         public IActionResult OnGet(int? id)
         {
-            if (id == null)
+			string role = HttpContext.Session.GetString("ROLE");
+			if (role == "ADMIN")
+			{
+				return RedirectToPage("/AccessDenied");
+			}
+			if (id == null)
             {
                 return NotFound();
             }
@@ -91,7 +96,12 @@ namespace UI.Pages.Jewelries
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!MetalsJson.IsNullOrEmpty())
+			string role = HttpContext.Session.GetString("ROLE");
+			if (role == "ADMIN")
+			{
+				return RedirectToPage("/AccessDenied");
+			}
+			if (!MetalsJson.IsNullOrEmpty())
             {
                 List<ProductMaterialDto> metalsInputList = JsonConvert.DeserializeObject<List<ProductMaterialDto>>(MetalsJson);
                 Metals = metalsInputList;
@@ -199,13 +209,28 @@ namespace UI.Pages.Jewelries
                 jewelryMaterials.Add(new JewelryMaterial { Material = material, JewelryWeight = metal.MaterialQuantWeight, Jewelry = jewelry });
 
             }
-            if (jewelry.Quantity > 0 && jewelry.StatusSale.Equals(StatusSale.OUT_OF_STOCK))
-            {
-                setupReturnPage(message: "The quantity of product in stock is greater than zero, the sale status mus be instock");
-                return Page();
-            }
+			if (jewelry.Quantity < 0)
+			{
+				setupReturnPage(message: "The quantity of product in stock must >= 0");
+				return Page();
+			}
+			if (jewelry.Quantity > 0 && !jewelry.StatusSale.Equals(StatusSale.IN_STOCK))
+			{
+				setupReturnPage(message: "The quantity of product in stock is greater than zero, the sale status mus be instock");
+				return Page();
+			}
+			if (jewelry.Quantity == 0 && !jewelry.StatusSale.Equals(StatusSale.OUT_OF_STOCK))
+			{
+				setupReturnPage(message: "The quantity of product in stock is zero, the sale status mus be out of stock");
+				return Page();
+			}
+			if (!Gemstones.IsNullOrEmpty() && jewelry.Quantity > 1)
+			{
+				setupReturnPage(message: "The quantity of product has gemstone must be 0  or 1");
+				return Page();
+			}
 
-            jewelry.JewelryMaterials = jewelryMaterials;
+			jewelry.JewelryMaterials = jewelryMaterials;
 
             try
             {

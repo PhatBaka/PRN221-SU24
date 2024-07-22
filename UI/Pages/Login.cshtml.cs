@@ -62,7 +62,7 @@ namespace UI.Pages
             var adminEmail = StringConstants.ADMIN_EMAIL;
             var adminPassword = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("AdminAccount:Password").Value;
 
-            if (Account.Email == adminEmail && Account.Password == adminPassword)
+            if (Account.Email.ToLower() == adminEmail.ToLower() && Account.Password == adminPassword)
             {
                 HttpContext.Session.SetString("ROLE", "ADMIN");
 				HttpContext.Session.SetString("EMAIL", adminEmail);
@@ -74,8 +74,14 @@ namespace UI.Pages
 
             var existedAccount = _accountService.GetAccount(Account.Email, Account.Password);
             
-            if (existedAccount != null && existedAccount.ObjectStatus == ObjectStatus.ACTIVE)
+            if (existedAccount != null)
             {
+                if(existedAccount.ObjectStatus != ObjectStatus.ACTIVE)
+                {
+					HttpContext.Session.SetString("ISAUTHENTICATED", "False");
+					Message = "Account is in status inactive";
+                    return Page();
+				}
 				HttpContext.Session.SetString("ISAUTHENTICATED", "True");
 				switch (existedAccount.Role)
                 {
@@ -102,7 +108,7 @@ namespace UI.Pages
             else
             {
 				HttpContext.Session.SetString("ISAUTHENTICATED", "False");
-				Message = "Can't find account";
+				Message = "Email or Password is incorrect !";
             }
 
             return Page();

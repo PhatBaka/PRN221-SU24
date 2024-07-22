@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataAccessObjects.Migrations
 {
-    public partial class InitalCreate : Migration
+    public partial class Initdatabase3 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -287,6 +287,32 @@ namespace DataAccessObjects.Migrations
                         principalTable: "Warranties",
                         principalColumn: "WarrantyId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Account",
+                columns: new[] { "AccountId", "CreatedDate", "Email", "FullName", "ObjectStatus", "Password", "PhoneNumber", "Role" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 7, 22, 14, 24, 32, 581, DateTimeKind.Local).AddTicks(4945), "adminA@mail.com", "Admin A", 0, "123", "1234567890", 3 },
+                    { 2, new DateTime(2024, 7, 22, 14, 24, 32, 581, DateTimeKind.Local).AddTicks(4967), "managerA@mail.com", "Manager A", 0, "123", "0987654321", 1 },
+                    { 3, new DateTime(2024, 7, 22, 14, 24, 32, 581, DateTimeKind.Local).AddTicks(4969), "staffA@mail.com", "Staff A", 0, "123", "1122334455", 0 },
+                    { 4, new DateTime(2024, 7, 22, 14, 24, 32, 581, DateTimeKind.Local).AddTicks(4970), "staffB@mail.com", "Staff B", 0, "123", "5566778899", 0 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Material",
+                columns: new[] { "MaterialId", "BidPrice", "Clarity", "Color", "Description", "GemCertificate", "IsMetail", "MaterialCost", "MaterialImage", "MaterialName", "MaterialStatus", "OfferPrice", "Purity", "Sharp", "StockQuantity" },
+                values: new object[,]
+                {
+                    { 1, 2000000m, 10, "Yellow", "Pure gold with 99.99% purity", null, true, 2000000.0, null, "Gold 24K", null, 2500000m, 99.989997863769531, null, 0m },
+                    { 2, 25000m, 10, "Silver", "Sterling silver with 92.5% purity", null, true, 25000.0, null, "Silver 925", null, 35000m, 92.5, null, 0m },
+                    { 3, 3000000m, 10, "White", "High purity platinum", null, true, 3000000.0, null, "Platinum", null, 3500000m, 95.0, null, 0m },
+                    { 4, 2200000m, 10, "Silver", "High purity palladium", null, true, 2200000.0, null, "Palladium", null, 2700000m, 95.0, null, 0m },
+                    { 5, 0m, 1, "Colorless", "High quality diamond with excellent clarity", null, false, 5000000.0, null, "Diamond", null, 0m, 100.0, "Round Brilliant", 0m },
+                    { 6, 0m, 3, "Red", "High quality ruby with vivid red color", null, false, 3000000.0, null, "Ruby", null, 0m, 100.0, "Oval", 0m },
+                    { 7, 0m, 4, "Blue", "High quality sapphire with deep blue color", null, false, 2500000.0, null, "Sapphire", null, 0m, 100.0, "Cushion", 0m },
+                    { 8, 0m, 5, "Green", "High quality emerald with vivid green color", null, false, 4000000.0, null, "Emerald", null, 0m, 100.0, "Emerald Cut", 0m }
                 });
 
             migrationBuilder.CreateIndex(

@@ -23,50 +23,78 @@
 	<script src="~/js/jquery-2.1.1.min.js"></script>
 	<script src="~/js/bootstrap.min.js"></script>
 </head>
-<body>
-	<section id="top">
-		<div class="container">
-			<div class="row">
-				<div class="top_1 clearfix">
-					<div class="col-sm-3">
-						<div class="top_1l clearfix">
-							<ul class="mgt">
-								<li>
-									<a href="#"><i class="fa fa-user"></i><span style="margin-left: 10px;"> @role <strong>@fullname</strong></span></a>
-								</li>
-							</ul>
-						</div>
-					</div>
-					<div class="col-sm-9">
-						<div class="top_1r clearfix">
-							<ul class="nav navbar-nav nav_1 mgt navbar-right">
-								<li class="bord_l">
-									<a class="font_tag col_1" href="#">
-										<i class="fa fa-phone"></i> 311
-									</a>									
-								</li>
-								<li class="bord_l">
-									@if (isAuthenticated != null && isAuthenticated.ToLower().Equals("true"))
-									{
-										<a class="font_tag col_1" asp-page=@ACCOUNT_LOGOUT>
-											Log Out
-										</a>
-									}
-									else
-									{
-										<a class="font_tag col_1" asp-page=@ACCOUNT_LOGIN_PATH>
-											Log In
-										</a>
-									}
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-	<section id="menu" class="clearfix cd-secondary-nav">
+<style>
+	body {
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.flex-1 {
+		flex: 1;
+	}
+
+	.flex {
+		display: flex;
+	}
+
+	.h-full {
+		height: 100%;
+	}
+
+	.w-full {
+		width: 100%;
+	}
+
+	.flex-col {
+		flex-direction: column;
+	}
+	.items-center {
+		align-items: center;
+	}
+	.justify-center {
+		justify-content: center;
+	}
+
+	.gap-10 {
+		gap: 2.5rem;
+	}
+
+	.p-2 {
+		padding: 2rem;
+	}
+
+	.p-14px {
+		padding: 14px;
+	}
+	
+	.input-primary {
+		border-color: #dfb858 !important;
+		border-radius: 4px !important;
+		font-weight: 400 !important;
+	}
+
+	.input-primary::placeholder {
+		font-weight: 400 !important;
+	}
+
+	.button-primary {
+		background-color: #dfb858 !important;
+		color: #fff; 
+		border: none;
+		padding: 10px 20px;
+		font-size: 16px; 
+		cursor: pointer; 
+		transition: background-color 0.3s ease;
+		text-align: center;
+	}
+
+	.button-primary:hover {
+		background-color: #cfa447 !important; 
+	}
+</style>
+<body class="vh-100">
+	<div id="menu">
 		<nav class="navbar nav_t">
 			<div class="container">
 				<div class="navbar-header page-scroll">
@@ -111,15 +139,14 @@
 					<!-- Collect the nav links, forms, and other content for toggling -->
 					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<ul class="nav navbar-nav nav_m">
-							<li><a class="m_tag active_tab" asp-page=@HOME_INDEX_PATH>Home</a></li>
-							@if (role.Equals(AccountRole.MANAGER.ToString()))
+							@if (role.Equals(AccountRole.MANAGER.ToString()) || role.Equals(AccountRole.STAFF.ToString()))
 							{
 								<li><a class="m_tag " asp-page=@JEWELRY_INDEX_PATH>Jewelry</a></li>
 								<li class="dropdown">
 									<a class="m_tag" href="#" data-toggle="dropdown" role="button"
 									   aria-expanded="false">Material<span class="caret"></span></a>
 									<ul class="dropdown-menu drop_3" role="menu">
-										<li><a asp-page=@MATERIAL_METAL_INDEX_PATH>Metal</a></li>
+										@* <li><a asp-page=@MATERIAL_METAL_INDEX_PATH>Metal</a></li> *@
 										<li><a asp-page=@MATERIAL_GEM_INDEX_PATH>Gemstone</a></li>
 									</ul>
 								</li>
@@ -149,13 +176,18 @@
 							}
 							@if (role.Equals(AccountRole.MANAGER.ToString()))
 							{
-								<li><a class="m_tag " asp-page=@PROMOTION_INDEX_PATH>Promotion</a></li>
+								<li><a class="m_tag " asp-page=@PROMOTION_INDEX_PATH>Promotions</a></li>
 							}
 							@if (role.Equals(AccountRole.ADMIN.ToString()))
 							{
+								<li><a class="m_tag " asp-page=@ACCOUNT_INDEX_PATH>Accounts</a></li>
 								<li><a class="m_tag " asp-page=@ACCOUNT_INDEX_PATH>Account</a></li>
 								<li><a class="m_tag " asp-page=@DASHBOARD_INDEX_PATH>Dashboard</a></li>
 							}
+						</ul>
+
+						<ul class="nav navbar-nav navbar-right">
+							<li><a class="m_tag" asp-page="/Logout">Logout</a></li>
 						</ul>
 					</div>
 					<!-- /.navbar-collapse -->
@@ -163,9 +195,11 @@
 			</div>
 			<!-- /.container-fluid -->
 		</nav>
-	</section>
+	</div>
 
-	@RenderBody()
+	<div class="flex-1 p-14px">
+		@RenderBody()
+	</div>
 
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

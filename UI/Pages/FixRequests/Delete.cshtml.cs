@@ -55,7 +55,12 @@ namespace UI.Pages.FixRequests
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            try
+			string role = HttpContext.Session.GetString("ROLE");
+			if (role == "ADMIN")
+			{
+				return RedirectToPage("/AccessDenied");
+			}
+			try
             {
                 var WarrantyHistory = warrantyHistoryService.GetWarrantyHistoryById(id.Value);
                 if (WarrantyHistory == null)

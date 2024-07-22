@@ -32,7 +32,12 @@ namespace UI.Pages.FixRequests
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null)
+			string role = HttpContext.Session.GetString("ROLE");
+			if (role == "ADMIN")
+			{
+				return RedirectToPage("/AccessDenied");
+			}
+			if (id == null)
             {
                 Message = $"Warranty History ID {id} not found to update";
                 return Page();

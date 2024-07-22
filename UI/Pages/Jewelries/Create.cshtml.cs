@@ -71,7 +71,12 @@ namespace UI.Pages.Jewelries
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public IActionResult OnPost()
         {
-            if (!MetalsJson.IsNullOrEmpty())
+			string role = HttpContext.Session.GetString("ROLE");
+			if (role == "ADMIN")
+			{
+				return RedirectToPage("/AccessDenied");
+			}
+			if (!MetalsJson.IsNullOrEmpty())
             {
                 List<ProductMaterialDto> metalsInputList = JsonConvert.DeserializeObject<List<ProductMaterialDto>>(MetalsJson);
                 Metals = metalsInputList;
@@ -169,13 +174,29 @@ namespace UI.Pages.Jewelries
             }
 
             jewelry.JewelryMaterials = jewelryMaterials;
-
-            if (jewelry.Quantity > 0 && jewelry.StatusSale.Equals(StatusSale.OUT_OF_STOCK))
+			if (jewelry.Quantity < 0)
+			{
+				setupReturnPageWhenError(message: "The quantity of product in stock must >= 0");
+				return Page();
+			}
+			if (jewelry.Quantity > 0 && !jewelry.StatusSale.Equals(StatusSale.IN_STOCK))
             {
                 setupReturnPageWhenError(message: "The quantity of product in stock is greater than zero, the sale status mus be instock");
                 return Page();
             }
-            try
+			if (jewelry.Quantity == 0 && !jewelry.StatusSale.Equals(StatusSale.OUT_OF_STOCK))
+			{
+				setupReturnPageWhenError(message: "The quantity of product in stock is zero, the sale status mus be out of stock");
+				return Page();
+			}
+			if (!Gemstones.IsNullOrEmpty() && jewelry.Quantity > 1 )
+			{
+				setupReturnPageWhenError(message: "The quantity of product has gemstone must be 0  or 1");
+				return Page();
+			}
+
+
+			try
             {
                 jewerlryService.AddJewelry(jewelry);
             }

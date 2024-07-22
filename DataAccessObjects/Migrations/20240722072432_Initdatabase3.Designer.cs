@@ -12,14 +12,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessObjects.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240722063353_InitalCreate")]
-    partial class InitalCreate
+    [Migration("20240722072432_Initdatabase3")]
+    partial class Initdatabase3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.32")
+                .HasAnnotation("ProductVersion", "6.0.30")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -60,6 +60,52 @@ namespace DataAccessObjects.Migrations
                     b.HasKey("AccountId");
 
                     b.ToTable("Account", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            AccountId = 1,
+                            CreatedDate = new DateTime(2024, 7, 22, 14, 24, 32, 581, DateTimeKind.Local).AddTicks(4945),
+                            Email = "adminA@mail.com",
+                            FullName = "Admin A",
+                            ObjectStatus = 0,
+                            Password = "123",
+                            PhoneNumber = "1234567890",
+                            Role = 3
+                        },
+                        new
+                        {
+                            AccountId = 2,
+                            CreatedDate = new DateTime(2024, 7, 22, 14, 24, 32, 581, DateTimeKind.Local).AddTicks(4967),
+                            Email = "managerA@mail.com",
+                            FullName = "Manager A",
+                            ObjectStatus = 0,
+                            Password = "123",
+                            PhoneNumber = "0987654321",
+                            Role = 1
+                        },
+                        new
+                        {
+                            AccountId = 3,
+                            CreatedDate = new DateTime(2024, 7, 22, 14, 24, 32, 581, DateTimeKind.Local).AddTicks(4969),
+                            Email = "staffA@mail.com",
+                            FullName = "Staff A",
+                            ObjectStatus = 0,
+                            Password = "123",
+                            PhoneNumber = "1122334455",
+                            Role = 0
+                        },
+                        new
+                        {
+                            AccountId = 4,
+                            CreatedDate = new DateTime(2024, 7, 22, 14, 24, 32, 581, DateTimeKind.Local).AddTicks(4970),
+                            Email = "staffB@mail.com",
+                            FullName = "Staff B",
+                            ObjectStatus = 0,
+                            Password = "123",
+                            PhoneNumber = "5566778899",
+                            Role = 0
+                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.Category", b =>
@@ -203,6 +249,124 @@ namespace DataAccessObjects.Migrations
                     b.HasKey("MaterialId");
 
                     b.ToTable("Material", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            MaterialId = 1,
+                            BidPrice = 2000000m,
+                            Clarity = 10,
+                            Color = "Yellow",
+                            Description = "Pure gold with 99.99% purity",
+                            IsMetail = true,
+                            MaterialCost = 2000000.0,
+                            MaterialName = "Gold 24K",
+                            OfferPrice = 2500000m,
+                            Purity = 99.989997863769531,
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            MaterialId = 2,
+                            BidPrice = 25000m,
+                            Clarity = 10,
+                            Color = "Silver",
+                            Description = "Sterling silver with 92.5% purity",
+                            IsMetail = true,
+                            MaterialCost = 25000.0,
+                            MaterialName = "Silver 925",
+                            OfferPrice = 35000m,
+                            Purity = 92.5,
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            MaterialId = 3,
+                            BidPrice = 3000000m,
+                            Clarity = 10,
+                            Color = "White",
+                            Description = "High purity platinum",
+                            IsMetail = true,
+                            MaterialCost = 3000000.0,
+                            MaterialName = "Platinum",
+                            OfferPrice = 3500000m,
+                            Purity = 95.0,
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            MaterialId = 4,
+                            BidPrice = 2200000m,
+                            Clarity = 10,
+                            Color = "Silver",
+                            Description = "High purity palladium",
+                            IsMetail = true,
+                            MaterialCost = 2200000.0,
+                            MaterialName = "Palladium",
+                            OfferPrice = 2700000m,
+                            Purity = 95.0,
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            MaterialId = 5,
+                            BidPrice = 0m,
+                            Clarity = 1,
+                            Color = "Colorless",
+                            Description = "High quality diamond with excellent clarity",
+                            IsMetail = false,
+                            MaterialCost = 5000000.0,
+                            MaterialName = "Diamond",
+                            OfferPrice = 0m,
+                            Purity = 100.0,
+                            Sharp = "Round Brilliant",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            MaterialId = 6,
+                            BidPrice = 0m,
+                            Clarity = 3,
+                            Color = "Red",
+                            Description = "High quality ruby with vivid red color",
+                            IsMetail = false,
+                            MaterialCost = 3000000.0,
+                            MaterialName = "Ruby",
+                            OfferPrice = 0m,
+                            Purity = 100.0,
+                            Sharp = "Oval",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            MaterialId = 7,
+                            BidPrice = 0m,
+                            Clarity = 4,
+                            Color = "Blue",
+                            Description = "High quality sapphire with deep blue color",
+                            IsMetail = false,
+                            MaterialCost = 2500000.0,
+                            MaterialName = "Sapphire",
+                            OfferPrice = 0m,
+                            Purity = 100.0,
+                            Sharp = "Cushion",
+                            StockQuantity = 0m
+                        },
+                        new
+                        {
+                            MaterialId = 8,
+                            BidPrice = 0m,
+                            Clarity = 5,
+                            Color = "Green",
+                            Description = "High quality emerald with vivid green color",
+                            IsMetail = false,
+                            MaterialCost = 4000000.0,
+                            MaterialName = "Emerald",
+                            OfferPrice = 0m,
+                            Purity = 100.0,
+                            Sharp = "Emerald Cut",
+                            StockQuantity = 0m
+                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.Order", b =>

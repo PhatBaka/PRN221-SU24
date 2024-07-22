@@ -55,7 +55,7 @@
 
 <div class="container-lg menu-home">
     <table class="table-container">
-        @if (Model.role != null && Model.role.Equals(AccountRole.MANAGER.ToString()))
+        @if (Model.role.Equals(AccountRole.MANAGER.ToString()) || Model.role.Equals(AccountRole.STAFF.ToString()))
         {
             <thead>
                 <tr>
@@ -68,11 +68,11 @@
                         <h6><a asp-page=@JEWELRY_INDEX_PATH>Jewelry Catalog</a></h6>
                     </td>
                 </tr>
-                <tr>
+@*                 <tr>
                     <td class="list_1i">
                         <h6><a asp-page=@MATERIAL_METAL_INDEX_PATH>Material Metal</a></h6>
                     </td>
-                </tr>
+                </tr> *@
                 <tr>
                     <td class="list_1i">
                         <h6><a asp-page=@MATERIAL_GEM_INDEX_PATH>Material Gemstone</a></h6>
