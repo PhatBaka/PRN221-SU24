@@ -77,9 +77,8 @@ namespace UI.Pages.Orders.Sell
 
         public IActionResult OnPostAddToCart(int JewelryId)
         {
-            UpdatePrice();
             LoadData("", "", 1);
-            Jewelry jewelry = _jewelryService.GetJewelryById(JewelryId);
+			Jewelry jewelry = _jewelryService.GetJewelryById(JewelryId);
             // total gem + total current price + labor price
             decimal unitPrice = 0;
 
@@ -232,7 +231,7 @@ namespace UI.Pages.Orders.Sell
                     Quantity = cartItem.Quantity,
                     UnitPrice = (double) cartItem.GetFinalPrice(),
                     DiscountPercent = promotion != null ? promotion.DiscountPercent : 0,
-                    PromotionDetailId = promotion != null ? promotion.PromotionDetailId : null,
+                    PromotionDetailId = promotion != null ? promotion.PromotionDetailId : null
                 };
 
                 items.Add(orderDetail);
@@ -326,7 +325,8 @@ namespace UI.Pages.Orders.Sell
             LoadCart();
             LoadCustomer();
             LoadPrice();
-        }
+			UpdatePrice();
+		}
 
         private void LoadPrice() => Metals = HttpContext.Session.GetObjectFromJson<IList<MetalResponse>>("PRICE");
 

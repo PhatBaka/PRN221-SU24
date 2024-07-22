@@ -18,7 +18,14 @@ namespace UI.Pages.Orders.Sell
 
         public void OnGet(int id)
         {
-            Order = _orderService.GetOrderByIdAsync(id).Result;
+            try
+            {
+                Order = _orderService.GetOrderByIdAsync(id).Result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

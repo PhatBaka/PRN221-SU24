@@ -23,7 +23,7 @@ namespace Repositories.Impls
         {
             try
             {
-                return _orderDAO.GetByIdAsync(id).Result;
+                return _orderDAO.GetOrderById(id);
             }
             catch (Exception ex)
             {
