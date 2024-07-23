@@ -10,6 +10,8 @@ namespace Services.Interfaces
     public interface IMetalService
     {
         public IList<MetalResponse> GetPrices();
+        public void GetMetalSellPriceAndBuybackPriceByMetalName(string metalName, out double BIDPRICE, out double OFFERPRICE);
+
     }
 
     public class MetalResponse

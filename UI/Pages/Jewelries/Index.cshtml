@@ -47,6 +47,7 @@
 	<div style="margin-top: 20px; text-align: end;">
 		<a class="btn btn-primary" asp-page="./Create">Create New</a>
 	</div>
+
 	<div class="table-responsive-lg">
 		<table id="table-list" class="table table-striped">
 			<thead class="table-header">
@@ -132,21 +133,18 @@
 						</td>
 						<td class="action-btn">
 							<span>
-								<a class="btn btn-warning" asp-page="./Edit" asp-route-id="@item.JewelryId">Edit</a>
-							</span>
-							<span>
 								<a class="btn btn-success" asp-page="./Details" asp-route-id="@item.JewelryId">Details</a>
 							</span>
+							<span>
+								<a class="btn btn-warning" asp-page="./Edit" asp-route-id="@item.JewelryId">Edit</a>
+							</span>
+						
 
 							<span>
 								<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" data-iddelete="@item.JewelryId" data-jwname="@item.JewelryName">
 									Delete
 								</button>
 							</span>
-
-							<form method="post" asp-page-handler="Buy" asp-route-id="@item.JewelryId" style="display:inline;">
-								<button type="submit" class="btn btn-primary">Buy</button>
-							</form>
 						</td>
 					</tr>
 				}

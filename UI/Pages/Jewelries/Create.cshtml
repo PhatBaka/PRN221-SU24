@@ -3,7 +3,25 @@
 
  @{
  	ViewData["Title"] = "Create";
+    Layout = "_Layout";
  }
+ <style>
+     .product-info{
+        margin-top: 20px;
+     }
+     .gemstone-item  td{
+		justify-content: center;
+        align-content: center;
+        align-items: center;
+        text-align: center;
+	 }
+
+    #selectedImage {
+        max-width: 400px;
+        max-height: 300px;
+        
+    }
+ </style>
  <head>
  	<meta charset="utf-8" />
  	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,14 +34,9 @@
 
  	<form method="post" id="jewelryForm" enctype="multipart/form-data">
  		<div class="form-group">
- 			Display any custom message 
- 			@if (!string.IsNullOrEmpty(Model.Message))
+= 			@if (!string.IsNullOrEmpty(Model.Message))
  			{
-
  				<div class="alert alert-danger d-flex align-items-center mt-3 mb-3" role="alert">
- 					<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
- 						<use xlink:href="#exclamation-triangle-fill" />
- 					</svg>
  					<div>
  						<div class="text-danger">@Model.Message</div>
  					</div>
@@ -38,17 +51,17 @@
  						<div class="mb-4 d-flex justify-content-center">
  							<img id="selectedImage" class="mx-auto d-block img-fluid"
  								 src="https://mdbootstrap.com/img/Photos/Others/placeholder.jpg"
- 								 alt="example placeholder" style="height: 300px" />
+ 								 alt="example placeholder" />
  						</div>
  						<div class="d-flex justify-content-center">
- 							<div data-mdb-ripple-init class="btn-sm btn-primary btn-rounded" style="width: 450px; margin-top: 10px;">
+ 							<div data-mdb-ripple-init class="btn-sm btn-primary btn-rounded" style="width: 400px; margin-top: 10px;">
  								<label class="form-label text-white m-1" for="customFile1">Load product image</label>
  								<input type="file" asp-for="Jewelry.ImageDataFile" class="form-control d-none" id="customFile1" onchange="displaySelectedImage(event, 'selectedImage')" />
  							</div>
  							<span asp-validation-for="Jewelry.ImageDataFile" class="text-danger"></span>
  						</div>
- 						<div class="d-flex justify-content-center mt-2" id="removeButtonContainer" style="display: none;">
- 							<button type="button" class="btn btn-danger btn-sm" onclick="removeSelectedImage('selectedImage', 'customFile1')">Remove</button>
+                        <div class="d-flex justify-content-center mt-2" id="removeButtonContainer" style="display: none; margin-top: 15px;">
+ 							<button type="button" class="btn btn-danger btn-sm" onclick="removeSelectedImage('selectedImage', 'customFile1')">Remove Image</button>
  						</div>
  					</div>
  					<div class="col-md-7 information-section" style="padding-left: 35px;">
@@ -79,7 +92,7 @@
  			</div>
  			<div class="container section">
  				<h3 id="product-info-title">Product Metal</h3>
- 				<div id="material-container">
+ 				<div id="material-container" class="product-info">
  					<div id="material-template" style="display: none;">
  						<table class="table table-bordered table-sm material-item ">
  							<thead>
@@ -133,11 +146,12 @@
 
  			<div class="container section">
  				<h3 id="product-info-title">Product Gemstone</h3>
- 				<div id="gemstone-container">
+ 				<div id="gemstone-container" class="product-info">
  					<div id="gemstone-template" style="display: none;">
  						<table class="table table-bordered table-sm gemstone-item">
  							<thead>
  								<tr>
+                                    <th>Image</th>
  									<th>Gemstone Type</th>
  									<th>Quantity</th>
  									<th>Gemstone Price</th>
@@ -146,6 +160,9 @@
  							</thead>
  							<tbody>
  								<tr class="gemstone-info product-info">
+                                     <td>
+                                        <img alt="jewelry image" class="img-thumbnail gemstone-image" style="height: 80px; width: 80px;">
+                                    </td>
  									<td>
  										<select class="form-control gemstone-dropdown">
  											<option value="" disabled selected>Select Gemstone Type</option>
@@ -184,7 +201,7 @@
 
  			<div class="container section">
  				<h3 id="product-info-title">Stock Inventory</h3>
- 				<div class="row">
+ 				<div class="row product-info">
  					<div class="form-group col-md-3">
  						<label class="control-label">Quantity</label>
  						<input asp-for="Jewelry.Quantity" class="form-control" type="number" min=0 placeholder="0" />
@@ -199,18 +216,18 @@
  			</div>
  			<div class="container section">
  				<h3 id="product-info-title">Product Price</h3>
- 				<div class="row">
+ 				<div class="row product-info">
  					<div class="form-group col-md-3">
- 						<label class="control-label">Total Metal Price (VNĐ)</label>
+ 						<label class="control-label">Total Metal Price (USD)</label>
  						<input class="form-control price-input" id="total-metal-cost" readonly placeholder="0" />
  					</div>
  					<div class="form-group col-md-3">
- 						<label class="control-label">Total Stone Cost (VNĐ)</label>
+ 						<label class="control-label">Total Stone Cost (USD)</label>
  						<input class="form-control price-input" id="total-gemstone-cost" readonly placeholder="0" />
  					</div>
  					<div class="form-group col-md-3">
- 						<label class="control-label">Labor Price (VNĐ)</label>
- 						<input id="labor-cost" asp-for="Jewelry.LaborPrice" class="form-control price-input" placeholder="0" />
+ 						<label class="control-label">Labor Price (USD)</label>
+ 						<input id="labor-cost" asp-for="Jewelry.LaborPrice" class="form-control price-input " placeholder="0" />
  						<span asp-validation-for="Jewelry.LaborPrice" class="text-danger"></span>
  					</div>
  					<div class="form-group col-md-3">
@@ -224,17 +241,17 @@
  				<div class="row">
  					<div class=" form-group col-md-2">
  						<div>
- 							<label style="font-size: 20px;" class="control-label">Sale Price</label>
+ 							<label style="font-size: 20px;" class="control-label">Sale Price (USD)</label>
  						</div>
  						<input style="height: 45px; width: 400px;" class="form-control price-input" id="sale-price" type="text" disabled>
 
  					</div>
  				</div>
  			</div>
- 			<div>
+ 			@* <div>
  				<input type="hidden" id="metalsJson" asp-for="MetalsJson" />
  				<input type="hidden" id="gemstonesJson" asp-for="GemstonesJson" />
- 			</div>
+ 			</div> *@
 
  			<div>
  				<input type="hidden" id="metalsJson" asp-for="MetalsJson" />

@@ -1,8 +1,8 @@
 ﻿var quill = new Quill('#editor', {
     theme: 'snow'
 });
+
 document.getElementById('jewelryForm').addEventListener('submit', function (e) {
-    // Copy the HTML content from Quill editor to the hidden textarea
     var description = document.getElementById('jewelryDescription');
     description.value = quill.root.innerHTML;
 });
@@ -10,7 +10,7 @@ document.getElementById('jewelryForm').addEventListener('submit', function (e) {
 $(document).ready(function () {
     // Load old data when errors return
     loadMetalsFromMetalsJson();
-    loadGemstoneFromGemstonesJsons();
+    loadGemstonesFromGemstonesJson();
 
     // Add new material row
     $('#add-material').on('click', function () {
@@ -35,20 +35,11 @@ $(document).ready(function () {
 
         $.get(`/Jewelries/Create/MetaDetail?id=${selectedMetalId}`)
             .done(function (data) {
-                if (data) {
-                    var bidPrice = formatNumber(data.bidPrice);
-                    var offerPrice = formatNumber(data.offerPrice);
-                    $row.find('.metal-bidprice').val(bidPrice);
-                    $row.find('.metal-offerprice').val(offerPrice);
-                    calculateTotalMetalPrice();
-                } else {
-                    $row.find('.metal-bidprice, .metal-offerprice').val('no data');
-                    calculateTotalMetalPrice();
-                }
+                updateMetalData($row, data);
             })
             .fail(function () {
                 console.error('Failed to fetch metal details.');
-                $row.find('.metal-bidprice, .metal-offerprice').val('no data');
+                updateMetalData($row, null);
             });
     });
 
@@ -75,18 +66,11 @@ $(document).ready(function () {
 
         $.get(`/Jewelries/Create/GemDetail?id=${selectedGemId}`)
             .done(function (data) {
-                if (data) {
-                    var gemCost = formatNumber(data.cost);
-                    $row.find('.gemstone-cost').val(gemCost);
-                    calculateTotalGemstonePrice();
-                } else {
-                    $row.find('.gemstone-cost').val('no data');
-                    calculateTotalGemstonePrice();
-                }
+                updateGemstoneData($row, data);
             })
             .fail(function () {
                 console.error('Failed to fetch gemstone details.');
-                $row.find('.gemstone-cost').val('no data');
+                updateGemstoneData($row, null);
             });
     });
 
@@ -97,44 +81,8 @@ $(document).ready(function () {
 
     // Handle form submission
     $('#jewelryForm').submit(function (event) {
-        var metals = [];
-        $('#material-container .material-info').each(function () {
-            var metalId = $(this).find('.metal-dropdown').val();
-            var metalWeight = $(this).find('.metal-weight').val();
-            if (metalId && metalWeight) {
-                metals.push({
-                    MaterialId: metalId,
-                    MaterialQuantWeight: metalWeight
-                });
-            }
-        });
-
-        var gemstones = [];
-        $('#gemstone-container .gemstone-info').each(function () {
-            var gemstoneId = $(this).find('.gemstone-dropdown').val();
-            var gemstoneWeight = $(this).find('.gemstone-weight').val();
-            if (gemstoneId && gemstoneWeight) {
-                gemstones.push({
-                    MaterialId: gemstoneId,
-                    MaterialQuantWeight: gemstoneWeight
-                });
-            }
-        });
-        $('#metalsJson').val(JSON.stringify(metals));
-        $('#gemstonesJson').val(JSON.stringify(gemstones));
+        prepareFormSubmission();
     });
-
-    function addMetalTemplate() {
-        var materialTemplate = $('#material-template').html();
-        $('#material-container').append(materialTemplate);
-        calculateTotalMetalPrice();
-    }
-
-    function addGemstoneTemplate() {
-        var gemstoneTemplate = $('#gemstone-template').html();
-        $('#gemstone-container').append(gemstoneTemplate);
-        calculateTotalGemstonePrice();
-    }
 
     // Utility functions for number formatting and parsing
     function formatNumber(value) {
@@ -177,6 +125,41 @@ $(document).ready(function () {
         $('#sale-price').val(formatNumber(total));
     }
 
+    function updateMetalData($row, data) {
+        if (data) {
+            var bidPrice = formatNumber(data.bidPrice);
+            var offerPrice = formatNumber(data.offerPrice);
+            $row.find('.metal-bidprice').val(bidPrice);
+            $row.find('.metal-offerprice').val(offerPrice);
+        } else {
+            $row.find('.metal-bidprice, .metal-offerprice').val('no data');
+        }
+        calculateTotalMetalPrice();
+    }
+
+    function updateGemstoneData($row, data) {
+        if (data) {
+            console.log('data', data);
+            var gemCost = formatNumber(data.cost);
+            var gemID = data.id;
+            var gemImageBase64 = data.image;
+            $row.find('.gemstone-cost').val(gemCost);
+            $row.find('.gemstone-id').val(gemID);
+            if (gemImageBase64) {
+                $row.find('.gemstone-image').attr('src', 'data:image/*;base64,' + gemImageBase64);
+            } else {
+                console.warn('No image data found');
+                $row.find('.gemstone-image').attr('src', 'https://mdbootstrap.com/img/Photos/Others/placeholder.jpg');
+            } 
+        } else {
+            $row.find('.gemstone-cost').val('no data');
+            $row.find('.gemstone-id').val('no data');
+            $row.find('.gemstone-image').attr('src', 'https://mdbootstrap.com/img/Photos/Others/placeholder.jpg');
+
+        }
+        calculateTotalGemstonePrice();
+    }
+
     function loadMetalsFromMetalsJson() {
         var metalsJson = $('#metalsJson').val();
         if (metalsJson) {
@@ -193,28 +176,19 @@ $(document).ready(function () {
 
                 $.get(`/Jewelries/Create/MetaDetail?id=${selectedMetalId}`)
                     .done(function (data) {
-                        if (data) {
-                            var bidPrice = formatNumber(data.bidPrice);
-                            var offerPrice = formatNumber(data.offerPrice);
-                            $row.find('.metal-bidprice').val(bidPrice);
-                            $row.find('.metal-offerprice').val(offerPrice);
-                            calculateTotalMetalPrice();
-                        } else {
-                            $row.find('.metal-bidprice, .metal-offerprice').val('no data');
-                            calculateTotalMetalPrice();
-                        }
+                        updateMetalData($row, data);
                     })
                     .fail(function () {
                         console.error('Failed to fetch metal details.');
-                        $row.find('.metal-bidprice, .metal-offerprice').val('no data');
+                        updateMetalData($row, null);
                     });
                 $('#material-container').append($row);
                 calculateTotalMetalPrice();
             });
-        };
+        }
     }
 
-    function loadGemstoneFromGemstonesJsons() {
+    function loadGemstonesFromGemstonesJson() {
         var gemstonesJson = $('#gemstonesJson').val();
         if (gemstonesJson) {
             var gemstones = JSON.parse(gemstonesJson);
@@ -226,36 +200,59 @@ $(document).ready(function () {
                 // Set value for input fields
                 $row.find('.gemstone-weight').val(gemstone.MaterialQuantWeight);
 
-                var selectedMetalId = gemstone.MaterialId;
+                var selectedGemId = gemstone.MaterialId;
 
-                $.get(`/Jewelries/Create/GemDetail?id=${selectedMetalId}`)
+                $.get(`/Jewelries/Create/GemDetail?id=${selectedGemId}`)
                     .done(function (data) {
-                        if (data) {
-                            var gemCost = formatNumber(data.cost);
-                            var gemID = formatNumber(data.id);
-                            $row.find('.gemstone-cost').val(gemCost);
-                            $row.find('.gemstone-id').val(gemID);
-                            calculateTotalGemstonePrice();
-                        } else {
-                            $row.find('.gemstone-cost').val('no data');
-                            $row.find('.gemstone-id').val('no data');
-                            calculateTotalGemstonePrice();
-                        }
+                        updateGemstoneData($row, data);
                     })
                     .fail(function () {
                         console.error('Failed to fetch gemstone details.');
-                        $row.find('.gemstone-cost').val('no data');
-                        $row.find('.gemstone-id').val('no data');
+                        updateGemstoneData($row, null);
                     });
                 $('#gemstone-container').append($row);
                 calculateTotalGemstonePrice();
             });
-        };
+        }
+    }
+
+    function prepareFormSubmission() {
+        var metals = [];
+        $('#material-container .material-info').each(function () {
+            var metalId = $(this).find('.metal-dropdown').val();
+            var metalWeight = $(this).find('.metal-weight').val();
+            if (metalId && metalWeight) {
+                metals.push({
+                    MaterialId: metalId,
+                    MaterialQuantWeight: metalWeight
+                });
+            }
+        });
+
+        var gemstones = [];
+        $('#gemstone-container .gemstone-info').each(function () {
+            var gemstoneId = $(this).find('.gemstone-dropdown').val();
+            var gemstoneWeight = $(this).find('.gemstone-weight').val();
+            if (gemstoneId && gemstoneWeight) {
+                gemstones.push({
+                    MaterialId: gemstoneId,
+                    MaterialQuantWeight: gemstoneWeight
+                });
+            }
+        });
+
+        $('#metalsJson').val(JSON.stringify(metals));
+        $('#gemstonesJson').val(JSON.stringify(gemstones));
+    }
+
+    function addMetalTemplate() {
+        $('#material-container').append($('#material-template').html());
+    }
+
+    function addGemstoneTemplate() {
+        $('#gemstone-container').append($('#gemstone-template').html());
     }
 });
-
-
-
 
 function displaySelectedImage(event, elementId) {
     const selectedImage = document.getElementById(elementId);
@@ -296,7 +293,6 @@ document.querySelectorAll('.price-input').forEach(function (input) {
             e.target.value = "";
             return;
         }
-
         var formattedValue = new Intl.NumberFormat('en-US').format(value);
         e.target.value = formattedValue;
     });
@@ -307,7 +303,6 @@ document.querySelectorAll('.price-input').forEach(function (input) {
             e.target.value = "0";
             return;
         }
-
         var formattedValue = new Intl.NumberFormat('en-US').format(value);
         e.target.value = formattedValue;
     });

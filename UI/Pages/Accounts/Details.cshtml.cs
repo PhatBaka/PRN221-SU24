@@ -23,14 +23,20 @@ namespace UI.Pages.Accounts
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            string role = HttpContext.Session.GetString("ROLE");
-            if (role != "ADMIN")
-            {
-                return RedirectToPage("/AccessDenied");
-            }
+            
             if (id == null || _context.Accounts == null)
             {
                 return NotFound();
+            }
+            string role = HttpContext.Session.GetString("ROLE");
+			var userId = HttpContext.Session.GetInt32("ID");
+			if (role != "ADMIN" )
+            {
+                if(userId != id)
+                {
+					return RedirectToPage("/AccessDenied");
+				}
+                
             }
 
             var account = await _context.Accounts.FirstOrDefaultAsync(m => m.AccountId == id);

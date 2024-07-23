@@ -2,6 +2,7 @@
 using Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -29,6 +30,31 @@ namespace Services.Impls
                 metals.Add(palladium);
             }
             return metals;
+        }
+
+        public void GetMetalSellPriceAndBuybackPriceByMetalName(string metalName, out double BIDPRICE, out double OFFERPRICE)
+        {
+            double bidPrice = 0;
+            double offerPrice = 0;
+            
+            switch (metalName.ToLower())
+            {
+                case "gold":
+                    bidPrice = this.GetPrices().FirstOrDefault(x => x.Metal.Equals("gold")).Rate.Bid;
+                    offerPrice = this.GetPrices().FirstOrDefault(x => x.Metal.Equals("gold")).Rate.Ask;
+                    break;
+                case "silver":
+                    bidPrice = this.GetPrices().FirstOrDefault(x => x.Metal.Equals("silver")).Rate.Bid;
+                    offerPrice = this.GetPrices().FirstOrDefault(x => x.Metal.Equals("silver")).Rate.Ask;
+                    break;
+                case "palladium":
+                    bidPrice = this.GetPrices().FirstOrDefault(x => x.Metal.Equals("palladium")).Rate.Bid;
+                    offerPrice = this.GetPrices().FirstOrDefault(x => x.Metal.Equals("palladium")).Rate.Ask;
+                    break;
+            }
+            BIDPRICE = bidPrice;
+            OFFERPRICE = offerPrice;
+            
         }
     }
 }
