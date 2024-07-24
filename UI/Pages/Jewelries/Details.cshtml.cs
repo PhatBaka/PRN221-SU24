@@ -22,9 +22,9 @@ namespace UI.Pages.Jewelries
         private readonly IMetalService _metalService;
         public string Message { get; set; }
 
-        public DetailsModel(IServiceProvider service, IMetalService metalService)
+        public DetailsModel(IServiceProvider service)
         {
-            _metalService = metalService;
+            _metalService = service.GetRequiredService<IMetalService>();
             jewerlryService = service.GetRequiredService<IJewelryService>();
             categoryService = service.GetRequiredService<ICategoryService>();
         }
@@ -41,7 +41,7 @@ namespace UI.Pages.Jewelries
 			}
 
 			Jewelry jewelry = jewerlryService.GetJewelryById(id.Value);
-            Metals = _metalService.GetPrices();
+            
             ImageDataBase64String = StringConstants.IMAGE_DATABASE64_DEFAULT;
             if (jewelry.JewelryImage != null && jewelry.JewelryImage.Length > 0)
             {
@@ -49,13 +49,28 @@ namespace UI.Pages.Jewelries
             }
             if (jewelry == null)
             {
-                return NotFound();
+                Message = "Jewelry is not fould";
+                return Page();
             }
             else
             {
                 Jewelry = jewelry;
                 ViewData["StatusSaleDisplay"] = StatusSaleExtension.GetDisplayName(jewelry.StatusSale);
-                ViewData["BasePriceDisplay"] = (Decimal) jewerlryService.GetJewelrySalePrice(jewelry);
+                ViewData["BasePriceDisplay"] = jewerlryService.GetJewelrySalePrice(jewelry).ToString("C2");
+                
+                Metals = _metalService.GetPrices();
+                foreach(var metalmaterial in Jewelry.JewelryMaterials)
+                {
+                    double BIDPRICE ;
+                    double OFFERPRICE;
+                    if (metalmaterial.Material.IsMetail) {
+                        _metalService.GetMetalSellPriceAndBuybackPriceByMetalName(metalmaterial.Material.MaterialName, out BIDPRICE, out OFFERPRICE);
+                        metalmaterial.Material.BidPrice = (decimal) BIDPRICE;
+                        metalmaterial.Material.OfferPrice = (decimal) OFFERPRICE;
+                    }
+                    
+                }
+
             }
             return Page();
         }

@@ -74,7 +74,7 @@
 						Category
 					</th>
 					<th>
-						Base Price (VNĐ)
+						Base Price (USD)
 					</th>
 					<th>
 						Actions
@@ -106,30 +106,30 @@
 						<td>
 							@Html.DisplayFor(modelItem => item.Quantity)
 						</td>
-@* 						<td>
+ 						<td>
 
-							@switch (@ViewData[$"ItemStatusSale_{item.JewelryId}"])
-							{
-								case "In stock":
-									<span class="badge badge-info">@ViewData[$"ItemStatusSale_{item.JewelryId}"]</span>
-									break;
-								case "Out of stock":
-									<span class="badge badge-warning">@ViewData[$"ItemStatusSale_{item.JewelryId}"]</span>
-									break;
-								case "Discontinued":
-									<span class="badge badge-danger">@ViewData[$"ItemStatusSale_{item.JewelryId}"]</span>
-									break;
-								default:
-									<span class="badge badge-secondary">Unknown</span>
-									break;
-							}
+ 							@switch (@ViewData[$"ItemStatusSale_{item.JewelryId}"])
+ 							{
+ 								case "In stock":
+ 									<span class="badge badge-info">@ViewData[$"ItemStatusSale_{item.JewelryId}"]</span>
+ 									break;
+ 								case "Out of stock":
+ 									<span class="badge badge-warning">@ViewData[$"ItemStatusSale_{item.JewelryId}"]</span>
+ 									break;
+ 								case "Discontinued":
+ 									<span class="badge badge-danger">@ViewData[$"ItemStatusSale_{item.JewelryId}"]</span>
+ 									break;
+ 								default:
+ 									<span class="badge badge-secondary">Unknown</span>
+ 									break;
+ 							}
 
-						</td> *@
+ 						</td> 
 						<td>
 							@Html.DisplayFor(modelItem => item.Category.CategoryName)
 						</td>
 						<td>
-							@(((Decimal)ViewData[$"ItemBasePrice_{item.JewelryId}"]).ToString("#,##0"))
+							@ViewData[$"ItemBasePrice_{item.JewelryId}"]
 						</td>
 						<td class="action-btn">
 							<span>

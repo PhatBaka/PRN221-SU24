@@ -229,7 +229,7 @@ namespace UI.Pages.Jewelries
             var metal = materialService.GetMaterialById(id);
             if (metal == null || !metal.IsMetail)
             {
-                return NotFound();
+                return null;
             }
             double BIDPRICE;
             double OFFERPRICE;
@@ -250,7 +250,7 @@ namespace UI.Pages.Jewelries
             var gem = materialService.GetMaterialById(id);
             if (gem == null || gem.IsMetail)
             {
-                return NotFound();
+                return null;
             }
             var result = new
             {

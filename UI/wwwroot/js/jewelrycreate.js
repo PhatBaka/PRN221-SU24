@@ -148,13 +148,13 @@ $(document).ready(function () {
             if (gemImageBase64) {
                 $row.find('.gemstone-image').attr('src', 'data:image/*;base64,' + gemImageBase64);
             } else {
-                console.warn('No image data found');
-                $row.find('.gemstone-image').attr('src', 'https://mdbootstrap.com/img/Photos/Others/placeholder.jpg');
+                console.log('No image data found haha');
+                $row.find('.gemstone-image').attr('src', 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg');
             } 
         } else {
             $row.find('.gemstone-cost').val('no data');
             $row.find('.gemstone-id').val('no data');
-            $row.find('.gemstone-image').attr('src', 'https://mdbootstrap.com/img/Photos/Others/placeholder.jpg');
+            $row.find('.gemstone-image').attr('src', 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg');
 
         }
         calculateTotalGemstonePrice();
