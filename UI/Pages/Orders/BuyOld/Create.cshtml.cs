@@ -78,9 +78,23 @@ namespace UI.Pages.Orders.BuyOld
 
         public IActionResult OnPostFindCustomer(string phoneNumber)
         {
-            LoadData();
+			IList<CartItem> carts = new List<CartItem>();
+			foreach (var metal in _materialService.GetMaterials().Where(x => x.IsMetail))
+			{
+				CartItem cartItem = new CartItem()
+				{
+					MaterialId = metal.MaterialId,
+					MaterialName = metal.MaterialName,
+					BidPrice = metal.BidPrice,
+					Weight = 0
+				};
+				carts.Add(cartItem);
+			}
+			MaterialCart = carts;
+			//HttpContext.Session.SetObjectAsJson("BUYCART", carts);
+			LoadData();
 
-            string phonePattern = @"^09\d{8}$"; // Phone number starting with 09 followed by 8 digits
+			string phonePattern = @"^09\d{8}$"; // Phone number starting with 09 followed by 8 digits
 
             if (!Regex.IsMatch(phoneNumber, phonePattern))
             {
@@ -91,14 +105,14 @@ namespace UI.Pages.Orders.BuyOld
             CurrentCustomer = _mapper.Map<GetAccountRequest>(_accountService.GetAccounts().FirstOrDefault(x => x.PhoneNumber.Equals(phoneNumber)));
             if (CurrentCustomer != null)
             {
-                HttpContext.Session.SetObjectAsJson("ACCOUNT", CurrentCustomer);
+                HttpContext.Session.SetObjectAsJson("ACCOUNT", CurrentCustomer.AccountId);
             }
             else
             {
                 Message = "Cannot find this account";
             }
 
-            return Page();
+			return Page();
         }
 
         public IActionResult OnPostSubmitOrderJson()
@@ -112,15 +126,14 @@ namespace UI.Pages.Orders.BuyOld
             //{
             //    return new JsonResult(new { success = false, message = "No data provided" });
             //}
+            string CurrentCustomer = HttpContext.Session.GetString("ACCOUNT");
+			if (CurrentCustomer == null)
+            {
+                Message = "Please enter customer info";
+                return Page();
+            }
 
-
-            //if (CurrentCustomer != null)
-            //{
-            //    Message = "Please enter customer info";
-            //    return Page();
-            //}
-
-            List<OrderDetail> orderDetails = new List<OrderDetail>();
+            ICollection<OrderDetail> orderDetails = new List<OrderDetail>();
             foreach (var item in MaterialCart)
             {
                 Material material = _materialService.GetMaterialById(item.MaterialId);
@@ -128,16 +141,16 @@ namespace UI.Pages.Orders.BuyOld
                 {
                     orderDetails.Add(new OrderDetail()
                     {
-                        MaterialId = material.MaterialId,
+                        MaterialId = item.MaterialId,
                         MetalWeight = item.Weight,
-                        UnitPrice = (double)(material.BidPrice * item.Weight)
+                        UnitPrice = (double)(item.BidPrice * item.Weight)
                     });
                 }
                 else if (!item.IsMetal)
                 {
                     orderDetails.Add(new OrderDetail()
                     {
-                        MaterialId = material.MaterialId,
+                        MaterialId = item.MaterialId,
                         UnitPrice = material.MaterialCost
                     });
                 }
@@ -146,8 +159,9 @@ namespace UI.Pages.Orders.BuyOld
             Order order = new()
             {
                 OrderDate = DateTime.Now,
-                CustomerId = CurrentCustomer.AccountId,
-                OrderType = OrderEnum.OLD
+                CustomerId = Int32.Parse(CurrentCustomer),
+                OrderType = OrderEnum.OLD,
+                OrderDetails = new List<OrderDetail>()
             };
 
             if (_orderService.CreateOrderAsync(order, orderDetails) != null)

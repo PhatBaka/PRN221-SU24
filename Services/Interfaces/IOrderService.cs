@@ -6,7 +6,7 @@ namespace Services.Interfaces
 {
     public interface IOrderService
     {
-        Task<Order> CreateOrderAsync(Order order, List<OrderDetail> orderDetails);
+        Task<Order> CreateOrderAsync(Order order, ICollection<OrderDetail> orderDetails);
         Task<Order> GetOrderByIdAsync(int orderId);
         Task<List<Order>> GetAllOrdersAsync();
         Task<IEnumerable<Order>> GetOrdersByUserIdAsync(int userId);

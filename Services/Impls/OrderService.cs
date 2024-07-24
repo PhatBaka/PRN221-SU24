@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using BusinessObjects;
 using BusinessObjects.Enums;
@@ -24,7 +25,7 @@ namespace Services.Impls
             _genericOrderRepository = genericOrderRepository;
         }
 
-        public async Task<Order> CreateOrderAsync(Order order, List<OrderDetail> orderDetails)
+        public async Task<Order> CreateOrderAsync(Order order, ICollection<OrderDetail> orderDetails)
         {
             try
             {
@@ -33,15 +34,17 @@ namespace Services.Impls
                     foreach (var item in orderDetails)
                     {
                         // if is metal, increase the quantity
-                        if (item.Material.IsMetail)
-                        {
                             Material material = _materialService.GetMaterialById((int)item.MaterialId);
                             material.StockQuantity += item.MetalWeight;
                             _materialService.UpdateMaterial(material);
-                        }
                     }
                 }
-                order.OrderDetails = orderDetails;
+	
+				foreach (var detail in orderDetails)
+				{
+					order.OrderDetails.Add(detail);
+				}
+				Debug.WriteLine(order.OrderDetails);
                 await _genericOrderRepository.InsertAsync(order);
                 return order;
             }
