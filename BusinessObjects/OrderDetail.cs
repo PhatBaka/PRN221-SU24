@@ -14,7 +14,7 @@ namespace BusinessObjects
 
         public int JewelryId { get; set; }
 
-        public int MaterialId { get; set; }
+        public int? MaterialId { get; set; }
 
         public int? PromotionDetailId { get; set; }
 
@@ -26,6 +26,8 @@ namespace BusinessObjects
 
         [Required]
         public double UnitPrice{ get; set; }
+
+        public decimal MetalWeight { get; set; }
 
         public virtual Order Order { get; set; }
 

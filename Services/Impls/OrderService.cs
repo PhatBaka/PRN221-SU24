@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using BusinessObjects;
+using BusinessObjects.Enums;
 using DataAccessObjects;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
@@ -12,11 +13,13 @@ namespace Services.Impls
 {
     public class OrderService : IOrderService
     {
+        private readonly IMaterialService _materialService;
         private readonly IOrderRepository orderRepository;
         private readonly IGenericRepository<Order> _genericOrderRepository;
 
-        public OrderService(IOrderRepository orderRepository, IGenericRepository<Order> genericOrderRepository)
+        public OrderService(IOrderRepository orderRepository, IGenericRepository<Order> genericOrderRepository, IMaterialService materialService)
         {
+            _materialService = materialService;
             this.orderRepository = orderRepository;
             _genericOrderRepository = genericOrderRepository;
         }
@@ -25,6 +28,16 @@ namespace Services.Impls
         {
             try
             {
+                foreach (var item in orderDetails)
+                {
+                    // if is metal, increase the quantity
+                    if (item.Material.IsMetail)
+                    {
+                        Material material = _materialService.GetMaterialById((int)item.MaterialId);
+                        material.StockQuantity += item.MetalWeight;
+                        _materialService.UpdateMaterial(material);
+                    }
+                }
                 order.OrderDetails = orderDetails;
                 await _genericOrderRepository.InsertAsync(order);
                 return order;

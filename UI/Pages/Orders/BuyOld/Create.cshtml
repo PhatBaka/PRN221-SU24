@@ -131,14 +131,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if (Model.MaterialCart != null && Model.MaterialCart.Count > 0)
+                            @if (Model.MaterialCart != null && Model.MaterialCart.Count() > 0)
                             {
                                 @foreach (var material in Model.MaterialCart)
                                 {
                                     <tr class="d-flex justify-content-center">
                                         <td>@material.MaterialId</td>
                                         <td>@material.MaterialName</td>
-                                        <td>@material.BidPrice.ToString("0.00")</td>
+                                        <td>
+                                            <span id="bid-price-@material.MaterialId">@material.BidPrice</span>
+                                        </td>
                                         <td>
                                             <input type="number" class="form-control weight-input" data-id="@material.MaterialId" value="0" min="0" step="any" />
                                         </td>
@@ -161,82 +163,39 @@
     </div>
 </section>
 
+
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        function updateTotalPrice(materialId, bidPrice, weight) {
-            let totalPriceElement = document.querySelector(`.total-price[data-id="${materialId}"]`);
-            let totalPrice = bidPrice * weight;
-            totalPriceElement.innerText = totalPrice.toFixed(2);
-            updateGrandTotal();
-        }
+    $(document).ready(function () {
+        $('#send-json-button').click(function () {
+            var cartData = [];
+            $('.table-center tbody tr').each(function () {
+                var materialId = $(this).find('.weight-input').data('id');
+                var materialName = $(this).find('td:nth-child(2)').text(); // Get material name from the second <td>
+                var weight = parseFloat($(this).find('.weight-input').val()) || 0;
+                var bidPrice = parseFloat($(`#bid-price-${materialId}`).text()) || 0;
 
-        function updateGrandTotal() {
-            let grandTotal = 0;
-            document.querySelectorAll('.total-price').forEach(element => {
-                grandTotal += parseFloat(element.innerText);
+                cartData.push({
+                    MaterialId: materialId,
+                    MaterialName: materialName, // Add material name
+                    BidPrice: bidPrice,
+                    Weight: weight
+                });
             });
-            document.getElementById('grand-total').innerText = "Grand Total: " + grandTotal.toFixed(2);
-        }
-
-        document.querySelectorAll('.weight-input').forEach(input => {
-            input.addEventListener('input', function () {
-                let materialId = this.getAttribute('data-id');
-                let bidPrice = parseFloat(this.closest('tr').querySelector('td:nth-child(3)').innerText);
-                let weight = parseFloat(this.value);
-
-                if (!isNaN(weight)) {
-                    updateTotalPrice(materialId, bidPrice, weight);
-                }
-            });
-        });
-
-        function sendCartDataAsJson() {
-            let cartData = Array.from(document.querySelectorAll('tbody tr'))
-                .map(row => {
-                    let weightInput = row.querySelector('.weight-input');
-                    if (weightInput) {
-                        let materialId = parseInt(weightInput.getAttribute('data-id'));
-                        let materialName = row.querySelector('td:nth-child(2)').innerText;
-                        let bidPrice = parseFloat(row.querySelector('td:nth-child(3)').innerText);
-                        let weight = parseFloat(weightInput.value);
-
-                        if (!isNaN(weight)) {
-                            return {[
-                                MaterialId: materialId,
-                                MaterialName: materialName,
-                                BidPrice: bidPrice,
-                                Weight: weight
-                            ]};
-                        }
-                    }
-                }).filter(item => item !== undefined);
 
             console.log(cartData);
 
-            fetch('/Orders/BuyOld/Create?handler=SubmitOrderJson', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
+            $.ajax({
+                url: '/Orders/BuyOld/Create?handler=SubmitOrderJson', // Assuming this is the correct URL
+                type: 'POST',
+                data: JSON.stringify(cartData),
+                contentType: 'application/json',
+                success: function (response) {
+                    console.log('Order submitted successfully:', response);
                 },
-                body: JSON.stringify(cartData)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Success:', data);
-                    alert('Order processed successfully!');
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    alert('Failed to process order.');
-                });
-        }
-
-        document.getElementById('send-json-button').addEventListener('click', sendCartDataAsJson);
-        updateGrandTotal();
+                error: function (xhr, status, error) {
+                    console.error('Error submitting order:', error);
+                }
+            });
+        });
     });
 </script>

@@ -1,5 +1,6 @@
 using AutoMapper;
 using BusinessObjects;
+using BusinessObjects.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Services.Interfaces;
@@ -33,14 +34,17 @@ namespace UI.Pages.Orders.BuyOld
         public GetAccountRequest CurrentCustomer { get; set; }
         public Account Account { get; set; }
         public string Message { get; set; }
+        [BindProperty]
         public IList<CartItem> MaterialCart { get; set; }
 
+        [BindProperties]
         public class CartItem
         {
             public int MaterialId { get; set; }
             public string MaterialName { get; set; }
             public decimal BidPrice { get; set; }
             public decimal Weight { get; set; }
+            public bool IsMetal { get; set; }
         }
 
         public void OnGet()
@@ -98,18 +102,57 @@ namespace UI.Pages.Orders.BuyOld
             return Page();
         }
 
-        public IActionResult OnPostSubmitOrderJson([FromBody] Array[] cartData)
+        public IActionResult OnPostSubmitOrderJson([FromBody] List<CartItem> cartData)
         {
+            Console.WriteLine("OnPostSubmitOrderJson called!");
+            Console.WriteLine($"cartData: {cartData}");
+
             if (cartData == null || !cartData.Any())
             {
                 return new JsonResult(new { success = false, message = "No data provided" });
             }
 
-            // Process the data here
-            // For example, save the data to the database or perform other actions
-            // Assume _orderService.CreateOrder() is used to save order
 
-            // Example: _orderService.CreateOrder(cartData);
+            if (CurrentCustomer != null)
+            {
+                Message = "Please enter customer info";
+                return Page();
+            }
+
+            List<OrderDetail> orderDetails = new List<OrderDetail>();
+            foreach (var item in cartData)
+            {
+                Material material = _materialService.GetMaterialById(item.MaterialId);
+                if (item.IsMetal)
+                {
+                    orderDetails.Add(new OrderDetail()
+                    {
+                        MaterialId = material.MaterialId,
+                        MetalWeight = item.Weight,
+                        UnitPrice = (double)(material.BidPrice * item.Weight)
+                    });
+                }
+                else
+                {
+                    orderDetails.Add(new OrderDetail()
+                    {
+                        MaterialId = material.MaterialId,
+                        UnitPrice = material.MaterialCost
+                    });
+                }
+            }
+
+            Order order = new()
+            {
+                OrderDate = DateTime.Now,
+                CustomerId = CurrentCustomer.AccountId,
+                OrderType = OrderEnum.OLD
+            };
+
+            if (_orderService.CreateOrderAsync(order, orderDetails) != null)
+            {
+                Message = "Order create successfully";
+            }
 
             return new JsonResult(new { success = true, message = "Order processed successfully" });
         }
