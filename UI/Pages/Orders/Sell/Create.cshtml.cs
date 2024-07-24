@@ -222,6 +222,7 @@ namespace UI.Pages.Orders.Sell
                 await _jewelryService.UpdateJewelryAsync(jewelry);
             }
 
+            newOrder.OrderType = OrderEnum.NEW;
             // Save order and order details
             Order order = await _orderService.CreateOrderAsync(newOrder, items);
 

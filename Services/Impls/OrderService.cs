@@ -28,14 +28,17 @@ namespace Services.Impls
         {
             try
             {
-                foreach (var item in orderDetails)
+                if (order.OrderType == OrderEnum.OLD)
                 {
-                    // if is metal, increase the quantity
-                    if (item.Material.IsMetail)
+                    foreach (var item in orderDetails)
                     {
-                        Material material = _materialService.GetMaterialById((int)item.MaterialId);
-                        material.StockQuantity += item.MetalWeight;
-                        _materialService.UpdateMaterial(material);
+                        // if is metal, increase the quantity
+                        if (item.Material.IsMetail)
+                        {
+                            Material material = _materialService.GetMaterialById((int)item.MaterialId);
+                            material.StockQuantity += item.MetalWeight;
+                            _materialService.UpdateMaterial(material);
+                        }
                     }
                 }
                 order.OrderDetails = orderDetails;
