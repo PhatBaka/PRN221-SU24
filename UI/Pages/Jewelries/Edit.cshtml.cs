@@ -43,7 +43,6 @@ namespace UI.Pages.Jewelries
             categoryService = service.GetRequiredService<ICategoryService>();
             materialService = service.GetRequiredService<IMaterialService>();
             mapper = service.GetRequiredService<IMapper>();
-            this.UpdateSelectOptions();
         }
 
 
@@ -78,15 +77,17 @@ namespace UI.Pages.Jewelries
 			}
 			if (id == null)
             {
-                return NotFound();
+                Message = "Invalid jewelry id";
+                return Page();
             }
 
             var jewelry = jewerlryService.GetJewelryById(id.GetValueOrDefault());
             originalJewelry = jewelry;
             if (jewelry == null)
             {
-                return NotFound();
-            }
+				Message = "Invalid jewelry id";
+				return Page();
+			}
             this.SetupReturnPage(originalJewelry);
             Jewelry = mapper.Map<CreateJewelryRequest>(jewelry);
             return Page();
@@ -116,13 +117,14 @@ namespace UI.Pages.Jewelries
             if (!ModelState.IsValid || Jewelry == null)
             {
                 Message = "Invalid model state";
-                return Page();
+                return OnGet(Jewelry.JewelryId);
             }
             int jewelryIdToUpdate = (int)Jewelry.JewelryId;
             if (jewelryIdToUpdate == null || jewerlryService.GetJewelryById(jewelryIdToUpdate) == null)
             {
-                return NotFound();
-            }
+				Message = "Invalid jewelry id";
+				return OnGet(Jewelry.JewelryId);
+			}
 
             originalJewelry = jewerlryService.GetJewelryById(jewelryIdToUpdate);
 
@@ -139,8 +141,8 @@ namespace UI.Pages.Jewelries
                 catch (Exception e)
                 {
                     setupReturnPage(message: e.Message);
-                    return Page();
-                }
+					return OnGet(Jewelry.JewelryId);
+				}
             }
             else
             {
@@ -161,27 +163,27 @@ namespace UI.Pages.Jewelries
             if (Gemstones.IsNullOrEmpty() && Metals.IsNullOrEmpty())
             {
                 setupReturnPage(message: "Gemstone or Metal is required");
-                return Page();
-            }
+				return OnGet(Jewelry.JewelryId);
+			}
             foreach (var gemstone in Gemstones)
             {
                 Material material = materialService.GetMaterialById(gemstone.MaterialId);
                 if (material == null || material.IsMetail)
                 {
                     setupReturnPage(message: $"Gemstone {material.MaterialName} is not found");
-                    return Page();
-                }
+					return OnGet(Jewelry.JewelryId);
+				}
                 var list = Gemstones.Where(x => x.MaterialId == gemstone.MaterialId).ToList();
                 if (list.Count > 1)
                 {
                     setupReturnPage(message: $"Gemstone {material.MaterialName} is duplicated");
-                    return Page();
-                }
+					return OnGet(Jewelry.JewelryId);
+				}
                 if (gemstone.MaterialQuantWeight <= 0)
                 {
                     setupReturnPage(message: $"Gemstone {material.MaterialName} must has the quantity of stone greater than 0");
-                    return Page();
-                }
+					return OnGet(Jewelry.JewelryId);
+				}
 
                 jewelryMaterials.Add(new JewelryMaterial { Material = material, JewelryWeight = gemstone.MaterialQuantWeight, Jewelry = jewelry });
 
@@ -192,19 +194,19 @@ namespace UI.Pages.Jewelries
                 if (material == null || !material.IsMetail)
                 {
                     setupReturnPage(message: $"Metal {material.MaterialName} is not found");
-                    return Page();
-                }
+					return OnGet(Jewelry.JewelryId);
+				}
                 var list = Metals.Where(x => x.MaterialId == metal.MaterialId).ToList();
                 if (list.Count > 1)
                 {
                     setupReturnPage(message: $"Metal {material.MaterialName} is duplicated");
-                    return Page();
-                }
+					return OnGet(Jewelry.JewelryId);
+				}
                 if (metal.MaterialQuantWeight <= 0)
                 {
                     setupReturnPage(message: $"Metal {material.MaterialName} must has the weight of metal greater than 0");
-                    return Page();
-                }
+					return OnGet(Jewelry.JewelryId);
+				}
 
                 jewelryMaterials.Add(new JewelryMaterial { Material = material, JewelryWeight = metal.MaterialQuantWeight, Jewelry = jewelry });
 
@@ -212,22 +214,22 @@ namespace UI.Pages.Jewelries
 			if (jewelry.Quantity < 0)
 			{
 				setupReturnPage(message: "The quantity of product in stock must >= 0");
-				return Page();
+				return OnGet(Jewelry.JewelryId);
 			}
 			if (jewelry.Quantity > 0 && !jewelry.StatusSale.Equals(StatusSale.IN_STOCK))
 			{
 				setupReturnPage(message: "The quantity of product in stock is greater than zero, the sale status mus be instock");
-				return Page();
+				return OnGet(Jewelry.JewelryId);
 			}
 			if (jewelry.Quantity == 0 && !jewelry.StatusSale.Equals(StatusSale.OUT_OF_STOCK))
 			{
 				setupReturnPage(message: "The quantity of product in stock is zero, the sale status mus be out of stock");
-				return Page();
+				return OnGet(Jewelry.JewelryId);
 			}
 			if (!Gemstones.IsNullOrEmpty() && jewelry.Quantity > 1)
 			{
 				setupReturnPage(message: "The quantity of product has gemstone must be 0  or 1");
-				return Page();
+				return OnGet(Jewelry.JewelryId);
 			}
 
 			jewelry.JewelryMaterials = jewelryMaterials;
@@ -241,8 +243,8 @@ namespace UI.Pages.Jewelries
                 Console.WriteLine(e.StackTrace);
                 ModelState.AddModelError("Error", e.Message);
                 setupReturnPage(message: e.Message);
-                return Page();
-            }
+				return OnGet(Jewelry.JewelryId);
+			}
             this.UpdateSelectOptions();
             return RedirectToPage("./Index");
         }
@@ -257,7 +259,11 @@ namespace UI.Pages.Jewelries
                                    Text = StatusSaleExtension.GetDisplayName(x)
                                }).ToList();
             GemstoneOptions = materialService.GetMaterials().Where(x => !x.IsMetail).Select(x => new SelectListItem { Value = x.MaterialId.ToString(), Text = x.MaterialName }).ToList();
-            MetalOptions = materialService.GetMaterials().Where(x => x.IsMetail).Select(x => new SelectListItem { Value = x.MaterialId.ToString(), Text = x.MaterialName }).ToList();
+			List<Material> currentGemstoneListOfThisJewelry = originalJewelry.JewelryMaterials.Where(x => !x.Material.IsMetail).Select(x => x.Material).ToList();
+			List<Material> gemstoneListCanSelect = materialService.GetGemsNotInJewelry().Where(x => !x.IsMetail).ToList();
+            gemstoneListCanSelect.AddRange(currentGemstoneListOfThisJewelry);
+			GemstoneOptions = gemstoneListCanSelect.Select(x => new SelectListItem { Value = x.MaterialId.ToString(), Text = x.MaterialName }).ToList();
+			MetalOptions = materialService.GetMaterials().Where(x => x.IsMetail).Select(x => new SelectListItem { Value = x.MaterialId.ToString(), Text = x.MaterialName }).ToList();
 
         }
 
@@ -287,14 +293,14 @@ namespace UI.Pages.Jewelries
                 });
             }
             Gemstones = gemstoneDtos;
+            UpdateSelectOptions();
             this.setUpReturnPage();
         }
 
         private void setupReturnPage(string message)
         {
             this.setUpReturnPage();
-
-            Message = message;
+			Message = message;
 
         }
 

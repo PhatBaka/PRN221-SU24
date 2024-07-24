@@ -229,25 +229,11 @@ namespace UI.Pages.Jewelries
             var metal = materialService.GetMaterialById(id);
             if (metal == null || !metal.IsMetail)
             {
-                return NotFound();
+                return null;
             }
-            double BIDPRICE = 0;
-            double OFFERPRICE = 0;
-            switch (metal.MaterialName.ToLower())
-            {
-                case "gold":
-                    BIDPRICE = metalService.GetPrices().FirstOrDefault(x => x.Metal.Equals("gold")).Rate.Bid;
-                    OFFERPRICE = metalService.GetPrices().FirstOrDefault(x => x.Metal.Equals("gold")).Rate.Ask;
-					break;
-				case "silver":
-					BIDPRICE = metalService.GetPrices().FirstOrDefault(x => x.Metal.Equals("silver")).Rate.Bid;
-					OFFERPRICE = metalService.GetPrices().FirstOrDefault(x => x.Metal.Equals("silver")).Rate.Ask;
-					break;
-				case "palladium":
-					BIDPRICE = metalService.GetPrices().FirstOrDefault(x => x.Metal.Equals("palladium")).Rate.Bid;
-					OFFERPRICE = metalService.GetPrices().FirstOrDefault(x => x.Metal.Equals("palladium")).Rate.Ask;
-					break;
-			}
+            double BIDPRICE;
+            double OFFERPRICE;
+            metalService.GetMetalSellPriceAndBuybackPriceByMetalName(metal.MaterialName, out BIDPRICE, out OFFERPRICE);
             var result = new
             {
                 id = metal.MaterialId,
@@ -264,7 +250,7 @@ namespace UI.Pages.Jewelries
             var gem = materialService.GetMaterialById(id);
             if (gem == null || gem.IsMetail)
             {
-                return NotFound();
+                return null;
             }
             var result = new
             {

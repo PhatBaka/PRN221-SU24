@@ -66,8 +66,8 @@ namespace UI.Pages.Jewelries
 			Jewelry = jewelryList;
 			foreach (var item in Jewelry)
 			{
-				//ViewData[$"ItemStatusSale_{item.JewelryId}"] = StatusSaleExtension.GetDisplayName(item.StatusSale);
-				ViewData[$"ItemBasePrice_{item.JewelryId}"] = (decimal)jewelryService.GetJewelrySalePrice(item);
+				ViewData[$"ItemStatusSale_{item.JewelryId}"] = StatusSaleExtension.GetDisplayName(item.StatusSale);
+				ViewData[$"ItemBasePrice_{item.JewelryId}"] = jewelryService.GetJewelrySalePrice(item).ToString("C2");
 				ViewData[$"ItemImage_{item.JewelryId}"] = formatImage(item);
 			}
 		}

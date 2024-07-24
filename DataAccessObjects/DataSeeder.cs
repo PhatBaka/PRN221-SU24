@@ -101,7 +101,7 @@ namespace DataAccessObjects
                 new Material
                 {
                     MaterialId = 1,
-                    MaterialName = "Gold 24K",
+                    MaterialName = "Gold",
                     IsMetail = true,
                     Purity = 99.99F,
                     MaterialCost = 2000000, // assuming this is the cost per gram
@@ -118,7 +118,7 @@ namespace DataAccessObjects
                 new Material
                 {
                     MaterialId = 2,
-                    MaterialName = "Silver 925",
+                    MaterialName = "Silver",
                     IsMetail = true,
                     Purity = 92.5F,
                     MaterialCost = 25000, // assuming this is the cost per gram
@@ -130,24 +130,6 @@ namespace DataAccessObjects
                     Sharp = null,
                     MaterialImage = null,
                     GemCertificate = null,
-                },
-
-                new Material
-                {
-                    MaterialId = 3,
-                    MaterialName = "Platinum",
-                    IsMetail = true,
-                    Purity = 95.0F,
-                    MaterialCost = 3000000, // assuming this is the cost per gram
-                    Description = "High purity platinum",
-                    BidPrice = 3000000,
-                    OfferPrice = 3500000,
-                    Clarity = ClarityEnum.NONE,
-                    Color = "White",
-                    Sharp = null,
-                    MaterialImage = null,
-                    GemCertificate = null,
-
                 },
 
                 new Material

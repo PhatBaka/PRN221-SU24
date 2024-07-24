@@ -105,32 +105,9 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					@{
-						//var role = Context.Session.GetString("ROLE");
-						switch (role)
-						{
-							case "ADMIN":
-								<a class="navbar-brand" asp-page="Admin">
-									<i class="fa fa-diamond"></i> <span class="col">Jewe</span>lry
-								</a>
-								break;
-							case "STAFF":
-								<a class="navbar-brand" asp-page="Staff">
-									<i class="fa fa-diamond"></i> <span class="col">Jewe</span>lry
-								</a>
-								break;
-							case "MANAGER":
-								<a class="navbar-brand" asp-page="Manager">
-									<i class="fa fa-diamond"></i> <span class="col">Jewe</span>lry
-								</a>
-								break;
-							default:
-								<a class="navbar-brand" asp-page="Login">
-									<i class="fa fa-diamond"></i> <span class="col">Jewe</span>lry
-								</a>
-								break;
-						}
-					}
+					<a class="navbar-brand" asp-page=@HOME_INDEX_PATH>
+						<i class="fa fa-diamond"></i> <span class="col">Jewe</span>lry
+					</a>
 				</div>
 
 				@if(role != null )
@@ -185,10 +162,12 @@
 								<li><a class="m_tag " asp-page=@DASHBOARD_INDEX_PATH>Dashboard</a></li>
 							}
 						</ul>
-
 						<ul class="nav navbar-nav navbar-right">
+							<li><a href="/Accounts/Details?id=@userId" class="m_tag"><i class="fa fa-user"></i><span style="margin-left: 10px; margin-right: 10px;">Hello, @role.ToLower() @fullname.ToUpper()</span></a></li>
 							<li><a class="m_tag" asp-page="/Logout">Logout</a></li>
+
 						</ul>
+						
 					</div>
 					<!-- /.navbar-collapse -->
 				}

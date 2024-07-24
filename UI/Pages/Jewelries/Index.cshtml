@@ -47,6 +47,7 @@
 	<div style="margin-top: 20px; text-align: end;">
 		<a class="btn btn-primary" asp-page="./Create">Create New</a>
 	</div>
+
 	<div class="table-responsive-lg">
 		<table id="table-list" class="table table-striped">
 			<thead class="table-header">
@@ -73,7 +74,7 @@
 						Category
 					</th>
 					<th>
-						Base Price (VNĐ)
+						Base Price (USD)
 					</th>
 					<th>
 						Actions
@@ -105,48 +106,45 @@
 						<td>
 							@Html.DisplayFor(modelItem => item.Quantity)
 						</td>
-@* 						<td>
+ 						<td>
 
-							@switch (@ViewData[$"ItemStatusSale_{item.JewelryId}"])
-							{
-								case "In stock":
-									<span class="badge badge-info">@ViewData[$"ItemStatusSale_{item.JewelryId}"]</span>
-									break;
-								case "Out of stock":
-									<span class="badge badge-warning">@ViewData[$"ItemStatusSale_{item.JewelryId}"]</span>
-									break;
-								case "Discontinued":
-									<span class="badge badge-danger">@ViewData[$"ItemStatusSale_{item.JewelryId}"]</span>
-									break;
-								default:
-									<span class="badge badge-secondary">Unknown</span>
-									break;
-							}
+ 							@switch (@ViewData[$"ItemStatusSale_{item.JewelryId}"])
+ 							{
+ 								case "In stock":
+ 									<span class="badge badge-info">@ViewData[$"ItemStatusSale_{item.JewelryId}"]</span>
+ 									break;
+ 								case "Out of stock":
+ 									<span class="badge badge-warning">@ViewData[$"ItemStatusSale_{item.JewelryId}"]</span>
+ 									break;
+ 								case "Discontinued":
+ 									<span class="badge badge-danger">@ViewData[$"ItemStatusSale_{item.JewelryId}"]</span>
+ 									break;
+ 								default:
+ 									<span class="badge badge-secondary">Unknown</span>
+ 									break;
+ 							}
 
-						</td> *@
+ 						</td> 
 						<td>
 							@Html.DisplayFor(modelItem => item.Category.CategoryName)
 						</td>
 						<td>
-							@(((Decimal)ViewData[$"ItemBasePrice_{item.JewelryId}"]).ToString("#,##0"))
+							@ViewData[$"ItemBasePrice_{item.JewelryId}"]
 						</td>
 						<td class="action-btn">
 							<span>
-								<a class="btn btn-warning" asp-page="./Edit" asp-route-id="@item.JewelryId">Edit</a>
-							</span>
-							<span>
 								<a class="btn btn-success" asp-page="./Details" asp-route-id="@item.JewelryId">Details</a>
 							</span>
+							<span>
+								<a class="btn btn-warning" asp-page="./Edit" asp-route-id="@item.JewelryId">Edit</a>
+							</span>
+						
 
 							<span>
 								<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" data-iddelete="@item.JewelryId" data-jwname="@item.JewelryName">
 									Delete
 								</button>
 							</span>
-
-							<form method="post" asp-page-handler="Buy" asp-route-id="@item.JewelryId" style="display:inline;">
-								<button type="submit" class="btn btn-primary">Buy</button>
-							</form>
 						</td>
 					</tr>
 				}
