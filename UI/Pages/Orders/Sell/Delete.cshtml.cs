@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace UI.Pages.Orders.BuyOld
+namespace UI.Pages.Orders.Sell
 {
-    public class IndexModel : PageModel
+    public class DeleteModel : PageModel
     {
         public void OnGet()
         {

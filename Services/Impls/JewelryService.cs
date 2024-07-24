@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Repositories;
+using Repositories.Interfaces;
 using Services.Helpers;
 using Services.Interfaces;
 using System;
@@ -28,14 +29,16 @@ namespace Services.Impls
 		private IGenericRepository<Category> _categoryRepo;
 		private ICategoryService _categoryService;
 		private IMetalService _metalService;
+		private readonly IJewelryRepository _jewelryRepository;
 
-		public JewelryService(IServiceProvider service)
+		public JewelryService(IServiceProvider service, IJewelryRepository jewelryRepository)
 		{
 			_jewelryRepo = service.GetRequiredService<IGenericRepository<Jewelry>>();
 			_categoryService = service.GetRequiredService<ICategoryService>();
 			_jewelryMaterialRepo = service.GetRequiredService<IGenericRepository<JewelryMaterial>>();
 			_categoryRepo = service.GetRequiredService<IGenericRepository<Category>>();
 			_metalService = service.GetRequiredService<IMetalService>();
+			_jewelryRepository = jewelryRepository;
 		}
 
 		public Jewelry AddJewelry(Jewelry jewelry)
@@ -413,5 +416,9 @@ namespace Services.Impls
 			}
 		}
 
+		public IList<Jewelry> GetAllJewelry()
+		{
+			return _jewelryRepository.GetJewelries();
+		}
 	}
 }

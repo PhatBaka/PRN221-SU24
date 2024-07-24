@@ -77,31 +77,8 @@ namespace UI.Pages.Orders.Sell
 
         public IActionResult OnPostAddToCart(int JewelryId)
         {
-            UpdatePrice();
             LoadData("", "", 1);
-            Jewelry jewelry = _jewelryService.GetJewelryById(JewelryId);
-            // total gem + total current price + labor price
-            decimal unitPrice = 0;
-
-            foreach (var material in jewelry.JewelryMaterials)
-            {
-                var currentMaterial = _materialService.GetMaterialById(material.MaterialId);
-
-                if (currentMaterial.IsMetail)
-                {
-                    unitPrice += currentMaterial.OfferPrice * (decimal)material.JewelryWeight;
-                }
-                else
-                {
-                    unitPrice += (decimal)currentMaterial.MaterialCost;
-                }
-            }
-
-            unitPrice += jewelry.LaborPrice;
-
-            // check jewelry have gem or not
-            // if jewelry have gem, don't show quantity
-            // if jewelry don't have gem, show quantity
+			Jewelry jewelry = _jewelryService.GetJewelryById(JewelryId);
 
             if (CartItems != null && CartItems.Count > 0)
             {
@@ -140,7 +117,7 @@ namespace UI.Pages.Orders.Sell
             {
                 Jewelry = _mapper.Map<GetJewelryRequest>(jewelry),
                 Quantity = 1,
-                UnitPrice = unitPrice,
+                UnitPrice = (decimal) _jewelryService.GetJewelrySalePrice(jewelry),
                 DiscountValue = promotion != null ? (decimal)promotion.DiscountPercent : 0
             };
 
@@ -232,7 +209,7 @@ namespace UI.Pages.Orders.Sell
                     Quantity = cartItem.Quantity,
                     UnitPrice = (double) cartItem.GetFinalPrice(),
                     DiscountPercent = promotion != null ? promotion.DiscountPercent : 0,
-                    PromotionDetailId = promotion != null ? promotion.PromotionDetailId : null,
+                    PromotionDetailId = promotion != null ? promotion.PromotionDetailId : null
                 };
 
                 items.Add(orderDetail);
@@ -245,6 +222,7 @@ namespace UI.Pages.Orders.Sell
                 await _jewelryService.UpdateJewelryAsync(jewelry);
             }
 
+            newOrder.OrderType = OrderEnum.NEW;
             // Save order and order details
             Order order = await _orderService.CreateOrderAsync(newOrder, items);
 
@@ -270,6 +248,8 @@ namespace UI.Pages.Orders.Sell
                 searchString = currentFilter;
             CurrentFilter = searchString;
 
+            var x = _jewelryService.GetAllJewelry();
+
             IQueryable<Jewelry> jewelries = _jewelryService.GetJewelries().Where(j =>
                                                 !(j.JewelryMaterials.Any(m => !m.Material.IsMetail) && j.OrderDetails.Count > 0) &&
                                                 !(j.JewelryMaterials.All(m => m.Material.IsMetail) && j.Quantity == 0)).AsQueryable();
@@ -279,6 +259,11 @@ namespace UI.Pages.Orders.Sell
 
             Jewelries = PaginatedList<Jewelry>.Create(
                 jewelries.AsNoTracking(), pageIndex ?? 1, 5);
+
+            foreach (var jewelry in Jewelries)
+            {
+                ViewData[$"ItemBasePrice_{jewelry.JewelryId}"] = (decimal) _jewelryService.GetJewelrySalePrice(jewelry);
+            }
         }
 
         private void UpdatePrice()
@@ -326,7 +311,8 @@ namespace UI.Pages.Orders.Sell
             LoadCart();
             LoadCustomer();
             LoadPrice();
-        }
+			UpdatePrice();
+		}
 
         private void LoadPrice() => Metals = HttpContext.Session.GetObjectFromJson<IList<MetalResponse>>("PRICE");
 

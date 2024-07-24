@@ -17,5 +17,7 @@ namespace Services.Interfaces
         Task<Jewelry> UpdateJewelryAsync(Jewelry jewelry);
         Task DeleteJewelryAsync(int id);
         double GetJewelrySalePrice(Jewelry jewelry);
+
+        public IList<Jewelry> GetAllJewelry();
     }
 }

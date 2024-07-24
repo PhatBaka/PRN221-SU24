@@ -40,16 +40,34 @@
                     <div class="detail_14 clearfix">
                         @{
                             double totalPrice = Model.Order.OrderDetails.Sum(x => x.UnitPrice);
-                            double vat = totalPrice * 5 / 100;
-                            double finalPrice = totalPrice + vat;
+                            double discountPrice = Model.Order.OrderDetails.Sum(x => x.UnitPrice * x.DiscountPercent);
+                            double finalPrice = totalPrice - discountPrice;
                         }
                         <h2 class="mgt">ORDER INFO</h2>
-                        <h4 class="mgt">Order ID: @Model.Order.OrderId</h4>
-                        <h4 class="mgt">Order ID: @Model.Order.OrderDate</h4>
-                        <h4 class="mgt">Order ID: @Model.Order.OrderType.ToString()</h4>
-                        <h4 class="mgt">Total Price: @Model.Order.OrderDetails.Sum(x => x.UnitPrice).ToString("F2")</h4>
-                        <h4 class="mgt">VAT 5%: @vat.ToString("F2")</h4>
-                        <h4 class="mgt">Total Price: @finalPrice.ToString("F2")</h4>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ORDER ID</th>
+                                    <th>ORDER DATE</th>
+                                    <th>ORDER TYPE</th>
+                                    <th>TOTAL PRICE</th>
+                                    <th>DISCOUNT PRICE </th>
+                                    <th>FINAL PRICE</th>
+                                    <td>CUSTOMER PHONE</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@Model.Order.OrderId</td>
+                                    <td>@Model.Order.OrderDate</td>
+                                    <td>@Model.Order.OrderType.ToString()</td>
+                                    <td>@totalPrice.ToString("F2")</td>
+                                    <td>@discountPrice.ToString("F2")</td>
+                                    <td>@finalPrice.ToString("F2")</td>
+                                    <td>@Model.Order.Customer.PhoneNumber</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -61,6 +79,8 @@
     <div class="container">
         <div class="row">
             <div class="center_shop_t clearfix">
+                <h2 class="mgt">ORDER ITEM</h2>
+                <hr />
                 <div class="center_shop_tl clearfix">
                     <table class="table table-striped table-center">
                         <thead>
@@ -68,9 +88,8 @@
                                 <th>Jewelry Id</th>
                                 <th>Jewelry Name</th>
                                 <th>Quantity</th>
-                                <th>Price</th>
                                 <th>Discount %</th>
-                                <td>Final price</td>
+                                <th>Total Price</th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -82,8 +101,8 @@
                                     <td>@order.JewelryId</td>
                                     <td>@order.Jewelry.JewelryName</td>
                                     <td>@order.Quantity</td>
-                                    <td>@order.UnitPrice</td>
                                     <td>@order.DiscountPercent %</td>
+                                    <td>@order.UnitPrice</td>
                                     <td>
                                         <img src="data:image/jpeg;base64,@Convert.ToBase64String(order.Jewelry.JewelryImage)" style="max-width: 100px; max-height: 100px;" />
                                     </td>

@@ -28,8 +28,15 @@ namespace UI.AppStarts
             services.AddScoped<IMaterialService, MaterialService>();
             services.AddScoped<IWarrantyService, WarrantyService>();
             services.AddScoped<IWarrantyHistoryService, WarrantyHistoryService>();
+
             services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IJewelryRepository, JewelryRepository>();
+
             services.AddScoped<IAccountDAO, AccountDAO>();
+            services.AddScoped<IOrderDAO, OrderDAO>();
+            services.AddScoped<IJewelryDAO, JewelryDAO>();
+
             services.AddScoped(typeof(IGenericDAO<>), typeof(GenericDAO<>));
 
             services.AddScoped<IMetalService, MetalService>();

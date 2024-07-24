@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace UI.Pages.Orders.BuyOld
 {
-    public class IndexModel : PageModel
+    public class UpdateModel : PageModel
     {
         public void OnGet()
         {

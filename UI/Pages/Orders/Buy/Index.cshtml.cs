@@ -19,7 +19,7 @@ namespace UI.Pages.Orders.Buy
 
         public void OnGet()
         {
-            Orders = _orderService.GetAllOrdersAsync().Result.Where(x => x.OrderType == OrderEnum.NEW).ToList();
+            Orders = _orderService.GetAllOrdersAsync().Result.Where(x => x.OrderType == OrderEnum.OLD).ToList();
         }
     }
 }
