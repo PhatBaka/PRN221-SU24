@@ -37,7 +37,6 @@ namespace UI.Pages.Orders.BuyOld
         [BindProperty]
         public IList<CartItem> MaterialCart { get; set; }
 
-        [BindProperties]
         public class CartItem
         {
             public int MaterialId { get; set; }
@@ -61,15 +60,15 @@ namespace UI.Pages.Orders.BuyOld
                 };
                 carts.Add(cartItem);
             }
-
-            HttpContext.Session.SetObjectAsJson("BUYCART", carts);
+            MaterialCart = carts;
+            //HttpContext.Session.SetObjectAsJson("BUYCART", carts);
             LoadData();
         }
 
         private void LoadData()
         {
             LoadMetals();
-            LoadCart();
+            // LoadCart();
         }
 
         private void LoadMetals()
@@ -102,28 +101,30 @@ namespace UI.Pages.Orders.BuyOld
             return Page();
         }
 
-        public IActionResult OnPostSubmitOrderJson([FromBody] List<CartItem> cartData)
+        public IActionResult OnPostSubmitOrderJson()
         {
-            Console.WriteLine("OnPostSubmitOrderJson called!");
-            Console.WriteLine($"cartData: {cartData}");
+            LoadData();
 
-            if (cartData == null || !cartData.Any())
-            {
-                return new JsonResult(new { success = false, message = "No data provided" });
-            }
+            //Console.WriteLine("OnPostSubmitOrderJson called!");
+            //Console.WriteLine($"cartData: {cartData}");
+
+            //if (cartData == null || !cartData.Any())
+            //{
+            //    return new JsonResult(new { success = false, message = "No data provided" });
+            //}
 
 
-            if (CurrentCustomer != null)
-            {
-                Message = "Please enter customer info";
-                return Page();
-            }
+            //if (CurrentCustomer != null)
+            //{
+            //    Message = "Please enter customer info";
+            //    return Page();
+            //}
 
             List<OrderDetail> orderDetails = new List<OrderDetail>();
-            foreach (var item in cartData)
+            foreach (var item in MaterialCart)
             {
                 Material material = _materialService.GetMaterialById(item.MaterialId);
-                if (item.IsMetal)
+                if (item.IsMetal && item.Weight != 0)
                 {
                     orderDetails.Add(new OrderDetail()
                     {
@@ -132,7 +133,7 @@ namespace UI.Pages.Orders.BuyOld
                         UnitPrice = (double)(material.BidPrice * item.Weight)
                     });
                 }
-                else
+                else if (!item.IsMetal)
                 {
                     orderDetails.Add(new OrderDetail()
                     {
@@ -157,9 +158,9 @@ namespace UI.Pages.Orders.BuyOld
             return new JsonResult(new { success = true, message = "Order processed successfully" });
         }
 
-        private void LoadCart()
-        {
-            MaterialCart = HttpContext.Session.GetObjectFromJson<IList<CartItem>>("BUYCART");
-        }
+        //private void LoadCart()
+        //{
+        //    MaterialCart = HttpContext.Session.GetObjectFromJson<IList<CartItem>>("BUYCART");
+        //}
     }
 }

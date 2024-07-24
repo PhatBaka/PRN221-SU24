@@ -27,6 +27,7 @@ namespace BusinessObjects
         [Required]
         public double UnitPrice{ get; set; }
 
+        [Column(TypeName = "decimal")]
         public decimal MetalWeight { get; set; }
 
         public virtual Order Order { get; set; }

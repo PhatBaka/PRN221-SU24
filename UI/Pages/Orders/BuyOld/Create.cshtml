@@ -103,7 +103,7 @@
                                         <input type="email" class="form-control" placeholder="Email" asp-for="Account.Email" required>
                                         <input type="text" class="form-control" placeholder="Full Name" asp-for="Account.FullName" required>
                                         <input type="phone" class="form-control" placeholder="Phone Number" required asp-for="Account.PhoneNumber">
-                                        <h4><input class="button" type="submit" value="CREATE CUSTOMER" />
+                                        <h4><input class="button" type="submit" value="CREATE CUSTOMER" /></h4>
                                     </form>
                                 }
                                 else
@@ -131,22 +131,29 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if (Model.MaterialCart != null && Model.MaterialCart.Count() > 0)
+                            @if (Model.MaterialCart != null && Model.MaterialCart.Count > 0)
                             {
-                                @foreach (var material in Model.MaterialCart)
-                                {
+                                <form method="post" asp-page-handler="SubmitOrderJson">
+                                    @for (int i = 0; i < Model.MaterialCart.Count; i++)
+                                    {
                                     <tr class="d-flex justify-content-center">
-                                        <td>@material.MaterialId</td>
-                                        <td>@material.MaterialName</td>
+                                        <input type="hidden" asp-for="@Model.MaterialCart[i].MaterialId" value="@Model.MaterialCart[i].MaterialId" />
+                                        <input type="hidden" asp-for="@Model.MaterialCart[i].MaterialName" value="@Model.MaterialCart[i].MaterialName" />
+                                        <input type="hidden" asp-for="@Model.MaterialCart[i].BidPrice" value="@Model.MaterialCart[i].BidPrice" />
+                                        <input type="hidden" asp-for="@Model.MaterialCart[i].IsMetal" value="@true" />
+                                        <td>@Model.MaterialCart[i].MaterialId</td>
+                                        <td>@Model.MaterialCart[i].MaterialName</td>
                                         <td>
-                                            <span id="bid-price-@material.MaterialId">@material.BidPrice</span>
+                                            <span id="bid-price-@Model.MaterialCart[i].MaterialId">@Model.MaterialCart[i].BidPrice</span>
                                         </td>
                                         <td>
-                                            <input type="number" class="form-control weight-input" data-id="@material.MaterialId" value="0" min="0" step="any" />
+                                            <input name="MaterialCart[@i].Weight" class="form-control weight-input" step="any" />
                                         </td>
-                                        <td class="total-price" data-id="@material.MaterialId">0.00</td>
+                                        <td class="total-price">0.00</td>
                                     </tr>
-                                }
+                                    }
+                                <input type="submit" class="button" value="CREATE" />
+                                </form>
                             }
                         </tbody>
                     </table>
@@ -154,7 +161,6 @@
                     {
                         <div class="center_shop_1li1 clearfix">
                             <h2 id="grand-total">Grand Total: 0.00</h2>
-                            <button id="send-json-button" class="button">Submit Order</button>
                         </div>
                     }
                 </div>
@@ -162,40 +168,3 @@
         </div>
     </div>
 </section>
-
-
-<script>
-    $(document).ready(function () {
-        $('#send-json-button').click(function () {
-            var cartData = [];
-            $('.table-center tbody tr').each(function () {
-                var materialId = $(this).find('.weight-input').data('id');
-                var materialName = $(this).find('td:nth-child(2)').text(); // Get material name from the second <td>
-                var weight = parseFloat($(this).find('.weight-input').val()) || 0;
-                var bidPrice = parseFloat($(`#bid-price-${materialId}`).text()) || 0;
-
-                cartData.push({
-                    MaterialId: materialId,
-                    MaterialName: materialName, // Add material name
-                    BidPrice: bidPrice,
-                    Weight: weight
-                });
-            });
-
-            console.log(cartData);
-
-            $.ajax({
-                url: '/Orders/BuyOld/Create?handler=SubmitOrderJson', // Assuming this is the correct URL
-                type: 'POST',
-                data: JSON.stringify(cartData),
-                contentType: 'application/json',
-                success: function (response) {
-                    console.log('Order submitted successfully:', response);
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error submitting order:', error);
-                }
-            });
-        });
-    });
-</script>
